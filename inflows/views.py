@@ -321,7 +321,7 @@ class InflowXMLUploadView(LoginRequiredMixin, PermissionRequiredMixin, FormView)
         if not supplier:
             supplier, _ = Supplier.objects.get_or_create(
                 name='Sem Fornecedor',
-                defaults={'description': 'Fornecedor padrao para entradas importadas'}
+                defaults={'notes': 'Fornecedor padrao para entradas importadas'}
             )
         
         # Marca selecionada para novos produtos (opcional)
