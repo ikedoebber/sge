@@ -1,70 +1,105 @@
 <!-- Sales Metrics Cards -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6 mb-6 md:mb-8">
   <!-- Total Sales Card -->
-  <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 hover:bg-white/15 transition-all duration-300 group">
+  <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-4 md:p-6 hover:bg-white/15 transition-all duration-300 group">
     <div class="flex items-center justify-between">
-      <div>
-        <h3 class="text-sm font-medium text-gray-400 mb-2">Quantidade de vendas</h3>
-        <p class="text-3xl font-bold text-white">{{ sales_metrics.total_sales }}</p>
-        <div class="flex items-center mt-2">
+      <div class="min-w-0">
+        <h3 class="text-xs sm:text-sm font-medium text-gray-400 mb-1 sm:mb-2">Vendas</h3>
+        <p class="text-xl sm:text-2xl lg:text-3xl font-bold text-white truncate">{{ sales_metrics.total_sales }}</p>
+        <div class="flex items-center mt-1 sm:mt-2">
           <div class="h-2 w-2 bg-purple-400 rounded-full mr-2"></div>
-          <span class="text-xs text-gray-400">Transações realizadas</span>
+          <span class="text-xs text-gray-400">Realizadas</span>
         </div>
       </div>
-      <div class="h-12 w-12 bg-purple-500/20 rounded-xl flex items-center justify-center group-hover:bg-purple-500/30 transition-colors duration-300">
-        <i class="bi bi-cart-check text-2xl text-purple-400"></i>
+      <div class="h-10 w-10 md:h-12 md:w-12 bg-purple-500/20 rounded-xl flex items-center justify-center group-hover:bg-purple-500/30 transition-colors duration-300 flex-shrink-0">
+        <i class="bi bi-cart-check text-lg md:text-2xl text-purple-400"></i>
       </div>
     </div>
   </div>
 
   <!-- Products Sold Card -->
-  <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 hover:bg-white/15 transition-all duration-300 group">
+  <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-4 md:p-6 hover:bg-white/15 transition-all duration-300 group">
     <div class="flex items-center justify-between">
-      <div>
-        <h3 class="text-sm font-medium text-gray-400 mb-2">Produtos vendidos</h3>
-        <p class="text-3xl font-bold text-white">{{ sales_metrics.total_products_sold }}</p>
-        <div class="flex items-center mt-2">
+      <div class="min-w-0">
+        <h3 class="text-xs sm:text-sm font-medium text-gray-400 mb-1 sm:mb-2">Produtos</h3>
+        <p class="text-xl sm:text-2xl lg:text-3xl font-bold text-white truncate">{{ sales_metrics.total_products_sold }}</p>
+        <div class="flex items-center mt-1 sm:mt-2">
           <div class="h-2 w-2 bg-indigo-400 rounded-full mr-2"></div>
-          <span class="text-xs text-gray-400">Unidades vendidas</span>
+          <span class="text-xs text-gray-400">Vendidos</span>
         </div>
       </div>
-      <div class="h-12 w-12 bg-indigo-500/20 rounded-xl flex items-center justify-center group-hover:bg-indigo-500/30 transition-colors duration-300">
-        <i class="bi bi-bag-check text-2xl text-indigo-400"></i>
+      <div class="h-10 w-10 md:h-12 md:w-12 bg-indigo-500/20 rounded-xl flex items-center justify-center group-hover:bg-indigo-500/30 transition-colors duration-300 flex-shrink-0">
+        <i class="bi bi-bag-check text-lg md:text-2xl text-indigo-400"></i>
       </div>
     </div>
   </div>
 
   <!-- Sales Value Card -->
-  <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 hover:bg-white/15 transition-all duration-300 group">
+  <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-4 md:p-6 hover:bg-white/15 transition-all duration-300 group">
     <div class="flex items-center justify-between">
-      <div>
-        <h3 class="text-sm font-medium text-gray-400 mb-2">Valor das vendas</h3>
-        <p class="text-3xl font-bold text-white">R$ {{ sales_metrics.total_sales_value }}</p>
-        <div class="flex items-center mt-2">
+      <div class="min-w-0">
+        <h3 class="text-xs sm:text-sm font-medium text-gray-400 mb-1 sm:mb-2">Receita</h3>
+        <p class="text-xl sm:text-2xl lg:text-3xl font-bold text-white truncate">R$ {{ sales_metrics.total_sales_value }}</p>
+        <div class="flex items-center mt-1 sm:mt-2">
           <div class="h-2 w-2 bg-emerald-400 rounded-full mr-2"></div>
-          <span class="text-xs text-gray-400">Receita total</span>
+          <span class="text-xs text-gray-400">Total</span>
         </div>
       </div>
-      <div class="h-12 w-12 bg-emerald-500/20 rounded-xl flex items-center justify-center group-hover:bg-emerald-500/30 transition-colors duration-300">
-        <i class="bi bi-cash-stack text-2xl text-emerald-400"></i>
+      <div class="h-10 w-10 md:h-12 md:w-12 bg-emerald-500/20 rounded-xl flex items-center justify-center group-hover:bg-emerald-500/30 transition-colors duration-300 flex-shrink-0">
+        <i class="bi bi-cash-stack text-lg md:text-2xl text-emerald-400"></i>
       </div>
     </div>
   </div>
 
   <!-- Sales Profit Card -->
-  <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 hover:bg-white/15 transition-all duration-300 group">
+  <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-4 md:p-6 hover:bg-white/15 transition-all duration-300 group">
     <div class="flex items-center justify-between">
-      <div>
-        <h3 class="text-sm font-medium text-gray-400 mb-2">Lucro das vendas</h3>
-        <p class="text-3xl font-bold text-white">R$ {{ sales_metrics.total_sales_profit }}</p>
-        <div class="flex items-center mt-2">
+      <div class="min-w-0">
+        <h3 class="text-xs sm:text-sm font-medium text-gray-400 mb-1 sm:mb-2">Lucro</h3>
+        <p class="text-xl sm:text-2xl lg:text-3xl font-bold text-white truncate">R$ {{ sales_metrics.total_sales_profit }}</p>
+        <div class="flex items-center mt-1 sm:mt-2">
           <div class="h-2 w-2 bg-amber-400 rounded-full mr-2"></div>
-          <span class="text-xs text-gray-400">Lucro líquido</span>
+          <span class="text-xs text-gray-400">Liquido</span>
         </div>
       </div>
-      <div class="h-12 w-12 bg-amber-500/20 rounded-xl flex items-center justify-center group-hover:bg-amber-500/30 transition-colors duration-300">
-        <i class="bi bi-trophy text-2xl text-amber-400"></i>
+      <div class="h-10 w-10 md:h-12 md:w-12 bg-amber-500/20 rounded-xl flex items-center justify-center group-hover:bg-amber-500/30 transition-colors duration-300 flex-shrink-0">
+        <i class="bi bi-trophy text-lg md:text-2xl text-amber-400"></i>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Payment Methods -->
+{% if payment_method_metrics %}
+  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 md:gap-4 lg:gap-6 mb-6 md:mb-8">
+    {% for key, data in payment_method_metrics.items %}
+      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-4 md:p-6 hover:bg-white/15 transition-all duration-300 group">
+        <div class="flex items-center justify-between">
+          <div class="min-w-0">
+            <h3 class="text-xs sm:text-sm font-medium text-gray-400 mb-1 sm:mb-2">{{ data.label }}</h3>
+            <p class="text-lg sm:text-xl font-bold text-white truncate">R$ {{ data.total }}</p>
+            <div class="flex items-center mt-1 sm:mt-2">
+              <div class="h-2 w-2 bg-violet-400 rounded-full mr-2"></div>
+              <span class="text-xs text-gray-400">{{ data.count }} venda(s)</span>
+            </div>
+          </div>
+          <div class="h-10 w-10 md:h-12 md:w-12 bg-violet-500/20 rounded-xl flex items-center justify-center group-hover:bg-violet-500/30 transition-colors duration-300 flex-shrink-0">
+            {% if key == 'money' %}
+              <i class="bi bi-cash text-lg md:text-2xl text-violet-400"></i>
+            {% elif key == 'credit' %}
+              <i class="bi bi-credit-card text-lg md:text-2xl text-violet-400"></i>
+            {% elif key == 'debit' %}
+              <i class="bi bi-credit-card-2-front text-lg md:text-2xl text-violet-400"></i>
+            {% elif key == 'pix' %}
+              <i class="bi bi-qr-code text-lg md:text-2xl text-violet-400"></i>
+            {% elif key == 'boleto' %}
+              <i class="bi bi-upc-scan text-lg md:text-2xl text-violet-400"></i>
+            {% else %}
+              <i class="bi bi-wallet2 text-lg md:text-2xl text-violet-400"></i>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}

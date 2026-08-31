@@ -22,13 +22,13 @@
   </div>
 
   <!-- Search and Filters Section -->
-  <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 mb-8">
+  <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-4 md:p-6 mb-6 md:mb-8">
     <div class="grid grid-cols-1 lg:grid-cols-1 gap-6">
       <!-- Search Form -->
       <div>
         <label class="block text-sm font-medium text-gray-300 mb-3">Buscar Marcas</label>
         <form method="get" action="{% url 'brand_list' %}" class="space-y-4">
-          <div class="flex gap-3">
+          <div class="flex flex-col sm:flex-row gap-3">
             <div class="flex-1">
               <input type="text" 
                      name="name" 

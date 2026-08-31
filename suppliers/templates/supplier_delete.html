@@ -4,10 +4,10 @@
 
 {% block content %}
   <!-- Page Header -->
-  <div class="flex items-center justify-between mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 md:mb-8">
     <div>
       <h1 class="text-2xl font-bold text-white mb-2">Excluir Fornecedor</h1>
-      <p class="text-gray-400">Confirme a exclusão do fornecedor</p>
+      <p class="text-gray-400">Confirme a exclusao do fornecedor</p>
     </div>
     <a href="{% url 'supplier_detail' object.id %}" 
        class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-colors duration-200">
@@ -25,16 +25,16 @@
           <i class="bi bi-exclamation-triangle-fill text-3xl text-red-400"></i>
         </div>
         <div class="ml-4">
-          <h3 class="text-lg font-medium text-red-200 mb-2">Atenção: Ação Irreversível</h3>
+          <h3 class="text-lg font-medium text-red-200 mb-2">Atencao: Acao Irreversivel</h3>
           <p class="text-red-300 text-sm leading-relaxed">
-            Esta ação não pode ser desfeita. O fornecedor será permanentemente removido do sistema.
+            Esta acao nao pode ser desfeita. O fornecedor sera permanentemente removido do sistema.
           </p>
         </div>
       </div>
     </div>
 
     <!-- Supplier Information -->
-    <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-8 mb-8">
+    <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-4 sm:p-6 lg:p-8 mb-6 md:mb-8">
       <div class="flex items-center mb-6">
         <div class="p-4 bg-red-600/20 rounded-xl mr-4">
           <i class="bi bi-building text-3xl text-red-400"></i>
@@ -58,32 +58,32 @@
           </div>
         </div>
 
-        {% if object.description %}
+        {% if object.cpf_cnpj %}
           <div class="bg-gray-800/50 rounded-lg p-4">
-            <h4 class="text-sm font-medium text-gray-300 mb-2">Descrição</h4>
-            <p class="text-white">{{ object.description }}</p>
+            <h4 class="text-sm font-medium text-gray-300 mb-2">CPF/CNPJ</h4>
+            <p class="text-white">{{ object.cpf_cnpj }}</p>
           </div>
         {% endif %}
       </div>
     </div>
 
-    <!-- Impact Warning -->
+    <!-- Impact Warning - Bloqueio se tiver entradas -->
     {% if object.inflows.exists %}
-      <div class="bg-amber-500/20 backdrop-blur-sm border border-amber-500/50 rounded-2xl p-6 mb-8">
+      <div class="bg-red-500/20 backdrop-blur-sm border border-red-500/50 rounded-2xl p-6 mb-8">
         <div class="flex items-start">
           <div class="flex-shrink-0">
-            <i class="bi bi-info-circle-fill text-2xl text-amber-400"></i>
+            <i class="bi bi-shield-x-fill text-2xl text-red-400"></i>
           </div>
           <div class="ml-4">
-            <h3 class="text-lg font-medium text-amber-200 mb-2">Dados Relacionados</h3>
-            <p class="text-amber-300 text-sm leading-relaxed mb-3">
-              Este fornecedor possui {{ object.inflows.count }} entrada(s) registrada(s). 
-              Ao excluir o fornecedor, estas informações podem ser afetadas.
+            <h3 class="text-lg font-medium text-red-200 mb-2">Nao e possivel excluir</h3>
+            <p class="text-red-300 text-sm leading-relaxed mb-3">
+              Este fornecedor possui <strong>{{ object.inflows.count }}</strong> entrada(s) registrada(s).
+              Para excluir este fornecedor, primeiro remova todas as entradas associadas a ele.
             </p>
-            <div class="bg-amber-600/30 rounded-lg p-3">
-              <p class="text-amber-100 text-xs">
-                <strong>Nota:</strong> As entradas já registradas serão mantidas no sistema, 
-                mas não será possível criar novas entradas para este fornecedor.
+            <div class="bg-red-600/30 rounded-lg p-3">
+              <p class="text-red-100 text-xs">
+                <i class="bi bi-info-circle mr-1"></i>
+                <strong>Dica:</strong> Acesse a lista de entradas, filtre por este fornecedor e remova ou transfira as entradas antes de tentar excluir novamente.
               </p>
             </div>
           </div>
@@ -92,16 +92,27 @@
     {% endif %}
 
     <!-- Confirmation Form -->
-    <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-8">
+    <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-4 sm:p-6 lg:p-8">
       <h3 class="text-lg font-semibold text-white mb-6 flex items-center">
         <i class="bi bi-shield-exclamation mr-2 text-red-400"></i>
-        Confirmação de Exclusão
+        Confirmacao de Exclusao
       </h3>
 
-      <p class="text-gray-300 mb-6 leading-relaxed">
-        Para confirmar a exclusão do fornecedor <strong class="text-white">{{ object.name }}</strong>, 
-        clique no botão "Excluir Fornecedor" abaixo. Esta ação é irreversível.
-      </p>
+      {% if object.inflows.exists %}
+        <div class="bg-amber-500/20 backdrop-blur-sm border border-amber-500/50 rounded-xl p-4 mb-6">
+          <div class="flex items-center">
+            <i class="bi bi-exclamation-triangle-fill text-amber-400 mr-3"></i>
+            <p class="text-amber-200 text-sm">
+              O botao de exclusao esta desabilitado porque este fornecedor possui entradas registradas.
+            </p>
+          </div>
+        </div>
+      {% else %}
+        <p class="text-gray-300 mb-6 leading-relaxed">
+          Para confirmar a exclusao do fornecedor <strong class="text-white">{{ object.name }}</strong>, 
+          clique no botao "Excluir Fornecedor" abaixo. Esta acao e irreversivel.
+        </p>
+      {% endif %}
 
       <form method="post" class="space-y-6">
         {% csrf_token %}
@@ -111,10 +122,11 @@
             <a href="{% url 'supplier_detail' object.id %}" 
                class="inline-flex items-center justify-center px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-colors duration-200">
               <i class="bi bi-x-circle mr-2"></i>
-              Cancelar
+              Voltar
             </a>
             <button type="submit" 
-                    class="inline-flex items-center justify-center px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transform transition-all duration-200 hover:scale-[1.02]">
+                    {% if object.inflows.exists %}disabled{% endif %}
+                    class="inline-flex items-center justify-center px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transform transition-all duration-200 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100">
               <i class="bi bi-trash mr-2"></i>
               Excluir Fornecedor
             </button>

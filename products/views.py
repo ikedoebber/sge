@@ -1,5 +1,8 @@
 from rest_framework import generics
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.db.models import ProtectedError
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from app import metrics
@@ -37,6 +40,7 @@ class ProductListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['product_metrics'] = metrics.get_product_metrics()
         context['sales_metrics'] = metrics.get_sales_metrics()
+        context['payment_method_metrics'] = metrics.get_payment_method_metrics()
         context['categories'] = Category.objects.all()
         context['brands'] = Brand.objects.all()
         return context
@@ -69,6 +73,19 @@ class ProductDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView)
     template_name = 'product_delete.html'
     success_url = reverse_lazy('product_list')
     permission_required = 'products.delete_product'
+    
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        try:
+            return super().post(request, *args, **kwargs)
+        except ProtectedError:
+            messages.error(
+                request,
+                f'Nao e possivel excluir o produto "{self.object.title}" '
+                f'porque ele possui {self.object.inflows.count()} entrada(s) registrada(s). '
+                f'Remove as entradas associadas antes de excluir o produto.'
+            )
+            return redirect('product_detail', pk=self.object.pk)
 
 
 class ProductCreateListAPIView(generics.ListCreateAPIView):

@@ -4,12 +4,12 @@
 
 {% block content %}
   <!-- Page Header -->
-  <div class="flex items-center justify-between mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 md:mb-8">
     <div>
       <h1 class="text-2xl font-bold text-white mb-2">Detalhes do Produto</h1>
       <p class="text-gray-400">Informações completas do produto</p>
     </div>
-    <div class="flex items-center space-x-3">
+    <div class="flex flex-col sm:flex-row gap-3 mt-4 sm:mt-0">
       <a href="{% url 'product_list' %}" 
          class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-colors duration-200">
         <i class="bi bi-arrow-left mr-2"></i>
@@ -97,9 +97,22 @@
             </div>
             {% if object.cost_price and object.selling_price %}
               <div class="flex justify-between items-center py-2 border-b border-white/10">
-                <span class="text-gray-400">Margem de Lucro</span>
+                <span class="text-gray-400">Lucro por Unidade</span>
                 <span class="text-green-400 font-medium">
-                  {% widthratio object.selling_price object.cost_price 100 %}%
+                  R$ {{ object.profit_per_unit|floatformat:2 }}
+                </span>
+              </div>
+              <div class="flex justify-between items-center py-2 border-b border-white/10">
+                <span class="text-gray-400">Margem de Lucro</span>
+                <span class="font-bold
+                  {% if object.profit_margin_percent > 100 %}text-green-400{% elif object.profit_margin_percent > 50 %}text-blue-400{% elif object.profit_margin_percent > 0 %}text-yellow-400{% else %}text-red-400{% endif %}">
+                  {{ object.profit_margin_percent|floatformat:1 }}%
+                </span>
+              </div>
+              <div class="flex justify-between items-center py-2 border-b border-white/10">
+                <span class="text-gray-400">Lucro Total em Estoque</span>
+                <span class="text-green-400 font-medium">
+                  R$ {{ object.total_profit_in_stock|floatformat:2 }}
                 </span>
               </div>
             {% endif %}

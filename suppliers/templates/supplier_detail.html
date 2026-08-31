@@ -7,7 +7,7 @@
   <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
     <div>
       <h1 class="text-2xl font-bold text-white mb-2">Detalhes do Fornecedor</h1>
-      <p class="text-gray-400">Informações completas sobre o fornecedor</p>
+      <p class="text-gray-400">Informacoes completas sobre o fornecedor</p>
     </div>
     <div class="flex flex-col sm:flex-row gap-3 mt-4 sm:mt-0">
       {% if perms.suppliers.change_supplier %}
@@ -32,7 +32,7 @@
     </div>
   </div>
 
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
     <!-- Main Information -->
     <div class="lg:col-span-2 space-y-6">
       <!-- Basic Information Card -->
@@ -47,16 +47,67 @@
           </div>
         </div>
 
-        <div class="space-y-4">
-          <div>
-            <h3 class="text-sm font-medium text-gray-300 uppercase tracking-wider mb-2">Descrição</h3>
-            {% if object.description %}
-              <p class="text-white leading-relaxed">{{ object.description }}</p>
-            {% else %}
-              <p class="text-gray-500 italic">Nenhuma descrição fornecida</p>
-            {% endif %}
-          </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Person Type -->
+          {% if object.person_type %}
+            <div class="bg-gray-800/50 rounded-lg p-4">
+              <p class="text-gray-400 text-sm">Tipo de Pessoa</p>
+              <p class="text-white font-semibold">
+                {% if object.person_type == 'pf' %}Pessoa Fisica{% else %}Juridica{% endif %}
+              </p>
+            </div>
+          {% endif %}
+
+          <!-- CPF/CNPJ -->
+          {% if object.cpf_cnpj %}
+            <div class="bg-gray-800/50 rounded-lg p-4">
+              <p class="text-gray-400 text-sm">CPF/CNPJ</p>
+              <p class="text-white font-semibold">{{ object.cpf_cnpj }}</p>
+            </div>
+          {% endif %}
+
+          <!-- Email -->
+          {% if object.email %}
+            <div class="bg-gray-800/50 rounded-lg p-4">
+              <p class="text-gray-400 text-sm">E-mail</p>
+              <p class="text-white font-semibold">{{ object.email }}</p>
+            </div>
+          {% endif %}
+
+          <!-- Phone -->
+          {% if object.phone %}
+            <div class="bg-gray-800/50 rounded-lg p-4">
+              <p class="text-gray-400 text-sm">Telefone</p>
+              <p class="text-white font-semibold">{{ object.phone }}</p>
+            </div>
+          {% endif %}
+
+          <!-- Address -->
+          {% if object.address %}
+            <div class="bg-gray-800/50 rounded-lg p-4">
+              <p class="text-gray-400 text-sm">Endereco</p>
+              <p class="text-white font-semibold">{{ object.address }}</p>
+            </div>
+          {% endif %}
+
+          <!-- City / State -->
+          {% if object.city or object.state %}
+            <div class="bg-gray-800/50 rounded-lg p-4">
+              <p class="text-gray-400 text-sm">Cidade/UF</p>
+              <p class="text-white font-semibold">
+                {{ object.city|default:"-" }}{% if object.state %}/{{ object.state }}{% endif %}
+              </p>
+            </div>
+          {% endif %}
         </div>
+
+        <!-- Notes -->
+        {% if object.notes %}
+          <div class="mt-4 bg-gray-800/50 rounded-lg p-4">
+            <p class="text-gray-400 text-sm">Observacoes</p>
+            <p class="text-white leading-relaxed">{{ object.notes }}</p>
+          </div>
+        {% endif %}
       </div>
 
       <!-- Related Data -->
@@ -84,7 +135,7 @@
           <div class="bg-green-600/20 rounded-xl p-4 border border-green-500/30">
             <div class="flex items-center justify-between">
               <div>
-                <p class="text-green-200 text-sm font-medium">Última Entrada</p>
+                <p class="text-green-200 text-sm font-medium">Ultima Entrada</p>
                 {% if object.inflows.first %}
                   <p class="text-white font-semibold">{{ object.inflows.first.created_at|date:"d/m/Y" }}</p>
                 {% else %}
@@ -106,7 +157,7 @@
       <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
         <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
           <i class="bi bi-info-circle mr-2 text-violet-400"></i>
-          Informações Gerais
+          Informacoes Gerais
         </h3>
         
         <div class="space-y-4">
@@ -120,16 +171,9 @@
             <span class="text-white font-medium">{{ object.created_at|date:"d/m/Y" }}</span>
           </div>
           
-          <div class="flex justify-between items-center py-2 border-b border-white/10">
+          <div class="flex justify-between items-center py-2">
             <span class="text-gray-300 text-sm">Atualizado em</span>
             <span class="text-white font-medium">{{ object.updated_at|date:"d/m/Y" }}</span>
-          </div>
-
-          <div class="flex justify-between items-center py-2">
-            <span class="text-gray-300 text-sm">Status</span>
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-              Ativo
-            </span>
           </div>
         </div>
       </div>
@@ -138,7 +182,7 @@
       <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
         <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
           <i class="bi bi-lightning mr-2 text-violet-400"></i>
-          Ações Rápidas
+          Acoes Rapidas
         </h3>
         
         <div class="space-y-3">
@@ -184,7 +228,7 @@
                 <th class="px-4 py-3 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Data</th>
                 <th class="px-4 py-3 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Produto</th>
                 <th class="px-4 py-3 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Quantidade</th>
-                <th class="px-4 py-3 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Ações</th>
+                <th class="px-4 py-3 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Acoes</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-white/10">

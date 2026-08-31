@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+
+{% block title %}SGE - Pagar Parcela{% endblock %}
+
+{% block content %}
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 md:mb-8">
+    <div>
+      <h1 class="text-2xl font-bold text-white mb-2">Registrar Pagamento</h1>
+      <p class="text-gray-400">Parcela {{ installment.installment_number }}/{{ outflow.num_installments }}</p>
+    </div>
+    <a href="{% url 'outflow_detail' outflow.id %}" 
+       class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-colors duration-200">
+      <i class="bi bi-arrow-left mr-2"></i>
+      Voltar
+    </a>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Formulario -->
+    <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-4 sm:p-6 lg:p-8">
+      <form method="post" class="space-y-6">
+        {% csrf_token %}
+
+        <div>
+          <label for="{{ form.amount.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">
+            {{ form.amount.label }}
+          </label>
+          <input type="number" 
+                 name="{{ form.amount.name }}" 
+                 id="{{ form.amount.id_for_label }}"
+                 value="{{ form.amount.value|default:'' }}"
+                 step="0.01" min="0.01"
+                 required
+                 class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200"
+                 placeholder="0.00">
+          {% if form.amount.errors %}
+            <div class="mt-1 text-sm text-red-400">{{ form.amount.errors.0 }}</div>
+          {% endif %}
+        </div>
+
+        <div>
+          <label for="{{ form.payment_date.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">
+            {{ form.payment_date.label }}
+          </label>
+          <input type="date" 
+                 name="{{ form.payment_date.name }}" 
+                 id="{{ form.payment_date.id_for_label }}"
+                 value="{{ form.payment_date.value|default:'' }}"
+                 required
+                 class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200">
+          {% if form.payment_date.errors %}
+            <div class="mt-1 text-sm text-red-400">{{ form.payment_date.errors.0 }}</div>
+          {% endif %}
+        </div>
+
+        <div>
+          <label for="{{ form.payment_method.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">
+            {{ form.payment_method.label }}
+          </label>
+          <select name="{{ form.payment_method.name }}" 
+                  id="{{ form.payment_method.id_for_label }}"
+                  required
+                  class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200">
+            {% for choice in form.payment_method.field.choices %}
+              <option value="{{ choice.0 }}" 
+                      {% if form.payment_method.value == choice.0 %}selected{% endif %}
+                      class="text-white">
+                {{ choice.1 }}
+              </option>
+            {% endfor %}
+          </select>
+          {% if form.payment_method.errors %}
+            <div class="mt-1 text-sm text-red-400">{{ form.payment_method.errors.0 }}</div>
+          {% endif %}
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-end pt-4 border-t border-white/10">
+          <a href="{% url 'outflow_detail' outflow.id %}" 
+             class="inline-flex items-center justify-center px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-colors duration-200">
+            Cancelar
+          </a>
+          <button type="submit" 
+                  class="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transform transition-all duration-200 hover:scale-[1.02]">
+            <i class="bi bi-check2 mr-2"></i>
+            Confirmar Pagamento
+          </button>
+        </div>
+
+        {% if form.non_field_errors %}
+          <div class="bg-red-500/20 backdrop-blur-sm border border-red-500/50 rounded-lg p-4">
+            <div class="flex items-start">
+              <div class="flex-shrink-0">
+                <i class="bi bi-exclamation-triangle-fill text-red-400"></i>
+              </div>
+              <div class="ml-3">
+                <h3 class="text-sm font-medium text-red-200">Erro</h3>
+                <div class="mt-2 text-sm text-red-300">
+                  <ul class="list-disc pl-5 space-y-1">
+                    {% for error in form.non_field_errors %}
+                      <li>{{ error }}</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      </form>
+    </div>
+
+    <!-- Resumo -->
+    <div class="space-y-6">
+      <!-- Info Parcela -->
+      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+        <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+          <i class="bi bi-info-circle mr-2 text-violet-400"></i>
+          Detalhes da Parcela
+        </h3>
+        <div class="space-y-3">
+          <div class="flex justify-between items-center py-2 border-b border-white/10">
+            <span class="text-gray-300 text-sm">Parcela</span>
+            <span class="text-white font-medium">{{ installment.installment_number }}/{{ outflow.num_installments }}</span>
+          </div>
+          <div class="flex justify-between items-center py-2 border-b border-white/10">
+            <span class="text-gray-300 text-sm">Vencimento</span>
+            <span class="text-white font-medium">{{ installment.due_date|date:"d/m/Y" }}</span>
+          </div>
+          <div class="flex justify-between items-center py-2 border-b border-white/10">
+            <span class="text-gray-300 text-sm">Valor da Parcela</span>
+            <span class="text-white font-medium">R$ {{ installment.value|floatformat:2 }}</span>
+          </div>
+          <div class="flex justify-between items-center py-2 border-b border-white/10">
+            <span class="text-gray-300 text-sm">Ja Pago</span>
+            <span class="text-green-400 font-medium">R$ {{ installment.amount_paid|floatformat:2 }}</span>
+          </div>
+          <div class="flex justify-between items-center py-2">
+            <span class="text-gray-300 text-sm">Restante</span>
+            <span class="text-amber-400 font-bold">R$ {{ installment.value|add:installment.amount_paid|floatformat:2 }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info Venda -->
+      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+        <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+          <i class="bi bi-cart mr-2 text-violet-400"></i>
+          Venda #{{ outflow.id }}
+        </h3>
+        <div class="space-y-3">
+          {% if outflow.client %}
+            <div class="flex justify-between items-center py-2 border-b border-white/10">
+              <span class="text-gray-300 text-sm">Cliente</span>
+              <span class="text-white font-medium">{{ outflow.client.name }}</span>
+            </div>
+          {% endif %}
+          <div class="flex justify-between items-center py-2 border-b border-white/10">
+            <span class="text-gray-300 text-sm">Total</span>
+            <span class="text-white font-medium">R$ {{ outflow.total_value|floatformat:2 }}</span>
+          </div>
+          <div class="flex justify-between items-center py-2 border-b border-white/10">
+            <span class="text-gray-300 text-sm">Pago</span>
+            <span class="text-green-400 font-medium">R$ {{ outflow.amount_paid|floatformat:2 }}</span>
+          </div>
+          <div class="flex justify-between items-center py-2">
+            <span class="text-gray-300 text-sm">Saldo</span>
+            <span class="text-amber-400 font-bold">R$ {{ outflow.balance_due|floatformat:2 }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

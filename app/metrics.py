@@ -4,7 +4,7 @@ from django.utils import timezone
 from brands.models import Brand
 from categories.models import Category
 from products.models import Product
-from outflows.models import Outflow
+from outflows.models import Outflow, OutflowItem
 
 
 def get_product_metrics():
@@ -24,9 +24,13 @@ def get_product_metrics():
 
 def get_sales_metrics():
     total_sales = Outflow.objects.count()
-    total_products_sold = Outflow.objects.aggregate(total_products_sold=Sum('quantity'))['total_products_sold'] or 0
-    total_sales_value = sum(outflow.quantity * outflow.product.selling_price for outflow in Outflow.objects.all())
-    total_sales_cost = sum(outflow.quantity * outflow.product.cost_price for outflow in Outflow.objects.all())
+    total_products_sold = OutflowItem.objects.aggregate(total=Sum('quantity'))['total'] or 0
+    total_sales_value = OutflowItem.objects.aggregate(
+        total=Sum(F('unit_price') * F('quantity'))
+    )['total'] or 0
+    total_sales_cost = OutflowItem.objects.aggregate(
+        total=Sum(F('product__cost_price') * F('quantity'))
+    )['total'] or 0
     total_sales_profit = total_sales_value - total_sales_cost
 
     return dict(
@@ -37,16 +41,32 @@ def get_sales_metrics():
     )
 
 
+def get_payment_method_metrics():
+    choices = dict(Outflow.PAYMENT_METHOD_CHOICES)
+    metrics = {}
+    for key, label in choices.items():
+        total = Outflow.objects.filter(payment_method=key).aggregate(
+            total=Sum('total_value')
+        )['total'] or 0
+        count = Outflow.objects.filter(payment_method=key).count()
+        metrics[key] = {
+            'label': label,
+            'total': number_format(total, decimal_pos=2, force_grouping=True),
+            'count': count,
+        }
+    return metrics
+
+
 def get_daily_sales_data():
     today = timezone.now().date()
     dates = [str(today - timezone.timedelta(days=i)) for i in range(6, -1, -1)]
     values = list()
 
     for date in dates:
-        sales_total = Outflow.objects.filter(
-            created_at__date=date
+        sales_total = OutflowItem.objects.filter(
+            outflow__created_at__date=date
         ).aggregate(
-            total_sales=Sum(F('product__selling_price') * F('quantity'))
+            total_sales=Sum(F('unit_price') * F('quantity'))
         )['total_sales'] or 0
         values.append(float(sales_total))
 

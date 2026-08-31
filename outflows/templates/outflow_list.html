@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-  SGE - Saídas
+  SGE - Saidas
 {% endblock %}
 
 {% block content %}
@@ -10,34 +10,38 @@
     {% include 'components/_sales_metrics.html' %}
   {% endif %}
 
-  <!-- Page Header -->
   <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
     <div>
-      <h1 class="text-2xl font-bold text-white mb-2">Gestão de Saídas</h1>
-      <p class="text-gray-400">Controle as saídas de produtos do estoque</p>
+      <h1 class="text-2xl font-bold text-white mb-2">Gestao de Saidas</h1>
+      <p class="text-gray-400">Controle as saidas de produtos e vendas</p>
     </div>
     {% if perms.outflows.add_outflow %}
       <a href="{% url 'outflow_create' %}" 
          class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transform transition-all duration-200 hover:scale-[1.02] mt-4 sm:mt-0">
         <i class="bi bi-plus mr-2"></i>
-        Nova Saída
+        Nova Saida / Venda
       </a>
     {% endif %}
   </div>
 
-  <!-- Search and Filters Section -->
   <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6 mb-8">
     <div class="grid grid-cols-1 lg:grid-cols-1 gap-6">
-      <!-- Search Form -->
       <div>
-        <label class="block text-sm font-medium text-gray-300 mb-3">Buscar Saídas</label>
+        <label class="block text-sm font-medium text-gray-300 mb-3">Buscar Saidas</label>
         <form method="get" action="{% url 'outflow_list' %}" class="space-y-4">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
               <input type="text" 
                      name="product" 
                      placeholder="Nome do produto" 
                      value="{{ request.GET.product }}"
+                     class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200">
+            </div>
+            <div>
+              <input type="text" 
+                     name="client" 
+                     placeholder="Nome do cliente" 
+                     value="{{ request.GET.client }}"
                      class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200">
             </div>
             <div class="flex gap-2">
@@ -57,17 +61,18 @@
     </div>
   </div>
 
-  <!-- Outflows Table -->
   <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 overflow-hidden">
     <div class="overflow-x-auto">
       <table class="w-full">
         <thead>
           <tr class="bg-white/10 border-b border-white/10">
             <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">ID</th>
-            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Produto</th>
-            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Quantidade</th>
+            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Produtos</th>
+            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Cliente</th>
+            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Valor</th>
+            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Status</th>
             <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Data</th>
-            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Ações</th>
+            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Acoes</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-white/10">
@@ -85,42 +90,58 @@
                     <i class="bi bi-box text-red-400"></i>
                   </div>
                   <div>
-                    <div class="text-sm font-medium text-white">{{ outflow.product.title }}</div>
-                    <div class="text-sm text-gray-400">{{ outflow.product.category.name }}</div>
+                    {% for item in outflow.items.all|slice:":2" %}
+                      <div class="text-sm text-white">{{ item.product.title }} <span class="text-gray-400">x{{ item.quantity }}</span></div>
+                    {% endfor %}
+                    {% if outflow.items.count > 2 %}
+                      <div class="text-xs text-gray-500">+{{ outflow.items.count|add:"-2" }} mais</div>
+                    {% endif %}
                   </div>
                 </div>
               </td>
               <td class="px-6 py-4">
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                  -{{ outflow.quantity }}
-                </span>
+                {% if outflow.client %}
+                  <span class="text-sm text-white">{{ outflow.client.name }}</span>
+                {% else %}
+                  <span class="text-sm text-gray-500">-</span>
+                {% endif %}
+              </td>
+              <td class="px-6 py-4">
+                <span class="text-sm font-medium text-green-400">R$ {{ outflow.total_value|floatformat:2 }}</span>
+              </td>
+              <td class="px-6 py-4">
+                {% if outflow.client %}
+                  {% if outflow.balance_due <= 0 %}
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Quitado</span>
+                  {% else %}
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">A receber</span>
+                  {% endif %}
+                {% else %}
+                  <span class="text-sm text-gray-500">-</span>
+                {% endif %}
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                 <div>{{ outflow.created_at|date:"d/m/Y" }}</div>
                 <div class="text-xs text-gray-500">{{ outflow.created_at|date:"H:i" }}</div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <div class="flex items-center space-x-2">
-                  <a href="{% url 'outflow_detail' outflow.id %}" 
-                     class="inline-flex items-center px-2.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors duration-200"
-                     title="Ver detalhes">
-                    <i class="bi bi-eye"></i>
-                  </a>
-                </div>
+                <a href="{% url 'outflow_detail' outflow.id %}" 
+                   class="inline-flex items-center px-2.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors duration-200">
+                  <i class="bi bi-eye"></i>
+                </a>
               </td>
             </tr>
           {% empty %}
             <tr>
-              <td colspan="5" class="px-6 py-12 text-center text-gray-400">
+              <td colspan="7" class="px-6 py-12 text-center text-gray-400">
                 <div class="flex flex-col items-center">
                   <i class="bi bi-arrow-up-circle text-4xl text-gray-500 mb-4"></i>
-                  <p class="text-lg font-medium">Nenhuma saída encontrada</p>
-                  <p class="text-sm">Tente ajustar os filtros ou adicionar uma nova saída.</p>
+                  <p class="text-lg font-medium">Nenhuma saida encontrada</p>
                   {% if perms.outflows.add_outflow %}
                     <a href="{% url 'outflow_create' %}" 
                        class="mt-4 inline-flex items-center px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium rounded-lg transition-colors duration-200">
                       <i class="bi bi-plus mr-2"></i>
-                      Adicionar Primeira Saída
+                      Adicionar Primeira Saida
                     </a>
                   {% endif %}
                 </div>

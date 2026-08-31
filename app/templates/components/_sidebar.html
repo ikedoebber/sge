@@ -7,10 +7,10 @@
 <div id="mobile-overlay" class="lg:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-40 opacity-0 pointer-events-none transition-all duration-300"></div>
 
 <!-- Sidebar -->
-<aside id="sidebar" class="fixed lg:static top-0 left-0 h-screen lg:h-full w-80 lg:w-64 bg-black/90 lg:bg-black/20 backdrop-blur-md border-r border-white/10 transform -translate-x-full lg:translate-x-0 transition-all duration-300 ease-in-out lg:z-auto z-50">
+<aside id="sidebar" class="fixed lg:static top-0 left-0 h-screen lg:h-full w-72 lg:w-64 bg-black/90 lg:bg-black/20 backdrop-blur-md border-r border-white/10 transform -translate-x-full lg:translate-x-0 transition-all duration-300 ease-in-out lg:z-auto z-50">
   <div class="flex flex-col h-full">
     <!-- Brand Section -->
-    <div class="p-6 border-b border-white/10">
+    <div class="p-4 lg:p-6 border-b border-white/10">
       <div class="flex items-center justify-between">
         <div class="flex items-center space-x-3">
           <div class="h-12 w-12 bg-gradient-to-r from-violet-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
@@ -39,40 +39,29 @@
             <span class="font-medium text-base">Dashboard</span>
           </a>
         </li>
-        
-        {% if perms.suppliers.view_supplier %}
+      
+        {% if perms.outflows.view_outflow %}
           <li>
-            <a href="{% url 'supplier_list' %}" 
-               class="flex items-center space-x-4 px-4 py-3 rounded-xl text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-violet-500/20 hover:to-purple-500/20 transition-all duration-200 group sidebar-link"
-               data-page="suppliers">
-              <i class="bi bi-truck text-xl group-hover:text-violet-400 transition-colors duration-200"></i>
-              <span class="font-medium text-base">Fornecedores</span>
+            <a href="{% url 'outflow_list' %}" 
+               class="flex items-center space-x-4 px-4 py-3 rounded-xl text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-red-500/20 hover:to-rose-500/20 transition-all duration-200 group sidebar-link"
+               data-page="outflows">
+              <i class="bi bi-cart-check text-xl group-hover:text-red-400 transition-colors duration-200"></i>
+              <span class="font-medium text-base">Vendas</span>
             </a>
           </li>
         {% endif %}
         
-        {% if perms.brands.view_brand %}
+        {% if perms.clients.view_client %}
           <li>
-            <a href="{% url 'brand_list' %}" 
-               class="flex items-center space-x-4 px-4 py-3 rounded-xl text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-violet-500/20 hover:to-purple-500/20 transition-all duration-200 group sidebar-link"
-               data-page="brands">
-              <i class="bi bi-shop text-xl group-hover:text-violet-400 transition-colors duration-200"></i>
-              <span class="font-medium text-base">Marcas</span>
+            <a href="{% url 'client_list' %}" 
+               class="flex items-center space-x-4 px-4 py-3 rounded-xl text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-blue-500/20 hover:to-indigo-500/20 transition-all duration-200 group sidebar-link"
+               data-page="clients">
+              <i class="bi bi-people text-xl group-hover:text-blue-400 transition-colors duration-200"></i>
+              <span class="font-medium text-base">Clientes</span>
             </a>
           </li>
         {% endif %}
-        
-        {% if perms.categories.view_category %}
-          <li>
-            <a href="{% url 'category_list' %}" 
-               class="flex items-center space-x-4 px-4 py-3 rounded-xl text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-violet-500/20 hover:to-purple-500/20 transition-all duration-200 group sidebar-link"
-               data-page="categories">
-              <i class="bi bi-tags text-xl group-hover:text-violet-400 transition-colors duration-200"></i>
-              <span class="font-medium text-base">Categorias</span>
-            </a>
-          </li>
-        {% endif %}
-        
+
         {% if perms.products.view_product %}
           <li>
             <a href="{% url 'product_list' %}" 
@@ -83,28 +72,7 @@
             </a>
           </li>
         {% endif %}
-        
-        {% if perms.inflows.view_inflow %}
-          <li>
-            <a href="{% url 'inflow_list' %}" 
-               class="flex items-center space-x-4 px-4 py-3 rounded-xl text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-green-500/20 hover:to-emerald-500/20 transition-all duration-200 group sidebar-link"
-               data-page="inflows">
-              <i class="bi bi-arrow-down-left-square text-xl group-hover:text-green-400 transition-colors duration-200"></i>
-              <span class="font-medium text-base">Entradas</span>
-            </a>
-          </li>
-        {% endif %}
-        
-        {% if perms.outflows.view_outflow %}
-          <li>
-            <a href="{% url 'outflow_list' %}" 
-               class="flex items-center space-x-4 px-4 py-3 rounded-xl text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-red-500/20 hover:to-rose-500/20 transition-all duration-200 group sidebar-link"
-               data-page="outflows">
-              <i class="bi bi-arrow-up-right-square text-xl group-hover:text-red-400 transition-colors duration-200"></i>
-              <span class="font-medium text-base">Saídas</span>
-            </a>
-          </li>
-        {% endif %}
+
       </ul>
       
       <!-- User Info Section (Mobile) -->

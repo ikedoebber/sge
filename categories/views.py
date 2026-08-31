@@ -1,5 +1,8 @@
 from rest_framework import generics
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.db.models import ProtectedError
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from . import models, forms, serializers
@@ -49,6 +52,19 @@ class CategoryDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView
     template_name = 'category_delete.html'
     success_url = reverse_lazy('category_list')
     permission_required = 'categories.delete_category'
+    
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        try:
+            return super().post(request, *args, **kwargs)
+        except ProtectedError:
+            messages.error(
+                request,
+                f'Nao e possivel excluir a categoria "{self.object.name}" '
+                f'porque ela possui {self.object.products.count()} produto(s) associado(s). '
+                f'Remove os produtos associados antes de excluir a categoria.'
+            )
+            return redirect('category_detail', pk=self.object.pk)
 
 
 class CategoryCreateListAPIView(generics.ListCreateAPIView):

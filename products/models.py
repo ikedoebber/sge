@@ -20,3 +20,22 @@ class Product(models.Model):
 
     def __str__(self):
         return self.title
+
+    @property
+    def profit_per_unit(self):
+        """Lucro por unidade."""
+        if self.cost_price and self.selling_price:
+            return self.selling_price - self.cost_price
+        return 0
+
+    @property
+    def profit_margin_percent(self):
+        """Margem de lucro em percentual."""
+        if self.cost_price and self.selling_price and self.cost_price > 0:
+            return ((self.selling_price - self.cost_price) / self.cost_price) * 100
+        return 0
+
+    @property
+    def total_profit_in_stock(self):
+        """Lucro total considerando todo o estoque."""
+        return self.profit_per_unit * self.quantity

@@ -1,0 +1,210 @@
+{% extends 'base.html' %}
+
+{% block title %}SGE - Venda #{{ object.id }}{% endblock %}
+
+{% block content %}
+  <!-- Page Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+    <div>
+      <h1 class="text-2xl font-bold text-white mb-2">Detalhes da Venda #{{ object.id }}</h1>
+      <p class="text-gray-400">Informacoes completas sobre a venda</p>
+    </div>
+    <div class="flex flex-col sm:flex-row gap-3 mt-4 sm:mt-0">
+      <a href="{% url 'sale_list' %}"
+         class="inline-flex items-center justify-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-colors duration-200">
+        <i class="bi bi-arrow-left mr-2"></i>
+        Voltar
+      </a>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
+    <!-- Main Information -->
+    <div class="lg:col-span-2 space-y-6">
+      <!-- Sale Info Card -->
+      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+        <div class="flex items-center mb-6">
+          <div class="p-3 bg-violet-600/20 rounded-xl mr-4">
+            <i class="bi bi-receipt text-2xl text-violet-400"></i>
+          </div>
+          <div>
+            <h2 class="text-xl font-bold text-white">Venda #{{ object.id }}</h2>
+            <p class="text-gray-400">
+              {{ object.client.name }}
+            </p>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="bg-gray-800/50 rounded-lg p-4">
+              <h4 class="text-sm font-medium text-gray-300 mb-1">Cliente</h4>
+              <p class="text-white">{{ object.client.name }}</p>
+            </div>
+            <div class="bg-gray-800/50 rounded-lg p-4">
+              <h4 class="text-sm font-medium text-gray-300 mb-1">Data da Venda</h4>
+              <p class="text-white">{{ object.sale_date|date:"d/m/Y" }}</p>
+            </div>
+            <div class="bg-gray-800/50 rounded-lg p-4">
+              <h4 class="text-sm font-medium text-gray-300 mb-1">Metodo de Pagamento</h4>
+              <p class="text-white">{{ object.get_payment_method_display|default:"Nao informado" }}</p>
+            </div>
+            <div class="bg-gray-800/50 rounded-lg p-4">
+              <h4 class="text-sm font-medium text-gray-300 mb-1">Status</h4>
+              {% with summary=object.get_status_display_summary %}
+                {% if summary == 'Pago' %}
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    {{ summary }}
+                  </span>
+                {% elif summary == 'Parcial' %}
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                    {{ summary }}
+                  </span>
+                {% elif summary == 'Atrasado' %}
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                    {{ summary }}
+                  </span>
+                {% else %}
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    {{ summary|default:"Pendente" }}
+                  </span>
+                {% endif %}
+              {% endwith %}
+            </div>
+          </div>
+
+          {% if object.description %}
+            <div>
+              <h3 class="text-sm font-medium text-gray-300 uppercase tracking-wider mb-2">Descricao</h3>
+              <div class="bg-gray-800/50 rounded-lg p-4">
+                <p class="text-white leading-relaxed">{{ object.description }}</p>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Installments Section -->
+      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 overflow-hidden">
+        <div class="p-6 border-b border-white/10">
+          <h3 class="text-lg font-semibold text-white flex items-center">
+            <i class="bi bi-list-ol mr-2 text-violet-400"></i>
+            Parcelas
+          </h3>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead>
+              <tr class="bg-white/10 border-b border-white/10">
+                <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Parcela</th>
+                <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Valor</th>
+                <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Vencimento</th>
+                <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Pago</th>
+                <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Status</th>
+                <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Acao</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-white/10">
+              {% for installment in object.installments.all %}
+                <tr class="hover:bg-white/5 transition-colors duration-200">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">
+                    {{ installment.installment_number }}x
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+                    R$ {{ installment.value }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+                    {{ installment.due_date|date:"d/m/Y" }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-400">
+                    R$ {{ installment.amount_paid }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    {% if installment.status == 'paid' %}
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        Pago
+                      </span>
+                    {% elif installment.status == 'partial' %}
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                        Parcial
+                      </span>
+                    {% elif installment.status == 'overdue' %}
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                        Atrasado
+                      </span>
+                    {% else %}
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                        Pendente
+                      </span>
+                    {% endif %}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    {% if installment.status != 'paid' %}
+                      <form method="post" action="{% url 'installment_pay' installment.pk %}" class="inline-flex items-center space-x-2">
+                        {% csrf_token %}
+                        <input type="number"
+                               name="amount"
+                               step="0.01"
+                               placeholder="Valor"
+                               required
+                               class="w-24 px-2 py-1.5 bg-gray-800/50 border border-gray-600 rounded text-white text-xs placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200">
+                        <input type="date"
+                               name="payment_date"
+                               required
+                               class="px-2 py-1.5 bg-gray-800/50 border border-gray-600 rounded text-white text-xs focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200">
+                        <button type="submit"
+                                class="inline-flex items-center px-2.5 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded transition-colors duration-200">
+                          <i class="bi bi-check-lg"></i>
+                        </button>
+                      </form>
+                    {% else %}
+                      <span class="text-gray-500 text-xs">-</span>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="6" class="px-6 py-12 text-center text-gray-400">
+                    <div class="flex flex-col items-center">
+                      <i class="bi bi-list-ol text-4xl text-gray-500 mb-4"></i>
+                      <p class="text-lg font-medium">Nenhuma parcela encontrada</p>
+                    </div>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar - Financial Summary -->
+    <div class="space-y-6">
+      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+        <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+          <i class="bi bi-graph-up mr-2 text-violet-400"></i>
+          Resumo Financeiro
+        </h3>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div class="bg-gray-800/50 rounded-lg p-4 text-center">
+            <p class="text-sm text-gray-400 mb-1">Total Venda</p>
+            <p class="text-lg font-bold text-white">R$ {{ object.total_value }}</p>
+          </div>
+          <div class="bg-gray-800/50 rounded-lg p-4 text-center">
+            <p class="text-sm text-gray-400 mb-1">Entrada</p>
+            <p class="text-lg font-bold text-violet-400">R$ {{ object.down_payment|default:"0.00" }}</p>
+          </div>
+          <div class="bg-gray-800/50 rounded-lg p-4 text-center">
+            <p class="text-sm text-gray-400 mb-1">Pago</p>
+            <p class="text-lg font-bold text-green-400">R$ {{ object.total_paid }}</p>
+          </div>
+          <div class="bg-gray-800/50 rounded-lg p-4 text-center">
+            <p class="text-sm text-gray-400 mb-1">Saldo Devedor</p>
+            <p class="text-lg font-bold text-amber-400">R$ {{ object.balance }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,31 +1,31 @@
 {% if page_obj.has_other_pages %}
-  <nav class="mt-8" aria-label="Pagination">
-    <div class="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-4">
-      <div class="flex items-center justify-between">
+  <nav class="mt-6 md:mt-8" aria-label="Paginacao">
+    <div class="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-3 md:p-4">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
         <!-- Page info -->
-        <div class="flex items-center space-x-2 text-sm text-gray-400">
-          <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
-          <div class="h-1 w-1 bg-gray-500 rounded-full"></div>
-          <span>{{ page_obj.paginator.count }} itens total</span>
+        <div class="flex items-center space-x-2 text-xs sm:text-sm text-gray-400">
+          <span>Pag. {{ page_obj.number }}/{{ page_obj.paginator.num_pages }}</span>
+          <div class="h-1 w-1 bg-gray-500 rounded-full hidden sm:block"></div>
+          <span class="hidden sm:inline">{{ page_obj.paginator.count }} itens</span>
         </div>
 
         <!-- Pagination controls -->
         <div class="flex items-center space-x-1">
           {% if page_obj.has_previous %}
             <a href="?page=1" 
-               class="flex items-center px-3 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200">
-              <i class="bi bi-chevron-double-left text-xs mr-1"></i>
-              Primeira
+               class="flex items-center px-2 sm:px-3 py-2 text-xs sm:text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200">
+              <i class="bi bi-chevron-double-left text-xs"></i>
+              <span class="hidden sm:inline ml-1">Primeira</span>
             </a>
             <a href="?page={{ page_obj.previous_page_number }}" 
-               class="flex items-center px-3 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200">
-              <i class="bi bi-chevron-left text-xs mr-1"></i>
-              Anterior
+               class="flex items-center px-2 sm:px-3 py-2 text-xs sm:text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200">
+              <i class="bi bi-chevron-left text-xs"></i>
+              <span class="hidden sm:inline ml-1">Anterior</span>
             </a>
           {% endif %}
 
           <!-- Page numbers -->
-          <div class="hidden sm:flex items-center space-x-1">
+          <div class="hidden md:flex items-center space-x-1">
             {% for page_number in page_obj.paginator.page_range %}
               {% if page_number <= page_obj.number|add:2 and page_number >= page_obj.number|add:-2 %}
                 {% if page_obj.number == page_number %}
@@ -44,14 +44,14 @@
 
           {% if page_obj.has_next %}
             <a href="?page={{ page_obj.next_page_number }}" 
-               class="flex items-center px-3 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200">
-              Próxima
-              <i class="bi bi-chevron-right text-xs ml-1"></i>
+               class="flex items-center px-2 sm:px-3 py-2 text-xs sm:text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200">
+              <span class="hidden sm:inline mr-1">Proxima</span>
+              <i class="bi bi-chevron-right text-xs"></i>
             </a>
             <a href="?page={{ page_obj.paginator.num_pages }}" 
-               class="flex items-center px-3 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200">
-              Última
-              <i class="bi bi-chevron-double-right text-xs ml-1"></i>
+               class="flex items-center px-2 sm:px-3 py-2 text-xs sm:text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200">
+              <span class="hidden sm:inline mr-1">Ultima</span>
+              <i class="bi bi-chevron-double-right text-xs"></i>
             </a>
           {% endif %}
         </div>

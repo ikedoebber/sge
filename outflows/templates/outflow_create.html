@@ -1,13 +1,12 @@
 {% extends 'base.html' %}
 
-{% block title %}SGE - Registrar Saída{% endblock %}
+{% block title %}SGE - Registrar Saida{% endblock %}
 
 {% block content %}
-  <!-- Page Header -->
-  <div class="flex items-center justify-between mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 md:mb-8">
     <div>
-      <h1 class="text-2xl font-bold text-white mb-2">Registrar Saída</h1>
-      <p class="text-gray-400">Remova produtos do estoque</p>
+      <h1 class="text-2xl font-bold text-white mb-2">Registrar Saida / Venda</h1>
+      <p class="text-gray-400">Remova produtos do estoque e registre vendas</p>
     </div>
     <a href="{% url 'outflow_list' %}" 
        class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-colors duration-200">
@@ -16,177 +15,519 @@
     </a>
   </div>
 
-  <!-- Form Container -->
-  <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-8">
-    <form method="post" class="space-y-8">
-      {% csrf_token %}
-      
-      <!-- Transaction Information Section -->
-      <div>
-        <h3 class="text-lg font-semibold text-white mb-6 flex items-center">
-          <i class="bi bi-arrow-up-circle mr-2 text-violet-400"></i>
-          Informações da Saída
+  <form method="post" id="outflow-form">
+    {% csrf_token %}
+    {{ item_formset.management_form }}
+
+    <!-- Itens -->
+    <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-4 sm:p-6 lg:p-8 mb-6">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-lg font-semibold text-white flex items-center">
+          <i class="bi bi-box mr-2 text-violet-400"></i>
+          Produtos
         </h3>
-        
-        <div class="grid grid-cols-1 lg:grid-cols-1 gap-6">
-          <!-- Product Field -->
-          <div>
-            <label for="{{ form.product.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">
-              {{ form.product.label }}
-            </label>
-            <select name="{{ form.product.name }}" 
-                    id="{{ form.product.id_for_label }}"
-                    required="{{ form.product.field.required }}"
-                    class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200">
-              <option value="" class="text-gray-500">Selecione um produto...</option>
-              {% for choice in form.product.field.queryset %}
+        <button type="button" id="add-item-btn"
+                class="inline-flex items-center px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium rounded-lg shadow-lg hover:shadow-xl transform transition-all duration-200 hover:scale-[1.02]">
+          <i class="bi bi-plus-lg mr-2"></i>
+          Adicionar Produto
+        </button>
+      </div>
+
+      <div id="items-container" class="space-y-4"></div>
+    </div>
+
+    <!-- Cliente e Pagamento -->
+    <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-4 sm:p-6 lg:p-8 mb-6">
+      <h3 class="text-lg font-semibold text-white mb-6 flex items-center">
+        <i class="bi bi-person mr-2 text-violet-400"></i>
+        Venda (Opcional)
+      </h3>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div>
+          <label for="{{ form.client.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">
+            Cliente
+          </label>
+          <div class="flex gap-2">
+            <select name="{{ form.client.name }}" 
+                    id="{{ form.client.id_for_label }}"
+                    class="flex-1 px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200">
+              <option value="" class="text-gray-500">Selecione o cliente (opcional)...</option>
+              {% for choice in form.client.field.queryset %}
                 <option value="{{ choice.pk }}" 
-                        {% if form.product.value == choice.pk %}selected{% endif %}
+                        {% if form.client.value == choice.pk|stringformat:"s" %}selected{% endif %}
                         class="text-white">
-                  {{ choice.title }} - {{ choice.category.name }} (Estoque: {{ choice.quantity }})
+                  {{ choice.name }} - {{ choice.phone }}
                 </option>
               {% endfor %}
             </select>
-            {% if form.product.errors %}
-              <div class="mt-1 text-sm text-red-400">{{ form.product.errors.0 }}</div>
-            {% endif %}
-            <p class="mt-1 text-xs text-gray-500">Selecione o produto que está sendo removido do estoque.</p>
+            <a href="{% url 'client_create' %}?next={% url 'outflow_create' %}" 
+               id="client-create-btn"
+               class="inline-flex items-center justify-center px-3 py-3 bg-violet-600 hover:bg-violet-700 text-white rounded-lg shadow-lg hover:shadow-xl transform transition-all duration-200 hover:scale-[1.02]"
+               title="Cadastrar novo cliente">
+              <i class="bi bi-person-plus text-lg"></i>
+            </a>
           </div>
+        </div>
 
-          <!-- Quantity Field -->
-          <div>
-            <label for="{{ form.quantity.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">
-              {{ form.quantity.label }}
-            </label>
-            <div class="relative">
-              <input type="number" 
-                     name="{{ form.quantity.name }}" 
-                     id="{{ form.quantity.id_for_label }}"
-                     value="{{ form.quantity.value|default:'' }}"
-                     required="{{ form.quantity.field.required }}"
-                     min="1"
-                     class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200"
-                     placeholder="Digite a quantidade">
-              <div class="absolute inset-y-0 right-0 flex items-center pr-3">
-                <i class="bi bi-dash-circle text-gray-400"></i>
-              </div>
+        <div>
+          <label for="{{ form.payment_method.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">
+            Forma de Pagamento
+          </label>
+          <select name="{{ form.payment_method.name }}" 
+                  id="{{ form.payment_method.id_for_label }}"
+                  class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200">
+            {% for choice in form.payment_method.field.choices %}
+              <option value="{{ choice.0 }}" 
+                      {% if form.payment_method.value == choice.0 %}selected{% endif %}
+                      class="text-white">
+                {{ choice.1 }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mt-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Valor Total</label>
+          <input type="number" name="total_value" id="id_total_value" value="0" readonly step="0.01"
+                 class="block w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-green-400 font-bold text-lg cursor-not-allowed">
+        </div>
+        <div>
+          <label for="{{ form.down_payment.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">Entrada (R$)</label>
+          <input type="number" 
+                 name="{{ form.down_payment.name }}" 
+                 id="{{ form.down_payment.id_for_label }}"
+                 value="{{ form.down_payment.value|default:'0' }}"
+                 step="0.01" min="0"
+                 class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200">
+        </div>
+        <div>
+          <label for="{{ form.num_installments.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">Parcelas</label>
+          <input type="number" 
+                 name="{{ form.num_installments.name }}" 
+                 id="{{ form.num_installments.id_for_label }}"
+                 value="{{ form.num_installments.value|default:'1' }}"
+                 min="1" max="6"
+                 class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200">
+        </div>
+        <div>
+          <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">Observacoes</label>
+          <input type="text" 
+                 name="{{ form.description.name }}" 
+                 id="{{ form.description.id_for_label }}"
+                 value="{{ form.description.value|default:'' }}"
+                 class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200"
+                 placeholder="Opcional">
+        </div>
+      </div>
+
+      <!-- Resumo Financeiro -->
+      <div id="resumo-financeiro" class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-amber-600/20 backdrop-blur-sm border border-amber-500/30 rounded-xl p-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-amber-200 text-sm font-medium">Restante (A Pagar)</p>
+              <p class="text-xl font-bold text-white" id="restante-value">R$ 0,00</p>
             </div>
-            {% if form.quantity.errors %}
-              <div class="mt-1 text-sm text-red-400">{{ form.quantity.errors.0 }}</div>
-            {% endif %}
-            <p class="mt-1 text-xs text-gray-500">Quantidade de produtos sendo removidos do estoque.</p>
+            <div class="p-2 bg-amber-600/30 rounded-lg">
+              <i class="bi bi-cash-stack text-amber-300"></i>
+            </div>
           </div>
-
-          <!-- Description Field -->
-          <div>
-            <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">
-              {{ form.description.label }}
-            </label>
-            <textarea name="{{ form.description.name }}" 
-                      id="{{ form.description.id_for_label }}"
-                      rows="4"
-                      class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200 resize-none"
-                      placeholder="Motivo da saída, destino dos produtos... (opcional)">{{ form.description.value|default:'' }}</textarea>
-            {% if form.description.errors %}
-              <div class="mt-1 text-sm text-red-400">{{ form.description.errors.0 }}</div>
-            {% endif %}
-            <p class="mt-1 text-xs text-gray-500">Campo opcional. Adicione informações relevantes sobre a saída.</p>
+        </div>
+        <div id="parcela-box" class="bg-violet-600/20 backdrop-blur-sm border border-violet-500/30 rounded-xl p-4" style="display:none;">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-violet-200 text-sm font-medium">Valor da Parcela</p>
+              <p class="text-xl font-bold text-white" id="parcela-value">R$ 0,00</p>
+              <p class="text-violet-300 text-xs" id="parcela-info">1x</p>
+            </div>
+            <div class="p-2 bg-violet-600/30 rounded-lg">
+              <i class="bi bi-calendar3 text-violet-300"></i>
+            </div>
+          </div>
+        </div>
+        <div id="taxa-box" class="bg-red-600/20 backdrop-blur-sm border border-red-500/30 rounded-xl p-4" style="display:none;">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-red-200 text-sm font-medium">Taxa</p>
+              <p class="text-xl font-bold text-white" id="taxa-value">R$ 0,00</p>
+              <p class="text-red-300 text-xs" id="taxa-percent">0%</p>
+            </div>
+            <div class="p-2 bg-red-600/30 rounded-lg">
+              <i class="bi bi-percent text-red-300"></i>
+            </div>
+          </div>
+        </div>
+        <div id="liquido-box" class="bg-green-600/20 backdrop-blur-sm border border-green-500/30 rounded-xl p-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-green-200 text-sm font-medium">Valor Liquido</p>
+              <p class="text-xl font-bold text-white" id="liquido-value">R$ 0,00</p>
+            </div>
+            <div class="p-2 bg-green-600/30 rounded-lg">
+              <i class="bi bi-check-circle text-green-300"></i>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Warning Section -->
-      <div class="bg-amber-500/20 backdrop-blur-sm border border-amber-500/50 rounded-xl p-6">
-        <div class="flex items-start">
-          <div class="flex-shrink-0">
-            <i class="bi bi-exclamation-triangle-fill text-2xl text-amber-400"></i>
-          </div>
-          <div class="ml-4">
-            <h4 class="text-lg font-medium text-amber-200 mb-2">Atenção: Verificação de Estoque</h4>
-            <p class="text-amber-300 text-sm leading-relaxed mb-3">
-              Certifique-se de que o produto selecionado possui quantidade suficiente em estoque antes de registrar a saída.
-            </p>
-            <div class="bg-amber-600/30 rounded-lg p-3">
-              <p class="text-amber-100 text-xs">
-                <strong>Dica:</strong> A quantidade disponível em estoque aparece ao lado do nome do produto na lista de seleção.
-              </p>
-            </div>
-          </div>
-        </div>
+      <!-- Checkbox de Taxa -->
+      <div id="taxa-checkbox-container" class="mt-4 hidden">
+        <label class="flex items-center space-x-3 cursor-pointer">
+          <input type="checkbox" id="id_pass_fee_to_client" name="pass_fee_to_client" 
+                 class="w-5 h-5 rounded border-gray-600 bg-gray-800/50 text-violet-600 focus:ring-violet-500 focus:ring-offset-0 cursor-pointer">
+          <span class="text-gray-300 text-sm">
+            <i class="bi bi-info-circle mr-1"></i>
+            Taxa repassada ao cliente (cliente paga a taxa)
+          </span>
+        </label>
+        <p class="text-xs text-gray-500 mt-1 ml-8">
+          Marcar se o cliente pagara a taxa. Desmarcar se a loja absorver a taxa.
+        </p>
       </div>
+    </div>
 
-      <!-- Summary Section -->
-      <div class="bg-red-600/20 backdrop-blur-sm border border-red-500/30 rounded-xl p-6">
-        <h4 class="text-lg font-semibold text-red-200 mb-4 flex items-center">
-          <i class="bi bi-info-circle mr-2"></i>
-          Resumo da Operação
-        </h4>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div class="bg-red-700/20 rounded-lg p-4">
-            <div class="flex items-center">
-              <i class="bi bi-arrow-down-circle text-red-300 text-xl mr-3"></i>
-              <div>
-                <p class="text-red-200 text-sm">Tipo de Operação</p>
-                <p class="text-white font-semibold">Saída de Estoque</p>
-              </div>
-            </div>
-          </div>
-          <div class="bg-orange-700/20 rounded-lg p-4">
-            <div class="flex items-center">
-              <i class="bi bi-dash-circle text-orange-300 text-xl mr-3"></i>
-              <div>
-                <p class="text-orange-200 text-sm">Efeito no Estoque</p>
-                <p class="text-white font-semibold">Diminui Quantidade</p>
-              </div>
-            </div>
-          </div>
-          <div class="bg-violet-700/20 rounded-lg p-4">
-            <div class="flex items-center">
-              <i class="bi bi-clock text-violet-300 text-xl mr-3"></i>
-              <div>
-                <p class="text-violet-200 text-sm">Data da Saída</p>
-                <p class="text-white font-semibold">{{ "now"|date:"d/m/Y H:i" }}</p>
-              </div>
-            </div>
-          </div>
-        </div>
+    <!-- Botoes -->
+    <div class="border-t border-white/10 pt-6 mb-8">
+      <div class="flex flex-col sm:flex-row gap-4 justify-end">
+        <a href="{% url 'outflow_list' %}" 
+           class="inline-flex items-center justify-center px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-colors duration-200">
+          Cancelar
+        </a>
+        <button type="submit" 
+                class="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transform transition-all duration-200 hover:scale-[1.02]">
+          <i class="bi bi-check2 mr-2"></i>
+          Registrar Saida
+        </button>
       </div>
+    </div>
+  </form>
 
-      <!-- Submit Buttons -->
-      <div class="border-t border-white/10 pt-6">
-        <div class="flex flex-col sm:flex-row gap-4 justify-end">
-          <a href="{% url 'outflow_list' %}" 
-             class="inline-flex items-center justify-center px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-colors duration-200">
-            Cancelar
-          </a>
-          <button type="submit" 
-                  class="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transform transition-all duration-200 hover:scale-[1.02]">
-            <i class="bi bi-check2 mr-2"></i>
-            Registrar Saída
-          </button>
-        </div>
-      </div>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const container = document.getElementById('items-container');
+    const addBtn = document.getElementById('add-item-btn');
+    const totalInput = document.getElementById('id_total_value');
+    let formIdx = 0;
 
-      <!-- Form Errors -->
-      {% if form.non_field_errors %}
-        <div class="bg-red-500/20 backdrop-blur-sm border border-red-500/50 rounded-lg p-4">
-          <div class="flex items-start">
-            <div class="flex-shrink-0">
-              <i class="bi bi-exclamation-triangle-fill text-red-400"></i>
-            </div>
-            <div class="ml-3">
-              <h3 class="text-sm font-medium text-red-200">Erro no formulário</h3>
-              <div class="mt-2 text-sm text-red-300">
-                <ul class="list-disc pl-5 space-y-1">
-                  {% for error in form.non_field_errors %}
-                    <li>{{ error }}</li>
-                  {% endfor %}
-                </ul>
-              </div>
+    // Lista de produtos vinda do servidor
+    const products = {{ products_json|safe }};
+
+    function buildProductOptions(selectedId) {
+      let html = '<option value="">Selecione...</option>';
+      products.forEach(p => {
+        const selected = p.id === selectedId ? 'selected' : '';
+        html += '<option value="' + p.id + '" data-price="' + p.price + '" ' + selected + '>' + p.title + ' (R$ ' + p.price.toFixed(2) + ')</option>';
+      });
+      return html;
+    }
+
+    function formatCurrency(value) {
+      return 'R$ ' + value.toFixed(2).replace('.', ',');
+    }
+
+    function updateSubtotal(row) {
+      const qty = parseFloat(row.querySelector('.item-quantity').value) || 0;
+      const price = parseFloat(row.querySelector('.item-price').value) || 0;
+      const subtotal = qty * price;
+      row.querySelector('.item-subtotal').textContent = formatCurrency(subtotal);
+      updateTotal();
+    }
+
+    function updateTotal() {
+      let total = 0;
+      document.querySelectorAll('.item-row').forEach(row => {
+        if (!row.querySelector('.delete-check')?.checked) {
+          const qty = parseFloat(row.querySelector('.item-quantity')?.value) || 0;
+          const price = parseFloat(row.querySelector('.item-price')?.value) || 0;
+          total += qty * price;
+        }
+      });
+      totalInput.value = total.toFixed(2);
+    }
+
+    function bindEvents(row) {
+      const productSelect = row.querySelector('.product-select');
+      const qtyInput = row.querySelector('.item-quantity');
+      const priceInput = row.querySelector('.item-price');
+      const deleteCheck = row.querySelector('.delete-check');
+
+      if (productSelect) {
+        productSelect.addEventListener('change', function() {
+          const option = this.options[this.selectedIndex];
+          if (option.dataset.price) {
+            priceInput.value = option.dataset.price;
+            updateSubtotal(row);
+          }
+        });
+      }
+
+      if (qtyInput) qtyInput.addEventListener('input', () => updateSubtotal(row));
+      if (priceInput) priceInput.addEventListener('input', () => updateSubtotal(row));
+      if (deleteCheck) deleteCheck.addEventListener('change', () => updateTotal());
+    }
+
+    function createItemRow(idx, selectedProductId) {
+      const div = document.createElement('div');
+      div.className = 'item-row bg-gray-800/50 rounded-xl p-4 border border-white/10 relative';
+      div.innerHTML = `
+        <input type="hidden" name="items-${idx}-id" id="items-${idx}-id">
+        <label class="absolute top-2 right-2 cursor-pointer">
+          <input type="checkbox" name="items-${idx}-DELETE" class="delete-check hidden">
+          <i class="bi bi-x-circle text-red-400 hover:text-red-300 text-xl"></i>
+        </label>
+        <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
+          <div class="sm:col-span-5">
+            <label class="block text-xs font-medium text-gray-400 mb-1">Produto</label>
+            <select name="items-${idx}-product" class="block w-full px-3 py-2 bg-gray-800/50 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent product-select">
+              ${buildProductOptions(selectedProductId)}
+            </select>
+          </div>
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-medium text-gray-400 mb-1">Qtd</label>
+            <input type="number" name="items-${idx}-quantity" value="1" min="1"
+                   class="block w-full px-3 py-2 bg-gray-800/50 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent item-quantity">
+          </div>
+          <div class="sm:col-span-3">
+            <label class="block text-xs font-medium text-gray-400 mb-1">Preco Unit.</label>
+            <input type="number" name="items-${idx}-unit_price" value="0" step="0.01" readonly
+                   class="block w-full px-3 py-2 bg-gray-700/50 border border-gray-600 rounded-lg text-white text-sm cursor-not-allowed item-price">
+          </div>
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-medium text-gray-400 mb-1">Subtotal</label>
+            <div class="px-3 py-2 bg-gray-700/50 border border-gray-600 rounded-lg text-green-400 font-medium text-sm item-subtotal">
+              R$ 0,00
             </div>
           </div>
         </div>
-      {% endif %}
-    </form>
-  </div>
+      `;
+      return div;
+    }
+
+    // Adicionar primeira linha vazia
+    function addEmptyRow(selectedProductId) {
+      const row = createItemRow(formIdx, selectedProductId);
+      container.appendChild(row);
+      bindEvents(row);
+      formIdx++;
+      updateTotalForms();
+    }
+
+    // Atualizar TOTAL_FORMS no management form
+    function updateTotalForms() {
+      const totalFormsInput = document.querySelector('input[name="items-TOTAL_FORMS"]');
+      if (totalFormsInput) {
+        totalFormsInput.value = formIdx;
+      }
+    }
+
+    // Resumo financeiro
+    const downPaymentInput = document.getElementById('{{ form.down_payment.id_for_label }}');
+    const numInstallmentsInput = document.getElementById('{{ form.num_installments.id_for_label }}');
+    const paymentMethodInput = document.getElementById('{{ form.payment_method.id_for_label }}');
+    const restanteEl = document.getElementById('restante-value');
+    const parcelaBox = document.getElementById('parcela-box');
+    const parcelaValue = document.getElementById('parcela-value');
+    const parcelaInfo = document.getElementById('parcela-info');
+    const taxaBox = document.getElementById('taxa-box');
+    const taxaValue = document.getElementById('taxa-value');
+    const taxaPercent = document.getElementById('taxa-percent');
+    const liquidoBox = document.getElementById('liquido-box');
+    const liquidoValue = document.getElementById('liquido-value');
+    const taxaCheckboxContainer = document.getElementById('taxa-checkbox-container');
+    const taxaCheckbox = document.getElementById('id_pass_fee_to_client');
+
+    // Taxas por forma de pagamento
+    const TAXAS = {
+      'debit': 1.37,
+      'credit': {
+        1: 3.15,
+        2: 5.39,
+        3: 6.12,
+        4: 6.85,
+        5: 7.57,
+        6: 8.28,
+      }
+    };
+
+    function getTaxaPercent(paymentMethod, numInstallments) {
+      if (paymentMethod === 'debit') {
+        return TAXAS.debit;
+      } else if (paymentMethod === 'credit') {
+        const parcelas = Math.min(Math.max(parseInt(numInstallments) || 1, 1), 6);
+        return TAXAS.credit[parcelas] || 0;
+      }
+      return 0;
+    }
+
+    function updateResumo() {
+      const total = parseFloat(totalInput.value) || 0;
+      const entrada = parseFloat(downPaymentInput.value) || 0;
+      const parcelas = parseInt(numInstallmentsInput.value) || 1;
+      const paymentMethod = paymentMethodInput.value;
+      const restante = Math.max(total - entrada, 0);
+      const passFee = taxaCheckbox.checked;
+
+      restanteEl.textContent = formatCurrency(restante);
+
+      if (parcelas > 1 && restante > 0) {
+        const valorParcela = restante / parcelas;
+        parcelaValue.textContent = formatCurrency(valorParcela);
+        parcelaInfo.textContent = parcelas + 'x de ' + formatCurrency(valorParcela);
+        parcelaBox.style.display = '';
+      } else {
+        parcelaBox.style.display = 'none';
+      }
+
+      // Calcular taxa
+      const taxaPct = getTaxaPercent(paymentMethod, parcelas);
+      const taxaValor = total * (taxaPct / 100);
+
+      if (taxaPct > 0) {
+        taxaValue.textContent = formatCurrency(taxaValor);
+        taxaPercent.textContent = taxaPct.toFixed(2) + '%';
+        taxaBox.style.display = '';
+        taxaCheckboxContainer.classList.remove('hidden');
+      } else {
+        taxaBox.style.display = 'none';
+        taxaCheckboxContainer.classList.add('hidden');
+      }
+
+      // Valor liquido depende de quem paga a taxa
+      let liquido;
+      if (passFee && taxaPct > 0) {
+        // Cliente paga a taxa: loja recebe o total
+        liquido = total;
+        liquidoValue.textContent = formatCurrency(liquido);
+        liquidoBox.className = 'bg-green-600/20 backdrop-blur-sm border border-green-500/30 rounded-xl p-4';
+        liquidoValue.className = 'text-xl font-bold text-green-400';
+      } else {
+        // Loja absorve a taxa: loja recebe total - taxa
+        liquido = total - taxaValor;
+        liquidoValue.textContent = formatCurrency(liquido);
+        if (taxaPct > 0) {
+          liquidoBox.className = 'bg-yellow-600/20 backdrop-blur-sm border border-yellow-500/30 rounded-xl p-4';
+          liquidoValue.className = 'text-xl font-bold text-yellow-400';
+        } else {
+          liquidoBox.className = 'bg-green-600/20 backdrop-blur-sm border border-green-500/30 rounded-xl p-4';
+          liquidoValue.className = 'text-xl font-bold text-white';
+        }
+      }
+    }
+
+    downPaymentInput.addEventListener('input', updateResumo);
+    numInstallmentsInput.addEventListener('input', updateResumo);
+    paymentMethodInput.addEventListener('change', updateResumo);
+    taxaCheckbox.addEventListener('change', updateResumo);
+
+    // Atualizar resumo quando total muda
+    const originalUpdateTotal = updateTotal;
+    updateTotal = function() {
+      originalUpdateTotal();
+      updateResumo();
+    };
+
+    // Adicionar linha
+    addBtn.addEventListener('click', function() { addEmptyRow(); });
+
+    // Adicionar primeira linha com produto pre-selecionado
+    const initialProductId = '{{ initial_product_id|default:'' }}';
+    addEmptyRow(initialProductId);
+
+    // Calcular resumo inicial
+    updateResumo();
+
+    // Enter nao salva, vai pro proximo campo
+    document.getElementById('outflow-form').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && e.target.tagName !== 'BUTTON' && e.target.tagName !== 'A') {
+        e.preventDefault();
+        const form = e.target.form;
+        const inputs = Array.from(form.querySelectorAll('input:not([type="hidden"]):not([readonly]), select, textarea'));
+        const idx = inputs.indexOf(e.target);
+        if (idx >= 0 && idx < inputs.length - 1) {
+          inputs[idx + 1].focus();
+        }
+      }
+    });
+
+    // Salvar dados do formulario antes de ir para criar cliente
+    const clientCreateBtn = document.getElementById('client-create-btn');
+    if (clientCreateBtn) {
+      clientCreateBtn.addEventListener('click', function() {
+        const formData = {
+          items: [],
+          client: document.getElementById('{{ form.client.id_for_label }}').value,
+          payment_method: document.getElementById('{{ form.payment_method.id_for_label }}').value,
+          down_payment: document.getElementById('{{ form.down_payment.id_for_label }}').value,
+          num_installments: document.getElementById('{{ form.num_installments.id_for_label }}').value,
+          description: document.getElementById('{{ form.description.id_for_label }}').value,
+        };
+        
+        // Salvar itens
+        document.querySelectorAll('.item-row').forEach(row => {
+          const productSelect = row.querySelector('.product-select');
+          const qtyInput = row.querySelector('.item-quantity');
+          if (productSelect && qtyInput) {
+            formData.items.push({
+              product: productSelect.value,
+              quantity: qtyInput.value,
+            });
+          }
+        });
+        
+        localStorage.setItem('outflowFormData', JSON.stringify(formData));
+      });
+    }
+
+    // Restaurar dados do formulario ao voltar
+    const savedData = localStorage.getItem('outflowFormData');
+    if (savedData) {
+      localStorage.removeItem('outflowFormData');
+      try {
+        const formData = JSON.parse(savedData);
+        
+        // Restaurar campos
+        if (formData.client) {
+          const clientSelect = document.getElementById('{{ form.client.id_for_label }}');
+          if (clientSelect) clientSelect.value = formData.client;
+        }
+        if (formData.payment_method) {
+          const paymentSelect = document.getElementById('{{ form.payment_method.id_for_label }}');
+          if (paymentSelect) paymentSelect.value = formData.payment_method;
+        }
+        if (formData.down_payment) {
+          const downPaymentInput = document.getElementById('{{ form.down_payment.id_for_label }}');
+          if (downPaymentInput) downPaymentInput.value = formData.down_payment;
+        }
+        if (formData.num_installments) {
+          const installmentsInput = document.getElementById('{{ form.num_installments.id_for_label }}');
+          if (installmentsInput) installmentsInput.value = formData.num_installments;
+        }
+        if (formData.description) {
+          const descriptionInput = document.getElementById('{{ form.description.id_for_label }}');
+          if (descriptionInput) descriptionInput.value = formData.description;
+        }
+        
+        // Restaurar itens
+        if (formData.items && formData.items.length > 0) {
+          container.innerHTML = '';
+          formData.items.forEach(item => {
+            addEmptyRow(item.product);
+            const lastRow = container.lastElementChild;
+            if (lastRow) {
+              const qtyInput = lastRow.querySelector('.item-quantity');
+              if (qtyInput) qtyInput.value = item.quantity;
+            }
+          });
+          updateTotal();
+          updateResumo();
+        }
+      } catch (e) {
+        console.error('Erro ao restaurar dados do formulario:', e);
+      }
+    }
+  });
+  </script>
 {% endblock %}

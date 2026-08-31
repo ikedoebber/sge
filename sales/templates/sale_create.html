@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+
+{% block title %}SGE - Nova Venda{% endblock %}
+
+{% block content %}
+  <!-- Page Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 md:mb-8">
+    <div>
+      <h1 class="text-2xl font-bold text-white mb-2">Nova Venda</h1>
+      <p class="text-gray-400">Registre uma nova venda no sistema</p>
+    </div>
+    <a href="{% url 'sale_list' %}"
+       class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-colors duration-200">
+      <i class="bi bi-arrow-left mr-2"></i>
+      Voltar
+    </a>
+  </div>
+
+  <!-- Form Container -->
+  <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-4 sm:p-6 lg:p-8">
+    <form method="post" class="space-y-6">
+      {% csrf_token %}
+
+      <!-- Sale Information Section -->
+      <div>
+        <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+          <i class="bi bi-receipt mr-2 text-violet-400"></i>
+          Informacoes da Venda
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Client Field -->
+          <div>
+            <label for="{{ form.client.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">
+              {{ form.client.label }} <span class="text-red-400">*</span>
+            </label>
+            <select name="{{ form.client.name }}"
+                    id="{{ form.client.id_for_label }}"
+                    {% if form.client.field.required %}required{% endif %}
+                    class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200">
+              <option value="">Selecione o cliente</option>
+              {% for value, label in form.client.field.choices %}
+                <option value="{{ value }}" {% if form.client.value|stringformat:"s" == value|stringformat:"s" %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+            {% if form.client.errors %}
+              <div class="mt-1 text-sm text-red-400">{{ form.client.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Sale Date Field -->
+          <div>
+            <label for="{{ form.sale_date.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">
+              {{ form.sale_date.label }} <span class="text-red-400">*</span>
+            </label>
+            <input type="date"
+                   name="{{ form.sale_date.name }}"
+                   id="{{ form.sale_date.id_for_label }}"
+                   value="{{ form.sale_date.value|default:'' }}"
+                   {% if form.sale_date.field.required %}required{% endif %}
+                   class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200">
+            {% if form.sale_date.errors %}
+              <div class="mt-1 text-sm text-red-400">{{ form.sale_date.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Description Field -->
+          <div class="md:col-span-2">
+            <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">
+              {{ form.description.label }} <span class="text-gray-500 text-xs font-normal">(opcional)</span>
+            </label>
+            <textarea name="{{ form.description.name }}"
+                      id="{{ form.description.id_for_label }}"
+                      rows="3"
+                      {% if form.description.field.required %}required{% endif %}
+                      class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200 resize-none"
+                      placeholder="Descricao da venda... (opcional)">{{ form.description.value|default:'' }}</textarea>
+            {% if form.description.errors %}
+              <div class="mt-1 text-sm text-red-400">{{ form.description.errors.0 }}</div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Financial Information Section -->
+      <div class="border-t border-white/10 pt-6">
+        <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+          <i class="bi bi-currency-dollar mr-2 text-violet-400"></i>
+          Informacoes Financeiras
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Total Value Field -->
+          <div>
+            <label for="{{ form.total_value.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">
+              {{ form.total_value.label }} <span class="text-red-400">*</span>
+            </label>
+            <input type="number"
+                   name="{{ form.total_value.name }}"
+                   id="{{ form.total_value.id_for_label }}"
+                   value="{{ form.total_value.value|default:'' }}"
+                   step="0.01"
+                   {% if form.total_value.field.required %}required{% endif %}
+                   class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200"
+                   placeholder="0.00">
+            {% if form.total_value.errors %}
+              <div class="mt-1 text-sm text-red-400">{{ form.total_value.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Down Payment Field -->
+          <div>
+            <label for="{{ form.down_payment.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">
+              {{ form.down_payment.label }} <span class="text-gray-500 text-xs font-normal">(opcional)</span>
+            </label>
+            <input type="number"
+                   name="{{ form.down_payment.name }}"
+                   id="{{ form.down_payment.id_for_label }}"
+                   value="{{ form.down_payment.value|default:'' }}"
+                   step="0.01"
+                   {% if form.down_payment.field.required %}required{% endif %}
+                   class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200"
+                   placeholder="0.00">
+            {% if form.down_payment.errors %}
+              <div class="mt-1 text-sm text-red-400">{{ form.down_payment.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Number of Installments Field -->
+          <div>
+            <label for="{{ form.num_installments.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">
+              {{ form.num_installments.label }} <span class="text-gray-500 text-xs font-normal">(opcional)</span>
+            </label>
+            <input type="number"
+                   name="{{ form.num_installments.name }}"
+                   id="{{ form.num_installments.id_for_label }}"
+                   value="{{ form.num_installments.value|default:'' }}"
+                   {% if form.num_installments.field.required %}required{% endif %}
+                   class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200"
+                   placeholder="1">
+            {% if form.num_installments.errors %}
+              <div class="mt-1 text-sm text-red-400">{{ form.num_installments.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Payment Method Field -->
+          <div>
+            <label for="{{ form.payment_method.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">
+              {{ form.payment_method.label }} <span class="text-gray-500 text-xs font-normal">(opcional)</span>
+            </label>
+            <select name="{{ form.payment_method.name }}"
+                    id="{{ form.payment_method.id_for_label }}"
+                    {% if form.payment_method.field.required %}required{% endif %}
+                    class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200">
+              <option value="">Selecione o metodo</option>
+              {% for value, label in form.payment_method.field.choices %}
+                <option value="{{ value }}" {% if form.payment_method.value == value %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+            {% if form.payment_method.errors %}
+              <div class="mt-1 text-sm text-red-400">{{ form.payment_method.errors.0 }}</div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Buttons -->
+      <div class="border-t border-white/10 pt-6">
+        <div class="flex flex-col sm:flex-row gap-4 justify-end">
+          <a href="{% url 'sale_list' %}"
+             class="inline-flex items-center justify-center px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-colors duration-200">
+            Cancelar
+          </a>
+          <button type="submit"
+                  class="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transform transition-all duration-200 hover:scale-[1.02]">
+            <i class="bi bi-check2 mr-2"></i>
+            Registrar Venda
+          </button>
+        </div>
+      </div>
+
+      <!-- Form Errors -->
+      {% if form.non_field_errors %}
+        <div class="bg-red-500/20 backdrop-blur-sm border border-red-500/50 rounded-lg p-4">
+          <div class="flex items-start">
+            <div class="flex-shrink-0">
+              <i class="bi bi-exclamation-triangle-fill text-red-400"></i>
+            </div>
+            <div class="ml-3">
+              <h3 class="text-sm font-medium text-red-200">Erro no formulario</h3>
+              <div class="mt-2 text-sm text-red-300">
+                <ul class="list-disc pl-5 space-y-1">
+                  {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </form>
+  </div>
+{% endblock %}

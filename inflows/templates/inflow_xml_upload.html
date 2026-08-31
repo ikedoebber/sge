@@ -1,0 +1,410 @@
+{% extends 'base.html' %}
+
+{% block title %}SGE - Importar Entrada via XML{% endblock %}
+
+{% block content %}
+  <!-- Page Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 md:mb-8">
+    <div>
+      <h1 class="text-2xl font-bold text-white mb-2">Importar Entrada via XML</h1>
+      <p class="text-gray-400">Importe notas fiscais eletronicas (NFe) para registrar entradas em estoque</p>
+    </div>
+    <a href="{% url 'inflow_list' %}" 
+       class="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-colors duration-200">
+      <i class="bi bi-arrow-left mr-2"></i>
+      Voltar
+    </a>
+  </div>
+
+  {% if processing %}
+    <!-- ============================== -->
+    <!-- PREVIEW: Itens prontos para importar -->
+    <!-- ============================== -->
+    
+    <!-- Cards de Resumo -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+      <div class="bg-violet-600/20 backdrop-blur-sm border border-violet-500/30 rounded-xl p-5">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-violet-200 text-sm font-medium">Itens</p>
+            <p class="text-3xl font-bold text-white">{{ total_items }}</p>
+          </div>
+          <div class="p-3 bg-violet-600/30 rounded-xl">
+            <i class="bi bi-box-seam text-2xl text-violet-300"></i>
+          </div>
+        </div>
+      </div>
+      <div class="bg-blue-600/20 backdrop-blur-sm border border-blue-500/30 rounded-xl p-5">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-blue-200 text-sm font-medium">Valor Total</p>
+            <p class="text-2xl font-bold text-white">R$ {{ total_value|floatformat:2 }}</p>
+          </div>
+          <div class="p-3 bg-blue-600/30 rounded-xl">
+            <i class="bi bi-currency-dollar text-2xl text-blue-300"></i>
+          </div>
+        </div>
+      </div>
+      <div class="bg-green-600/20 backdrop-blur-sm border border-green-500/30 rounded-xl p-5">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-green-200 text-sm font-medium">Novos Produtos</p>
+            <p class="text-3xl font-bold text-white">
+              {% with count=0 %}
+                {% for item in preview_items %}{% if item.product_created %}{% with count=count|add:1 %}{% endwith %}{% endif %}{% endfor %}
+                {{ count }}
+              {% endwith %}
+            </p>
+          </div>
+          <div class="p-3 bg-green-600/30 rounded-xl">
+            <i class="bi bi-plus-circle text-2xl text-green-300"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fornecedor e Marca -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <!-- Fornecedor -->
+      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+        <h3 class="text-lg font-semibold text-white flex items-center mb-4">
+          <i class="bi bi-building mr-2 text-violet-400"></i>
+          Fornecedor
+          <span class="ml-2 text-xs font-normal text-gray-400">(opcional)</span>
+        </h3>
+        
+        <select name="supplier_id" id="supplier_select"
+                class="w-full bg-gray-800/50 border border-gray-600 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-colors">
+          <option value="">Nenhum fornecedor</option>
+          {% for s in all_suppliers %}
+            <option value="{{ s.id }}" {% if supplier and s.id == supplier.id %}selected{% endif %}>
+              {{ s.name }}
+              {% if supplier and s.id == supplier.id and supplier_created %} (novo da NFe){% endif %}
+            </option>
+          {% endfor %}
+        </select>
+        
+        {% if emitente and emitente.razao_social %}
+          <p class="text-gray-400 text-xs mt-2">
+            <i class="bi bi-info-circle mr-1"></i>
+            NFe identificou: <span class="text-gray-300">{{ emitente.razao_social }}</span>
+          </p>
+        {% endif %}
+      </div>
+      
+      <!-- Marca -->
+      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+        <h3 class="text-lg font-semibold text-white flex items-center mb-4">
+          <i class="bi bi-tag mr-2 text-violet-400"></i>
+          Marca para Produtos Novos
+          <span class="ml-2 text-xs font-normal text-gray-400">(opcional)</span>
+        </h3>
+        
+        <select name="brand_id" id="brand_select"
+                class="w-full bg-gray-800/50 border border-gray-600 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-colors">
+          <option value="">Marca padrao (Sem Marca)</option>
+          {% for b in all_brands %}
+            <option value="{{ b.id }}">{{ b.name }}</option>
+          {% endfor %}
+        </select>
+        
+        <p class="text-gray-400 text-xs mt-2">
+          <i class="bi bi-info-circle mr-1"></i>
+          Aplica apenas a produtos novos criados nesta importacao
+        </p>
+      </div>
+    </div>
+
+    <!-- Tabela de Itens -->
+    <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 overflow-hidden mb-8">
+      <div class="p-6 border-b border-white/10">
+        <h3 class="text-lg font-semibold text-white flex items-center">
+          <i class="bi bi-list-check mr-2 text-violet-400"></i>
+          Itens que serao adicionados ao estoque
+        </h3>
+        <p class="text-gray-400 text-sm mt-1">Produtos novos serao criados automaticamente. Produtos ja existentes serao identificados pelo codigo.</p>
+      </div>
+      
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead>
+            <tr class="bg-white/5 border-b border-white/10">
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">#</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Produto</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Codigo</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Qtd</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Custo Unit.</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Venda Unit.</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Vl. Total</th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Status</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-white/10">
+            {% for item in preview_items %}
+              <tr class="hover:bg-white/5 transition-colors duration-200">
+                <td class="px-4 py-3 text-sm text-gray-300">{{ forloop.counter }}</td>
+                <td class="px-4 py-3">
+                  <div class="text-sm font-medium text-white">{{ item.product.title }}</div>
+                  {% if item.xml.ean %}
+                    <div class="text-xs text-gray-500">EAN: {{ item.xml.ean }}</div>
+                  {% endif %}
+                </td>
+                <td class="px-4 py-3 text-sm text-gray-300">{{ item.xml.codigo|default:"-" }}</td>
+                <td class="px-4 py-3">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    +{{ item.xml.quantidade|floatformat:0 }}
+                  </span>
+                </td>
+                <td class="px-4 py-3">
+                  {% if item.xml.preco_custo %}
+                    <span class="text-sm font-medium text-green-400">R$ {{ item.xml.preco_custo|floatformat:2 }}</span>
+                  {% else %}
+                    <span class="text-sm text-gray-400">R$ {{ item.xml.valor_unitario|floatformat:2 }}</span>
+                  {% endif %}
+                </td>
+                <td class="px-4 py-3">
+                  {% if item.xml.preco_venda %}
+                    <span class="text-sm font-medium text-blue-400">R$ {{ item.xml.preco_venda|floatformat:2 }}</span>
+                  {% else %}
+                    <span class="text-sm text-gray-500">-</span>
+                  {% endif %}
+                </td>
+                <td class="px-4 py-3 text-sm text-white font-medium">R$ {{ item.xml.valor_total|floatformat:2 }}</td>
+                <td class="px-4 py-3">
+                  {% if item.product_created %}
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                      <i class="bi bi-plus-circle mr-1"></i> Novo
+                    </span>
+                  {% else %}
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      <i class="bi bi-check-circle mr-1"></i> Existente
+                    </span>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+          <tfoot>
+            <tr class="bg-white/5 border-t border-white/10">
+              <td colspan="3" class="px-4 py-3 text-sm font-medium text-gray-300">Total</td>
+              <td class="px-4 py-3">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-200 text-green-900">
+                  +{{ total_items }}
+                </span>
+              </td>
+              <td colspan="3" class="px-4 py-3 text-sm font-bold text-white">R$ {{ total_value|floatformat:2 }}</td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+    <!-- Botoes de Acao -->
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="confirm_import" value="true">
+      
+      <div class="border-t border-white/10 pt-6">
+        <div class="flex flex-col sm:flex-row gap-4 justify-end">
+          <a href="{% url 'inflow_xml_upload' %}" 
+             class="inline-flex items-center justify-center px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-colors duration-200">
+            <i class="bi bi-x-circle mr-2"></i>
+            Cancelar
+          </a>
+          <button type="submit" 
+                  class="inline-flex items-center justify-center px-8 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transform transition-all duration-200 hover:scale-[1.02]">
+            <i class="bi bi-check2-all mr-2"></i>
+            Confirmar Importacao de {{ total_items }} Itens
+          </button>
+        </div>
+      </div>
+    </form>
+
+  {% else %}
+    <!-- ============================== -->
+    <!-- STEP 1: UPLOAD DO XML -->
+    <!-- ============================== -->
+    
+    <!-- Info Card -->
+    <div class="bg-blue-600/20 backdrop-blur-sm border border-blue-500/30 rounded-2xl p-6 mb-8">
+      <div class="flex items-start">
+        <div class="flex-shrink-0">
+          <i class="bi bi-info-circle-fill text-2xl text-blue-400"></i>
+        </div>
+        <div class="ml-4">
+          <h3 class="text-lg font-medium text-blue-200 mb-2">Como funciona?</h3>
+          <ol class="text-blue-300 text-sm space-y-1 list-decimal pl-5">
+            <li>Selecione o arquivo XML da Nota Fiscal Eletronica (NFe)</li>
+            <li>O sistema analisa o XML e extrai fornecedor, produtos, quantidades e precos</li>
+            <li>Fornecedores e produtos ja existentes sao identificados automaticamente</li>
+            <li>Produtos novos sao criados automaticamente com preco de custo do XML</li>
+            <li>Revise o preview e confirme para registrar as entradas no estoque</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upload Form -->
+    <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-4 sm:p-6 lg:p-8">
+      <form method="post" enctype="multipart/form-data" class="space-y-8">
+        {% csrf_token %}
+        
+        <!-- Upload Area -->
+        <div>
+          <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+            <i class="bi bi-file-earmark-code mr-2 text-violet-400"></i>
+            Arquivo XML da NFe
+          </h3>
+          
+          <div class="border-2 border-dashed border-gray-600 rounded-xl p-4 sm:p-6 md:p-8 text-center hover:border-violet-500 transition-colors duration-200"
+               id="dropZone">
+            <div class="flex flex-col items-center">
+              <div class="p-4 bg-violet-600/20 rounded-full mb-4">
+                <i class="bi bi-cloud-arrow-up text-4xl text-violet-400"></i>
+              </div>
+              <p class="text-lg font-medium text-white mb-2">
+                Arraste o arquivo XML aqui
+              </p>
+              <p class="text-sm text-gray-400 mb-4">
+                ou clique para selecionar
+              </p>
+              <label for="xml_file" 
+                     class="inline-flex items-center px-6 py-3 bg-violet-600 hover:bg-violet-700 text-white font-medium rounded-lg cursor-pointer transition-colors duration-200">
+                <i class="bi bi-folder2-open mr-2"></i>
+                Selecionar Arquivo
+              </label>
+              <input type="file" 
+                     name="xml_file" 
+                     id="xml_file" 
+                     accept=".xml"
+                     class="hidden"
+                     onchange="handleFileSelect(this)">
+            </div>
+          </div>
+          
+          <!-- Selected File Display -->
+          <div id="fileInfo" class="hidden mt-4 p-4 bg-gray-800/50 rounded-lg border border-gray-600">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="bi bi-file-earmark-code text-2xl text-green-400 mr-3"></i>
+                <div>
+                  <p class="text-white font-medium" id="fileName"></p>
+                  <p class="text-gray-400 text-sm" id="fileSize"></p>
+                </div>
+              </div>
+              <button type="button" onclick="clearFile()" 
+                      class="text-gray-400 hover:text-red-400 transition-colors">
+                <i class="bi bi-x-lg"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="border-t border-white/10 pt-6">
+          <div class="flex flex-col sm:flex-row gap-4 justify-end">
+            <a href="{% url 'inflow_list' %}" 
+               class="inline-flex items-center justify-center px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-colors duration-200">
+              Cancelar
+            </a>
+            <button type="submit" 
+                    id="uploadBtn"
+                    disabled
+                    class="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transform transition-all duration-200 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100">
+              <i class="bi bi-upload mr-2"></i>
+              Analisar XML
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Formatos Suportados -->
+    <div class="mt-8 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+      <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+        <i class="bi bi-question-circle mr-2 text-violet-400"></i>
+        Formatos Suportados
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-gray-800/50 rounded-lg p-4">
+          <div class="flex items-center mb-2">
+            <i class="bi bi-check-circle-fill text-green-400 mr-2"></i>
+            <span class="text-white font-medium">NFe (Nota Fiscal Eletronica)</span>
+          </div>
+          <p class="text-gray-400 text-sm">
+            Arquivos XML de NFe com namespace padrao da SEFAZ.
+          </p>
+        </div>
+        <div class="bg-gray-800/50 rounded-lg p-4">
+          <div class="flex items-center mb-2">
+            <i class="bi bi-check-circle-fill text-green-400 mr-2"></i>
+            <span class="text-white font-medium">NFCe (Nota Fiscal de Consumidor)</span>
+          </div>
+          <p class="text-gray-400 text-sm">
+            Arquivos XML de NFCe com a mesma estrutura de itens.
+          </p>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  <script>
+    // =====================
+    // UPLOAD STEP SCRIPTS
+    // =====================
+    
+    function handleFileSelect(input) {
+      if (input.files && input.files[0]) {
+        const file = input.files[0];
+        document.getElementById('fileName').textContent = file.name;
+        document.getElementById('fileSize').textContent = formatFileSize(file.size);
+        document.getElementById('fileInfo').classList.remove('hidden');
+        document.getElementById('uploadBtn').disabled = false;
+        document.getElementById('dropZone').classList.add('border-green-500');
+        document.getElementById('dropZone').classList.remove('border-gray-600');
+      }
+    }
+    
+    function clearFile() {
+      document.getElementById('xml_file').value = '';
+      document.getElementById('fileInfo').classList.add('hidden');
+      document.getElementById('uploadBtn').disabled = true;
+      document.getElementById('dropZone').classList.remove('border-green-500');
+      document.getElementById('dropZone').classList.add('border-gray-600');
+    }
+    
+    function formatFileSize(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    // Drag and drop
+    const dropZone = document.getElementById('dropZone');
+    if (dropZone) {
+      dropZone.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        this.classList.add('border-violet-500', 'bg-violet-500/10');
+      });
+      
+      dropZone.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        this.classList.remove('border-violet-500', 'bg-violet-500/10');
+      });
+      
+      dropZone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        this.classList.remove('border-violet-500', 'bg-violet-500/10');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          const fileInput = document.getElementById('xml_file');
+          fileInput.files = files;
+          handleFileSelect(fileInput);
+        }
+      });
+    }
+  </script>
+{% endblock %}

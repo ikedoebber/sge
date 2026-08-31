@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  SGE - Vendas
+{% endblock %}
+
+{% block content %}
+
+  <!-- Page Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+    <div>
+      <h1 class="text-2xl font-bold text-white mb-2">Gestao de Vendas</h1>
+      <p class="text-gray-400">Controle as vendas realizadas</p>
+    </div>
+    <div class="flex flex-col sm:flex-row gap-3 mt-4 sm:mt-0">
+      <a href="{% url 'sale_create' %}"
+         class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transform transition-all duration-200 hover:scale-[1.02]">
+        <i class="bi bi-plus mr-2"></i>
+        Nova Venda
+      </a>
+    </div>
+  </div>
+
+  <!-- Search and Filters Section -->
+  <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-4 md:p-6 mb-6 md:mb-8">
+    <div class="grid grid-cols-1 lg:grid-cols-1 gap-6">
+      <!-- Search Form -->
+      <div>
+        <label class="block text-sm font-medium text-gray-300 mb-3">Buscar Vendas</label>
+        <form method="get" action="{% url 'sale_list' %}" class="space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <input type="text"
+                     name="client"
+                     placeholder="Nome do cliente"
+                     value="{{ request.GET.client }}"
+                     class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200">
+            </div>
+            <div>
+              <select name="status"
+                      class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200">
+                <option value="">Todos os status</option>
+                <option value="paid" {% if request.GET.status == 'paid' %}selected{% endif %}>Pago</option>
+                <option value="pending" {% if request.GET.status == 'pending' %}selected{% endif %}>Pendente</option>
+                <option value="overdue" {% if request.GET.status == 'overdue' %}selected{% endif %}>Atrasado</option>
+              </select>
+            </div>
+            <div class="flex gap-2">
+              <button type="submit"
+                      class="flex-1 inline-flex items-center justify-center px-6 py-3 bg-violet-600 hover:bg-violet-700 text-white font-medium rounded-lg transition-colors duration-200">
+                <i class="bi bi-search mr-2"></i>
+                Buscar
+              </button>
+              <a href="{% url 'sale_list' %}"
+                 class="inline-flex items-center justify-center px-4 py-3 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors duration-200">
+                <i class="bi bi-x-lg"></i>
+              </a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
+    <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+      <div class="flex items-center">
+        <div class="p-3 bg-blue-600/20 rounded-xl mr-4">
+          <i class="bi bi-receipt text-2xl text-blue-400"></i>
+        </div>
+        <div>
+          <p class="text-sm font-medium text-gray-400">Total Vendas</p>
+          <p class="text-2xl font-bold text-white">{{ total_vendas|default:"0" }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+      <div class="flex items-center">
+        <div class="p-3 bg-violet-600/20 rounded-xl mr-4">
+          <i class="bi bi-currency-dollar text-2xl text-violet-400"></i>
+        </div>
+        <div>
+          <p class="text-sm font-medium text-gray-400">Total Valor</p>
+          <p class="text-2xl font-bold text-white">R$ {{ total_valor|default:"0,00" }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+      <div class="flex items-center">
+        <div class="p-3 bg-green-600/20 rounded-xl mr-4">
+          <i class="bi bi-check-circle text-2xl text-green-400"></i>
+        </div>
+        <div>
+          <p class="text-sm font-medium text-gray-400">Total Recebido</p>
+          <p class="text-2xl font-bold text-white">R$ {{ total_recebido|default:"0,00" }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+      <div class="flex items-center">
+        <div class="p-3 bg-amber-600/20 rounded-xl mr-4">
+          <i class="bi bi-hourglass-split text-2xl text-amber-400"></i>
+        </div>
+        <div>
+          <p class="text-sm font-medium text-gray-400">Total Pendente</p>
+          <p class="text-2xl font-bold text-white">R$ {{ total_pendente|default:"0,00" }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sales Table -->
+  <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full">
+        <thead>
+          <tr class="bg-white/10 border-b border-white/10">
+            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">ID</th>
+            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Cliente</th>
+            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Data</th>
+            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Valor Total</th>
+            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Pago</th>
+            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Saldo</th>
+            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Parcelas</th>
+            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Status</th>
+            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Acoes</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-white/10">
+          {% for sale in sales %}
+            <tr class="hover:bg-white/5 transition-colors duration-200">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <a href="{% url 'sale_detail' sale.id %}"
+                   class="text-violet-400 hover:text-violet-300 font-semibold transition-colors duration-200">
+                  #{{ sale.id }}
+                </a>
+              </td>
+              <td class="px-6 py-4">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 p-2 bg-blue-600/20 rounded-lg mr-3">
+                    <i class="bi bi-person text-blue-400"></i>
+                  </div>
+                  <div class="text-sm font-medium text-white">{{ sale.client.name }}</div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+                {{ sale.sale_date|date:"d/m/Y" }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">
+                R$ {{ sale.total_value }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-400">
+                R$ {{ sale.total_paid }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-amber-400">
+                R$ {{ sale.balance }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
+                {{ sale.installments.count }}x
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                {% with summary=sale.get_status_display_summary %}
+                  {% if summary == 'Pago' %}
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      {{ summary }}
+                    </span>
+                  {% elif summary == 'Parcial' %}
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                      {{ summary }}
+                    </span>
+                  {% elif summary == 'Atrasado' %}
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                      {{ summary }}
+                    </span>
+                  {% else %}
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      {{ summary|default:"Pendente" }}
+                    </span>
+                  {% endif %}
+                {% endwith %}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <div class="flex items-center space-x-2">
+                  <a href="{% url 'sale_detail' sale.id %}"
+                     class="inline-flex items-center px-2.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors duration-200"
+                     title="Ver detalhes">
+                    <i class="bi bi-eye"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="9" class="px-6 py-12 text-center text-gray-400">
+                <div class="flex flex-col items-center">
+                  <i class="bi bi-receipt text-4xl text-gray-500 mb-4"></i>
+                  <p class="text-lg font-medium">Nenhuma venda encontrada</p>
+                  <p class="text-sm">Tente ajustar os filtros ou registre uma nova venda.</p>
+                  <a href="{% url 'sale_create' %}"
+                     class="mt-4 inline-flex items-center px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium rounded-lg transition-colors duration-200">
+                    <i class="bi bi-plus mr-2"></i>
+                    Registrar Primeira Venda
+                  </a>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {% include 'components/_pagination.html' %}
+
+{% endblock %}
