@@ -30,9 +30,17 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'unsafe-default-key')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
-CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
+def parse_csv_env(var_name):
+    return [
+        value.strip().rstrip('/')
+        for value in os.getenv(var_name, '').split(',')
+        if value.strip()
+    ]
+
+
+ALLOWED_HOSTS = parse_csv_env('ALLOWED_HOSTS')
+CSRF_TRUSTED_ORIGINS = parse_csv_env('CSRF_TRUSTED_ORIGINS')
 # Application definition
 
 INSTALLED_APPS = [
