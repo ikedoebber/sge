@@ -64,7 +64,11 @@
     </div>
 
     <!-- Fornecedor, Marca e Consignacao -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="confirm_import" value="true">
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
       <!-- Fornecedor -->
       <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
         <h3 class="text-lg font-semibold text-white flex items-center mb-4">
@@ -181,7 +185,9 @@
               <tr class="hover:bg-white/5 transition-colors duration-200">
                 <td class="px-4 py-3 text-sm text-gray-300">{{ forloop.counter }}</td>
                 <td class="px-4 py-3">
-                  <div class="text-sm font-medium text-white">{{ item.product.title }}</div>
+                  <div class="text-sm font-medium text-white">
+                    {% if item.product %}{{ item.product.title }}{% else %}{{ item.xml.descricao }}{% endif %}
+                  </div>
                   {% if item.xml.ean %}
                     <div class="text-xs text-gray-500">EAN: {{ item.xml.ean }}</div>
                   {% endif %}
@@ -238,10 +244,6 @@
     </div>
 
     <!-- Botoes de Acao -->
-    <form method="post">
-      {% csrf_token %}
-      <input type="hidden" name="confirm_import" value="true">
-      
       <div class="border-t border-white/10 pt-6">
         <div class="flex flex-col sm:flex-row gap-4 justify-end">
           <a href="{% url 'inflow_xml_upload' %}" 

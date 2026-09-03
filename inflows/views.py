@@ -27,7 +27,54 @@ def _decimals_to_floats(items):
     return converted
 
 
-def _find_or_create_supplier(emitente):
+def _find_existing_supplier(emitente):
+    """Busca fornecedor existente pelo nome ou CNPJ. NÃO cria novo."""
+    if not emitente:
+        return None
+
+    razao = emitente.get('razao_social', '')
+    cnpj = emitente.get('cnpj', '')
+
+    if razao:
+        supplier = Supplier.objects.filter(name__iexact=razao).first()
+        if supplier:
+            return supplier
+        supplier = Supplier.objects.filter(name__icontains=razao).first()
+        if supplier:
+            return supplier
+
+    if cnpj:
+        cnpj_formatado = format_cpf_cnpj(cnpj) if cnpj else ''
+        if cnpj_formatado:
+            supplier = Supplier.objects.filter(cpf_cnpj=cnpj_formatado).first()
+            if supplier:
+                return supplier
+
+    return None
+
+
+def _search_existing_product(item_xml):
+    """Busca produto existente pelo codigo ou descricao. Retorna None se nao encontrar."""
+    codigo = item_xml.get('codigo', '')
+    descricao = item_xml.get('descricao', '')
+
+    if codigo:
+        product = Product.objects.filter(serie_number=codigo).first()
+        if product:
+            return product
+
+    if descricao:
+        product = Product.objects.filter(title__iexact=descricao).first()
+        if product:
+            return product
+        product = Product.objects.filter(title__icontains=descricao).first()
+        if product:
+            return product
+
+    return None
+
+
+def _find_or_create_supplier(emitente, brand=None):
     """
     Busca fornecedor existente pelo nome ou cria um novo.
     Retorna (supplier, created).
@@ -252,33 +299,28 @@ class InflowXMLUploadView(LoginRequiredMixin, PermissionRequiredMixin, FormView)
         # Converter Decimals para floats
         items_converted = _decimals_to_floats(result['itens'])
         
-        # Pre-processar: buscar/criar fornecedor e produtos para o preview
+        # Pre-processar: buscar fornecedor existente (NÃO criar ainda)
         emitente = result['emitente']
-        supplier, supplier_created = _find_or_create_supplier(emitente)
+        supplier = _find_existing_supplier(emitente)
         
         # Verificar se o fornecedor e de consignacao
         is_consignment_supplier = supplier.is_consignment_supplier if supplier else False
         
+        # Para cada item: buscar produto existente (NÃO criar ainda)
         preview_items = []
         for item in items_converted:
-            product, product_created = _find_or_create_product(item)
+            existing_product = _search_existing_product(item)
             preview_items.append({
                 'xml': item,
-                'product': product,
-                'product_created': product_created,
+                'product': existing_product,
+                'product_created': existing_product is None,
             })
         
         # Salvar dados na sessao para a confirmacao
         self.request.session['xml_items'] = items_converted
         self.request.session['xml_emitente'] = emitente
         self.request.session['supplier_id'] = supplier.id if supplier else None
-        self.request.session['supplier_created'] = supplier_created
-        self.request.session['product_ids'] = [
-            {'id': p['product'].id, 'created': p['product_created']} 
-            for p in preview_items
-        ]
         self.request.session['is_consignment_supplier'] = is_consignment_supplier
-        # Forcar save da sessao (render() nao salva automaticamente)
         self.request.session.save()
         
         # Renderizar preview
@@ -287,7 +329,7 @@ class InflowXMLUploadView(LoginRequiredMixin, PermissionRequiredMixin, FormView)
             'preview_items': preview_items,
             'emitente': emitente,
             'supplier': supplier,
-            'supplier_created': supplier_created,
+            'supplier_created': False,
             'total_items': len(items_converted),
             'total_value': total_value,
             'processing': True,
@@ -298,15 +340,14 @@ class InflowXMLUploadView(LoginRequiredMixin, PermissionRequiredMixin, FormView)
         return render(self.request, 'inflow_xml_upload.html', context)
     
     def _process_confirmation(self, request):
-        """Processa a confirmacao - cria as entradas em estoque."""
-        product_ids = request.session.get('product_ids', [])
+        """Processa a confirmacao - cria fornecedor, produtos e entradas em estoque."""
         xml_items = request.session.get('xml_items', [])
         
-        if not product_ids or not xml_items:
+        if not xml_items:
             messages.error(request, 'Dados da importacao expirados. Faca o upload novamente.')
             return redirect('inflow_xml_upload')
         
-        # Ler fornecedor e marca selecionados no preview (opcionais)
+        # Ler fornecedor e marca selecionados no preview
         selected_supplier_id = request.POST.get('supplier_id', '').strip()
         selected_brand_id = request.POST.get('brand_id', '').strip()
         
@@ -322,6 +363,7 @@ class InflowXMLUploadView(LoginRequiredMixin, PermissionRequiredMixin, FormView)
             except ValueError:
                 pass
         
+        # Resolver fornecedor
         supplier = None
         if selected_supplier_id:
             try:
@@ -329,23 +371,19 @@ class InflowXMLUploadView(LoginRequiredMixin, PermissionRequiredMixin, FormView)
             except (Supplier.DoesNotExist, ValueError):
                 supplier = None
         
-        # Se nao selecionou nenhum, usar o da sessao
+        # Se nao selecionou nenhum, criar a partir do emitente
         if not supplier:
-            session_supplier_id = request.session.get('supplier_id')
-            if session_supplier_id:
-                try:
-                    supplier = Supplier.objects.get(id=session_supplier_id)
-                except Supplier.DoesNotExist:
-                    supplier = None
+            emitente = request.session.get('xml_emitente', {})
+            supplier, _ = _find_or_create_supplier(emitente)
         
-        # Se ainda nao tem fornecedor, criar um padrao (obrigatorio para Inflow)
+        # Se ainda nao tem fornecedor, criar um padrao
         if not supplier:
             supplier, _ = Supplier.objects.get_or_create(
                 name='Sem Fornecedor',
                 defaults={'notes': 'Fornecedor padrao para entradas importadas'}
             )
         
-        # Marca selecionada para novos produtos (opcional)
+        # Marca selecionada para novos produtos
         brand = None
         if selected_brand_id:
             try:
@@ -358,50 +396,79 @@ class InflowXMLUploadView(LoginRequiredMixin, PermissionRequiredMixin, FormView)
         errors = []
         
         for i, item in enumerate(xml_items):
-            if i >= len(product_ids):
-                break
-            
-            product_id = product_ids[i]['id']
             quantity = item.get('quantidade', 0)
             
             if quantity <= 0:
                 continue
             
             try:
-                product = Product.objects.get(id=product_id)
-                # Se uma marca foi selecionada e o produto e novo, atualizar a marca
-                if brand and product_ids[i].get('created'):
-                    product.brand = brand
+                # Buscar produto existente
+                existing_product = _search_existing_product(item)
                 
-                # Atualizar precos do produto - sempre sobrescrever com valores do XML
+                if existing_product:
+                    product = existing_product
+                else:
+                    # Criar novo produto
+                    category, _ = Category.objects.get_or_create(
+                        name='Importado NFe',
+                        defaults={'description': 'Produtos importados automaticamente via XML de NFe'}
+                    )
+                    
+                    if not brand:
+                        brand, _ = Brand.objects.get_or_create(
+                            name='Sem Marca',
+                            defaults={'description': 'Marca padrao para produtos importados'}
+                        )
+                    
+                    codigo = item.get('codigo', '')
+                    descricao = item.get('descricao', '')
+                    ean = item.get('ean', '')
+                    valor_unitario = item.get('valor_unitario', 0)
+                    preco_custo = item.get('preco_custo')
+                    preco_venda = item.get('preco_venda')
+                    
+                    if preco_custo:
+                        cost = float(preco_custo)
+                    else:
+                        cost = float(valor_unitario)
+                    
+                    if preco_venda:
+                        selling = float(preco_venda)
+                    else:
+                        selling = cost * 1.3
+                    
+                    stock_type = 'consignado' if consignment_mode else 'proprio'
+                    
+                    product = Product.objects.create(
+                        title=descricao or f'Produto NFe {codigo}',
+                        category=category,
+                        brand=brand,
+                        description=f'Importado automaticamente via NFe.\nEAN: {ean}' if ean else None,
+                        serie_number=codigo or None,
+                        cost_price=cost,
+                        selling_price=selling,
+                        quantity=0,
+                        stock_type=stock_type,
+                        consignment_supplier=supplier if consignment_mode else None,
+                        consignment_return_date=consignment_return_date if consignment_mode else None,
+                    )
+                
+                # Atualizar precos do produto com valores do XML
                 valor_unitario = item.get('valor_unitario', 0)
                 preco_custo = item.get('preco_custo')
                 preco_venda = item.get('preco_venda')
                 
                 updated_fields = []
                 
-                # Custo: usar preco_custo se existir, senao valor_unitario
                 if preco_custo:
                     product.cost_price = float(preco_custo)
                 elif valor_unitario:
                     product.cost_price = float(valor_unitario)
                 updated_fields.append('cost_price')
                 
-                # Venda: usar preco_venda se existir, senao manter atual
                 if preco_venda:
                     product.selling_price = float(preco_venda)
                     updated_fields.append('selling_price')
-                
-                if brand and product_ids[i].get('created'):
-                    updated_fields.append('brand')
-                
-                # Apolar consignacao para produtos novos
-                if consignment_mode and product_ids[i].get('created'):
-                    product.stock_type = 'consignado'
-                    product.consignment_supplier = supplier
-                    if consignment_return_date:
-                        product.consignment_return_date = consignment_return_date
-                    updated_fields.extend(['stock_type', 'consignment_supplier', 'consignment_return_date'])
                 
                 product.save(update_fields=updated_fields)
                 
@@ -412,13 +479,11 @@ class InflowXMLUploadView(LoginRequiredMixin, PermissionRequiredMixin, FormView)
                     description=f'Entrada via NFe - {item.get("descricao", "")}',
                 )
                 created_count += 1
-            except Product.DoesNotExist:
-                errors.append(f'Produto ID {product_id} nao encontrado.')
             except Exception as e:
                 errors.append(f'Erro ao criar entrada: {str(e)}')
         
         # Limpar sessao
-        for key in ['xml_items', 'xml_emitente', 'supplier_id', 'supplier_created', 'product_ids', 'is_consignment_supplier']:
+        for key in ['xml_items', 'xml_emitente', 'supplier_id', 'is_consignment_supplier']:
             request.session.pop(key, None)
         
         # Mensagens de resultado
