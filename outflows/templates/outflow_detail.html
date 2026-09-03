@@ -7,10 +7,27 @@
     <div>
       <h1 class="text-2xl font-bold text-white mb-2">
         {% if object.client %}Venda{% else %}Saida{% endif %} #{{ object.id }}
+        {% if object.status == 'cancelled' %}
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-500/20 text-red-400 border border-red-500/30 ml-2">
+            <i class="bi bi-x-circle mr-1"></i> Cancelada
+          </span>
+        {% endif %}
       </h1>
       <p class="text-gray-400">{{ object.created_at|date:"d/m/Y H:i" }}</p>
     </div>
     <div class="flex flex-col sm:flex-row gap-3 mt-4 sm:mt-0">
+      {% if object.status == 'active' %}
+        <a href="{% url 'outflow_update' object.id %}" 
+           class="inline-flex items-center justify-center px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white font-medium rounded-lg transition-colors duration-200">
+          <i class="bi bi-pencil mr-2"></i>
+          Editar
+        </a>
+        <button type="button" onclick="document.getElementById('cancel-modal').classList.remove('hidden')"
+                class="inline-flex items-center justify-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors duration-200">
+          <i class="bi bi-x-circle mr-2"></i>
+          Cancelar Venda
+        </button>
+      {% endif %}
       <a href="{% url 'outflow_list' %}" 
          class="inline-flex items-center justify-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-colors duration-200">
         <i class="bi bi-arrow-left mr-2"></i>
@@ -200,6 +217,55 @@
         </div>
       </div>
 
+    </div>
+  </div>
+
+  <!-- Modal de Confirmacao de Cancelamento -->
+  <div id="cancel-modal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
+      <div class="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="document.getElementById('cancel-modal').classList.add('hidden')"></div>
+
+      <div class="relative bg-gray-800 border border-white/10 rounded-2xl shadow-2xl w-full max-w-md transform transition-all">
+        <div class="px-6 pt-6 pb-4">
+          <div class="flex items-center justify-center w-16 h-16 mx-auto bg-red-500/20 rounded-full mb-4">
+            <i class="bi bi-exclamation-triangle text-3xl text-red-400"></i>
+          </div>
+          <h3 class="text-xl font-bold text-white text-center" id="modal-title">
+            Cancelar Venda #{{ object.id }}?
+          </h3>
+          <p class="mt-3 text-sm text-gray-400 text-center">
+            Esta acao ira cancelar a venda e devolver <span class="text-white font-semibold">todos os produtos</span> ao estoque. Esta acao nao pode ser desfeita.
+          </p>
+        </div>
+
+        <div class="mx-6 mb-4 p-3 bg-gray-900/50 rounded-xl border border-white/5">
+          <p class="text-xs text-gray-500 uppercase tracking-wider mb-2">Produtos que serao devolvidos:</p>
+          <div class="space-y-1">
+            {% for item in object.items.all %}
+              <div class="flex items-center justify-between text-sm">
+                <span class="text-gray-300">{{ item.product.title }}</span>
+                <span class="text-white font-medium">+{{ item.quantity }} un</span>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="px-6 pb-6 flex flex-col sm:flex-row gap-3">
+          <form method="post" action="{% url 'outflow_cancel' object.id %}" class="flex-1">
+            {% csrf_token %}
+            <button type="submit"
+                    class="w-full inline-flex items-center justify-center px-4 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-xl transition-colors duration-200 shadow-lg hover:shadow-red-500/25">
+              <i class="bi bi-x-circle mr-2"></i>
+              Sim, Cancelar Venda
+            </button>
+          </form>
+          <button type="button" onclick="document.getElementById('cancel-modal').classList.add('hidden')"
+                  class="flex-1 inline-flex items-center justify-center px-4 py-3 bg-gray-700 hover:bg-gray-600 text-white font-medium rounded-xl transition-colors duration-200">
+            <i class="bi bi-arrow-left mr-2"></i>
+            Voltar
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 {% endblock %}

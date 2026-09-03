@@ -1,0 +1,35 @@
+<!-- Supplier Metrics Cards -->
+{% if supplier_metrics %}
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6 mb-6 md:mb-8">
+    {% for item in supplier_metrics %}
+      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-4 md:p-6 hover:bg-white/15 transition-all duration-300 group">
+        <div class="flex items-center justify-between mb-3">
+          <div class="min-w-0">
+            <h3 class="text-xs sm:text-sm font-medium text-gray-400 mb-1">{{ item.supplier.name }}</h3>
+          </div>
+          <div class="h-10 w-10 md:h-12 md:w-12 bg-cyan-500/20 rounded-xl flex items-center justify-center group-hover:bg-cyan-500/30 transition-colors duration-300 flex-shrink-0">
+            <i class="bi bi-truck text-lg md:text-2xl text-cyan-400"></i>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <p class="text-gray-400 text-xs">Estoque</p>
+            <p class="text-white text-sm font-bold">{{ item.stock_qty }} un</p>
+          </div>
+          <div>
+            <p class="text-gray-400 text-xs">Vendidos</p>
+            <p class="text-white text-sm font-bold">{{ item.qty_sold }} un</p>
+          </div>
+          <div>
+            <p class="text-gray-400 text-xs">Receita</p>
+            <p class="text-emerald-400 text-sm font-bold">R$ {{ item.sales_value_fmt }}</p>
+          </div>
+          <div>
+            <p class="text-gray-400 text-xs">Lucro</p>
+            <p class="text-amber-400 text-sm font-bold">R$ {{ item.profit_fmt }}</p>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}

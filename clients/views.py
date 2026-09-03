@@ -1,6 +1,8 @@
 from rest_framework import generics
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.db.models import Sum, Q
+from django.db.models import ProtectedError
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
@@ -78,6 +80,18 @@ class ClientDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     template_name = 'client_delete.html'
     success_url = reverse_lazy('client_list')
     permission_required = 'clients.delete_client'
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        try:
+            return super().post(request, *args, **kwargs)
+        except ProtectedError:
+            messages.error(
+                request,
+                f'Nao e possivel excluir o cliente "{self.object.name}" '
+                f'porque ele possui {self.object.outflows.count()} venda(s) registrada(s).'
+            )
+            return redirect('client_detail', pk=self.object.pk)
 
 
 class ClientCreateListAPIView(generics.ListCreateAPIView):

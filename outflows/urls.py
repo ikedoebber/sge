@@ -6,6 +6,8 @@ urlpatterns = [
     path('outflows/list/', views.OutflowListView.as_view(), name='outflow_list'),
     path('outflows/create/', views.OutflowCreateView.as_view(), name='outflow_create'),
     path('outflows/<int:pk>/detail/', views.OutflowDetailView.as_view(), name='outflow_detail'),
+    path('outflows/<int:pk>/update/', views.OutflowUpdateView.as_view(), name='outflow_update'),
+    path('outflows/<int:pk>/cancel/', views.OutflowCancelView.as_view(), name='outflow_cancel'),
     path('outflows/<int:pk>/installments/create/', views.OutflowInstallmentsCreateView.as_view(), name='outflow_installments_create'),
     path('outflows/installment/<int:pk>/pay/', views.InstallmentPayView.as_view(), name='installment_pay'),
 

@@ -20,6 +20,7 @@ def home(request):
         'product_metrics': product_metrics,
         'sales_metrics': sales_metrics,
         'payment_method_metrics': metrics.get_payment_method_metrics(),
+        'supplier_metrics': metrics.get_supplier_metrics(),
         'product_count_by_category': json.dumps(graphic_product_category_metric),
         'product_count_by_brand': json.dumps(graphic_product_brand_metric),
         'daily_sales_data': json.dumps(daily_sales_data),

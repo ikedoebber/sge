@@ -2,7 +2,8 @@ from rest_framework import generics
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, DetailView, FormView
+from django.views.generic import ListView, CreateView, UpdateView, DetailView, FormView
+from django.db.models import Q
 from django.shortcuts import redirect
 from django.utils import timezone
 from app import metrics
@@ -31,6 +32,7 @@ class OutflowListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         context['product_metrics'] = metrics.get_product_metrics()
         context['sales_metrics'] = metrics.get_sales_metrics()
         context['payment_method_metrics'] = metrics.get_payment_method_metrics()
+        context['supplier_metrics'] = metrics.get_supplier_metrics()
         return context
 
 
@@ -53,7 +55,7 @@ class OutflowCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
         
         # Passar produtos como JSON para o JS
         from products.models import Product
-        products = Product.objects.select_related('category').all()
+        products = Product.objects.select_related('category').filter(quantity__gt=0)
         context['products_json'] = [
             {'id': p.pk, 'title': p.title, 'price': float(p.selling_price)}
             for p in products
@@ -65,6 +67,29 @@ class OutflowCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
         item_formset = context['item_formset']
 
         if item_formset.is_valid():
+            stock_errors = []
+            items_data = []
+            for form_item in item_formset.forms:
+                delete_field = form_item.prefix + '-DELETE'
+                is_deleted = form_item.data.get(delete_field) == 'on'
+                if is_deleted:
+                    continue
+                product = form_item.cleaned_data.get('product')
+                if not product:
+                    continue
+                qty = form_item.cleaned_data.get('quantity', 0) or 0
+                if qty <= 0:
+                    continue
+                if product.quantity < qty:
+                    stock_errors.append(
+                        f'{product.title}: solicitado {qty}, disponivel {product.quantity}'
+                    )
+                items_data.append({'product': product, 'qty': qty})
+
+            if stock_errors:
+                messages.error(self.request, 'Estoque insuficiente: ' + '; '.join(stock_errors))
+                return self.render_to_response(context)
+
             self.object = form.save(commit=False)
             self.object.sale_date = timezone.now().date()
             self.object.save()
@@ -78,14 +103,11 @@ class OutflowCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
                 item.save()
                 total += item.subtotal
 
-                # Baixar estoque
                 product = item.product
                 product.quantity -= item.quantity
                 product.save()
 
-            # Deletar itens marcados para remoção
             for item in item_formset.deleted_objects:
-                # Devolver estoque
                 product = item.product
                 product.quantity += item.quantity
                 product.save()
@@ -95,7 +117,6 @@ class OutflowCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
             self.object.balance_due = total - self.object.down_payment
             self.object.save()
 
-            # Gerar parcelas
             self._generate_installments(self.object)
 
             return super().form_valid(form)
@@ -119,10 +140,145 @@ class OutflowCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
             )
 
 
+class OutflowUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    model = models.Outflow
+    template_name = 'outflow_update.html'
+    form_class = forms.OutflowForm
+    success_url = reverse_lazy('outflow_list')
+    permission_required = 'outflows.change_outflow'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            context['item_formset'] = forms.OutflowItemFormSet(
+                self.request.POST, prefix='items', instance=self.object
+            )
+        else:
+            context['item_formset'] = forms.OutflowItemFormSet(
+                prefix='items', instance=self.object
+            )
+
+        from products.models import Product
+        existing_product_ids = set(
+            self.object.items.values_list('product_id', flat=True)
+        )
+        all_products = Product.objects.select_related('category').filter(
+            Q(quantity__gt=0) | Q(id__in=existing_product_ids)
+        )
+        context['products_json'] = [
+            {'id': p.pk, 'title': p.title, 'price': float(p.selling_price)}
+            for p in all_products
+        ]
+        context['existing_items_json'] = [
+            {
+                'id': item.product_id,
+                'product_id': item.product_id,
+                'quantity': item.quantity,
+                'unit_price': float(item.unit_price),
+                'item_id': item.pk,
+            }
+            for item in self.object.items.select_related('product').all()
+        ]
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        item_formset = context['item_formset']
+
+        if item_formset.is_valid():
+            old_stock = {}
+            for item in self.object.items.all():
+                old_stock[item.product_id] = item.quantity
+
+            stock_adjustments = {}
+            stock_errors = []
+
+            for form_item in item_formset.forms:
+                delete_field = form_item.prefix + '-DELETE'
+                is_deleted = form_item.data.get(delete_field) == 'on'
+
+                product = form_item.cleaned_data.get('product')
+                if not product:
+                    continue
+                pid = product.pk
+                new_qty = form_item.cleaned_data.get('quantity', 0) or 0
+
+                if is_deleted:
+                    if pid in old_stock:
+                        stock_adjustments[pid] = stock_adjustments.get(pid, 0) + old_stock[pid]
+                else:
+                    if pid in old_stock:
+                        adjustment = old_stock[pid] - new_qty
+                        stock_adjustments[pid] = stock_adjustments.get(pid, 0) + adjustment
+                    else:
+                        stock_adjustments[pid] = stock_adjustments.get(pid, 0) - new_qty
+
+            for pid, adjustment in stock_adjustments.items():
+                if adjustment < 0:
+                    product = Product.objects.get(id=pid)
+                    current = old_stock.get(pid, 0)
+                    needed = current - adjustment
+                    stock_errors.append(
+                        f'{product.title}: solicitado {needed}, disponivel {current}'
+                    )
+
+            if stock_errors:
+                messages.error(self.request, 'Estoque insuficiente: ' + '; '.join(stock_errors))
+                return self.render_to_response(context)
+
+            for pid, adjustment in stock_adjustments.items():
+                if adjustment != 0:
+                    product = Product.objects.get(id=pid)
+                    product.quantity += adjustment
+                    product.save()
+
+            items = item_formset.save(commit=False)
+            total = 0
+            for item in items:
+                if not item.unit_price:
+                    item.unit_price = item.product.selling_price
+                item.outflow = self.object
+                item.save()
+                total += item.subtotal
+
+            for item in item_formset.deleted_objects:
+                item.delete()
+
+            self.object.total_value = total
+            self.object.save()
+
+            return super().form_valid(form)
+        return self.render_to_response(context)
+
+
 class OutflowDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
     model = models.Outflow
     template_name = 'outflow_detail.html'
     permission_required = 'outflows.view_outflow'
+
+
+class OutflowCancelView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+    model = models.Outflow
+    permission_required = 'outflows.change_outflow'
+
+    def post(self, request, *args, **kwargs):
+        outflow = self.get_object()
+        if outflow.status == 'cancelled':
+            messages.warning(request, 'Esta venda ja foi cancelada.')
+            return redirect('outflow_detail', pk=outflow.pk)
+
+        for item in outflow.items.all():
+            product = item.product
+            product.quantity += item.quantity
+            product.save()
+
+        outflow.status = 'cancelled'
+        outflow.balance_due = 0
+        outflow.amount_paid = outflow.total_value
+        outflow.save()
+
+        messages.success(request, f'Venda #{outflow.id} cancelada com sucesso. Estoque devolvido.')
+        return redirect('outflow_detail', pk=outflow.pk)
 
 
 class OutflowInstallmentsCreateView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):

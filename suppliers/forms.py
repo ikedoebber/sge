@@ -6,7 +6,7 @@ class SupplierForm(forms.ModelForm):
 
     class Meta:
         model = models.Supplier
-        fields = ['name', 'person_type', 'cpf_cnpj', 'email', 'phone', 'address', 'city', 'state', 'notes']
+        fields = ['name', 'person_type', 'cpf_cnpj', 'email', 'phone', 'address', 'city', 'state', 'is_consignment_supplier', 'notes']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'person_type': forms.Select(attrs={'class': 'form-control'}),
@@ -16,6 +16,7 @@ class SupplierForm(forms.ModelForm):
             'address': forms.TextInput(attrs={'class': 'form-control'}),
             'city': forms.TextInput(attrs={'class': 'form-control'}),
             'state': forms.TextInput(attrs={'class': 'form-control'}),
+            'is_consignment_supplier': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
         }
         labels = {
@@ -27,6 +28,7 @@ class SupplierForm(forms.ModelForm):
             'address': 'Endereco',
             'city': 'Cidade',
             'state': 'Estado',
+            'is_consignment_supplier': 'Fornecedor de Consignacao',
             'notes': 'Observacoes',
         }
 
@@ -41,4 +43,5 @@ class SupplierForm(forms.ModelForm):
         self.fields['address'].required = False
         self.fields['city'].required = False
         self.fields['state'].required = False
+        self.fields['is_consignment_supplier'].required = False
         self.fields['notes'].required = False

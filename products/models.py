@@ -1,9 +1,15 @@
 from django.db import models
 from categories.models import Category
 from brands.models import Brand
+from suppliers.models import Supplier
 
 
 class Product(models.Model):
+    STOCK_TYPE_CHOICES = [
+        ('proprio', 'Proprio'),
+        ('consignado', 'Consignado'),
+    ]
+
     title = models.CharField(max_length=500)
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='products')
     brand = models.ForeignKey(Brand, on_delete=models.PROTECT, related_name='products')
@@ -12,6 +18,14 @@ class Product(models.Model):
     cost_price = models.DecimalField(max_digits=20, decimal_places=2)
     selling_price = models.DecimalField(max_digits=20, decimal_places=2)
     quantity = models.IntegerField(default=0)
+    stock_type = models.CharField(max_length=10, choices=STOCK_TYPE_CHOICES, default='proprio')
+    consignment_supplier = models.ForeignKey(
+        Supplier, on_delete=models.SET_NULL, null=True, blank=True,
+        related_name='consignment_products', verbose_name='Fornecedor Consignado'
+    )
+    consignment_return_date = models.DateField(
+        null=True, blank=True, verbose_name='Data de Retorno da Consignacao'
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

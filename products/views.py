@@ -24,6 +24,7 @@ class ProductListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         serie_number = self.request.GET.get('serie_number')
         category = self.request.GET.get('category')
         brand = self.request.GET.get('brand')
+        stock_type = self.request.GET.get('stock_type')
 
         if title:
             queryset = queryset.filter(title__icontains=title)
@@ -33,6 +34,8 @@ class ProductListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
             queryset = queryset.filter(category_id=category)
         if brand:
             queryset = queryset.filter(brand__id=brand)
+        if stock_type:
+            queryset = queryset.filter(stock_type=stock_type)
 
         return queryset
 
@@ -41,6 +44,7 @@ class ProductListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
         context['product_metrics'] = metrics.get_product_metrics()
         context['sales_metrics'] = metrics.get_sales_metrics()
         context['payment_method_metrics'] = metrics.get_payment_method_metrics()
+        context['supplier_metrics'] = metrics.get_supplier_metrics()
         context['categories'] = Category.objects.all()
         context['brands'] = Brand.objects.all()
         return context

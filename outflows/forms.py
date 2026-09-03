@@ -69,7 +69,7 @@ class InstallmentPayForm(forms.Form):
         ('debit', 'Cartao de Debito'),
         ('pix', 'PIX'),
         ('boleto', 'Boleto'),
-        ('other', 'Outros'),
+        ('other', 'Em Aberto'),
     ]
 
     amount = forms.DecimalField(

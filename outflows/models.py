@@ -5,17 +5,23 @@ from clients.models import Client
 
 
 class Outflow(models.Model):
+    STATUS_CHOICES = [
+        ('active', 'Ativo'),
+        ('cancelled', 'Cancelado'),
+    ]
+
     PAYMENT_METHOD_CHOICES = [
         ('money', 'Dinheiro'),
         ('credit', 'Cartao de Credito'),
         ('debit', 'Cartao de Debito'),
         ('pix', 'PIX'),
         ('boleto', 'Boleto'),
-        ('other', 'Outros'),
+        ('other', 'Em Aberto'),
     ]
 
     client = models.ForeignKey(Client, on_delete=models.PROTECT, related_name='outflows', null=True, blank=True)
     description = models.TextField(null=True, blank=True)
+    status = models.CharField('Situacao', max_length=10, choices=STATUS_CHOICES, default='active')
 
     sale_date = models.DateField('Data da Venda', null=True, blank=True)
     total_value = models.DecimalField('Valor Total', max_digits=12, decimal_places=2, default=0)

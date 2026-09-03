@@ -1,4 +1,3 @@
-import json
 from decimal import Decimal
 from rest_framework import generics
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
@@ -83,7 +82,7 @@ def _find_or_create_supplier(emitente):
     return supplier, True
 
 
-def _find_or_create_product(item_xml):
+def _find_or_create_product(item_xml, consignment_mode=False, consignment_supplier=None, consignment_return_date=None):
     """
     Busca produto existente pelo codigo ou descricao ou cria um novo.
     Retorna (product, created).
@@ -134,6 +133,9 @@ def _find_or_create_product(item_xml):
     else:
         selling = cost * 1.3  # 30% de markup padrao
 
+    # Definir tipo de estoque
+    stock_type = 'consignado' if consignment_mode else 'proprio'
+
     product = Product.objects.create(
         title=descricao or f'Produto NFe {codigo}',
         category=category,
@@ -143,6 +145,9 @@ def _find_or_create_product(item_xml):
         cost_price=cost,
         selling_price=selling,
         quantity=0,
+        stock_type=stock_type,
+        consignment_supplier=consignment_supplier if consignment_mode else None,
+        consignment_return_date=consignment_return_date if consignment_mode else None,
     )
     return product, True
 
@@ -251,6 +256,9 @@ class InflowXMLUploadView(LoginRequiredMixin, PermissionRequiredMixin, FormView)
         emitente = result['emitente']
         supplier, supplier_created = _find_or_create_supplier(emitente)
         
+        # Verificar se o fornecedor e de consignacao
+        is_consignment_supplier = supplier.is_consignment_supplier if supplier else False
+        
         preview_items = []
         for item in items_converted:
             product, product_created = _find_or_create_product(item)
@@ -269,6 +277,7 @@ class InflowXMLUploadView(LoginRequiredMixin, PermissionRequiredMixin, FormView)
             {'id': p['product'].id, 'created': p['product_created']} 
             for p in preview_items
         ]
+        self.request.session['is_consignment_supplier'] = is_consignment_supplier
         # Forcar save da sessao (render() nao salva automaticamente)
         self.request.session.save()
         
@@ -300,6 +309,18 @@ class InflowXMLUploadView(LoginRequiredMixin, PermissionRequiredMixin, FormView)
         # Ler fornecedor e marca selecionados no preview (opcionais)
         selected_supplier_id = request.POST.get('supplier_id', '').strip()
         selected_brand_id = request.POST.get('brand_id', '').strip()
+        
+        # Ler dados de consignacao
+        consignment_mode = request.POST.get('consignment_mode') == 'true'
+        consignment_return_date_str = request.POST.get('consignment_return_date', '').strip()
+        
+        consignment_return_date = None
+        if consignment_return_date_str:
+            try:
+                from datetime import datetime
+                consignment_return_date = datetime.strptime(consignment_return_date_str, '%Y-%m-%d').date()
+            except ValueError:
+                pass
         
         supplier = None
         if selected_supplier_id:
@@ -374,6 +395,14 @@ class InflowXMLUploadView(LoginRequiredMixin, PermissionRequiredMixin, FormView)
                 if brand and product_ids[i].get('created'):
                     updated_fields.append('brand')
                 
+                # Apolar consignacao para produtos novos
+                if consignment_mode and product_ids[i].get('created'):
+                    product.stock_type = 'consignado'
+                    product.consignment_supplier = supplier
+                    if consignment_return_date:
+                        product.consignment_return_date = consignment_return_date
+                    updated_fields.extend(['stock_type', 'consignment_supplier', 'consignment_return_date'])
+                
                 product.save(update_fields=updated_fields)
                 
                 models.Inflow.objects.create(
@@ -389,15 +418,17 @@ class InflowXMLUploadView(LoginRequiredMixin, PermissionRequiredMixin, FormView)
                 errors.append(f'Erro ao criar entrada: {str(e)}')
         
         # Limpar sessao
-        for key in ['xml_items', 'xml_emitente', 'supplier_id', 'supplier_created', 'product_ids']:
+        for key in ['xml_items', 'xml_emitente', 'supplier_id', 'supplier_created', 'product_ids', 'is_consignment_supplier']:
             request.session.pop(key, None)
         
         # Mensagens de resultado
         if created_count > 0:
-            messages.success(
-                request, 
-                f'{created_count} entrada(s) criada(s) com sucesso! Estoque atualizado automaticamente.'
-            )
+            msg = f'{created_count} entrada(s) criada(s) com sucesso!'
+            if consignment_mode:
+                msg += ' Estoque consignado registrado.'
+            else:
+                msg += ' Estoque atualizado automaticamente.'
+            messages.success(request, msg)
         
         if errors:
             for error in errors:

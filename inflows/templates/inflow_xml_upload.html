@@ -63,8 +63,8 @@
       </div>
     </div>
 
-    <!-- Fornecedor e Marca -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+    <!-- Fornecedor, Marca e Consignacao -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
       <!-- Fornecedor -->
       <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
         <h3 class="text-lg font-semibold text-white flex items-center mb-4">
@@ -77,8 +77,11 @@
                 class="w-full bg-gray-800/50 border border-gray-600 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-colors">
           <option value="">Nenhum fornecedor</option>
           {% for s in all_suppliers %}
-            <option value="{{ s.id }}" {% if supplier and s.id == supplier.id %}selected{% endif %}>
+            <option value="{{ s.id }}" 
+                    {% if supplier and s.id == supplier.id %}selected{% endif %}
+                    data-is-consignment="{{ s.is_consignment_supplier|yesno:'true,false' }}">
               {{ s.name }}
+              {% if s.is_consignment_supplier %}<span class="text-amber-400"> (Consignacao)</span>{% endif %}
               {% if supplier and s.id == supplier.id and supplier_created %} (novo da NFe){% endif %}
             </option>
           {% endfor %}
@@ -112,6 +115,40 @@
           <i class="bi bi-info-circle mr-1"></i>
           Aplica apenas a produtos novos criados nesta importacao
         </p>
+      </div>
+
+      <!-- Consignacao -->
+      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+        <h3 class="text-lg font-semibold text-white flex items-center mb-4">
+          <i class="bi bi-arrow-left-right mr-2 text-amber-400"></i>
+          Consignacao
+        </h3>
+        
+        <div class="space-y-4">
+          <label class="flex items-center space-x-3 cursor-pointer">
+            <input type="checkbox" 
+                   name="consignment_mode" 
+                   id="consignment_mode"
+                   value="true"
+                   class="w-5 h-5 rounded border-gray-600 bg-gray-800/50 text-amber-500 focus:ring-amber-500 focus:ring-offset-0"
+                   onchange="toggleConsignmentMode(this.checked)">
+            <span class="text-gray-300 text-sm font-medium">Esta entrada e consignacao</span>
+          </label>
+          
+          <div id="consignment-date-container" class="hidden">
+            <label class="block text-sm font-medium text-gray-300 mb-2">
+              Data de Retorno
+            </label>
+            <input type="date" 
+                   name="consignment_return_date" 
+                   id="consignment_return_date"
+                   class="w-full bg-gray-800/50 border border-gray-600 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors">
+            <p class="text-gray-400 text-xs mt-2">
+              <i class="bi bi-info-circle mr-1"></i>
+              Produtos novos receberao esta data para zerar estoque
+            </p>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -406,5 +443,47 @@
         }
       });
     }
+
+    // =====================
+    // PREVIEW STEP SCRIPTS
+    // =====================
+
+    function toggleConsignmentMode(checked) {
+      const container = document.getElementById('consignment-date-container');
+      if (container) {
+        if (checked) {
+          container.classList.remove('hidden');
+        } else {
+          container.classList.add('hidden');
+        }
+      }
+    }
+
+    // Auto-detect consignment supplier on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      const supplierSelect = document.getElementById('supplier_select');
+      if (supplierSelect) {
+        supplierSelect.addEventListener('change', function() {
+          const selectedOption = this.options[this.selectedIndex];
+          if (selectedOption && selectedOption.dataset.isConsignment === 'true') {
+            const checkbox = document.getElementById('consignment_mode');
+            if (checkbox && !checkbox.checked) {
+              checkbox.checked = true;
+              toggleConsignmentMode(true);
+            }
+          }
+        });
+
+        // Check on load if selected supplier is consignment
+        const selectedOption = supplierSelect.options[supplierSelect.selectedIndex];
+        if (selectedOption && selectedOption.dataset.isConsignment === 'true') {
+          const checkbox = document.getElementById('consignment_mode');
+          if (checkbox) {
+            checkbox.checked = true;
+            toggleConsignmentMode(true);
+          }
+        }
+      }
+    });
   </script>
 {% endblock %}

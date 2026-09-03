@@ -25,7 +25,7 @@
       <div>
         <h3 class="text-lg font-semibold text-white mb-6 flex items-center">
           <i class="bi bi-arrow-down-circle mr-2 text-violet-400"></i>
-          Informações da Entrada
+          Informacoes da Entrada
         </h3>
         
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -36,7 +36,7 @@
             </label>
             <select name="{{ form.product.name }}" 
                     id="{{ form.product.id_for_label }}"
-                    required="{{ form.product.field.required }}"
+                    required
                     class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200">
               <option value="" class="text-gray-500">Selecione um produto...</option>
               {% for choice in form.product.field.queryset %}
@@ -50,7 +50,7 @@
             {% if form.product.errors %}
               <div class="mt-1 text-sm text-red-400">{{ form.product.errors.0 }}</div>
             {% endif %}
-            <p class="mt-1 text-xs text-gray-500">Selecione o produto que está sendo adicionado ao estoque.</p>
+            <p class="mt-1 text-xs text-gray-500">Selecione o produto que esta sendo adicionado ao estoque.</p>
           </div>
 
           <!-- Supplier Field -->
@@ -60,7 +60,7 @@
             </label>
             <select name="{{ form.supplier.name }}" 
                     id="{{ form.supplier.id_for_label }}"
-                    required="{{ form.supplier.field.required }}"
+                    required
                     class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200">
               <option value="" class="text-gray-500">Selecione um fornecedor...</option>
               {% for choice in form.supplier.field.queryset %}
@@ -74,7 +74,7 @@
             {% if form.supplier.errors %}
               <div class="mt-1 text-sm text-red-400">{{ form.supplier.errors.0 }}</div>
             {% endif %}
-            <p class="mt-1 text-xs text-gray-500">Fornecedor responsável pela entrada dos produtos.</p>
+            <p class="mt-1 text-xs text-gray-500">Fornecedor responsavel pela entrada dos produtos.</p>
           </div>
         </div>
 
@@ -89,7 +89,7 @@
                      name="{{ form.quantity.name }}" 
                      id="{{ form.quantity.id_for_label }}"
                      value="{{ form.quantity.value|default:'' }}"
-                     required="{{ form.quantity.field.required }}"
+                     required
                      min="1"
                      class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200"
                      placeholder="Digite a quantidade">
@@ -110,13 +110,13 @@
             <label for="{{ form.unit_cost.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">
               {{ form.unit_cost.label }}
             </label>
-            <input type="number" 
+            <input type="text" 
                    name="{{ form.unit_cost.name }}" 
                    id="{{ form.unit_cost.id_for_label }}"
                    value="{{ form.unit_cost.value|default:'' }}"
-                   step="0.01" min="0"
+                   inputmode="decimal"
                    class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200"
-                   placeholder="Custo unitario de compra">
+                   placeholder="0.00">
             {% if form.unit_cost.errors %}
               <div class="mt-1 text-sm text-red-400">{{ form.unit_cost.errors.0 }}</div>
             {% endif %}
@@ -128,13 +128,13 @@
             <label for="{{ form.selling_price.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">
               {{ form.selling_price.label }}
             </label>
-            <input type="number" 
+            <input type="text" 
                    name="{{ form.selling_price.name }}" 
                    id="{{ form.selling_price.id_for_label }}"
                    value="{{ form.selling_price.value|default:'' }}"
-                   step="0.01" min="0"
+                   inputmode="decimal"
                    class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200"
-                   placeholder="Preco de venda unitario">
+                   placeholder="0.00">
             {% if form.selling_price.errors %}
               <div class="mt-1 text-sm text-red-400">{{ form.selling_price.errors.0 }}</div>
             {% endif %}
@@ -162,14 +162,14 @@
       <div class="bg-blue-600/20 backdrop-blur-sm border border-blue-500/30 rounded-xl p-6">
         <h4 class="text-lg font-semibold text-blue-200 mb-4 flex items-center">
           <i class="bi bi-info-circle mr-2"></i>
-          Resumo da Operação
+          Resumo da Operacao
         </h4>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <div class="bg-blue-700/20 rounded-lg p-4">
             <div class="flex items-center">
               <i class="bi bi-arrow-up-circle text-blue-300 text-xl mr-3"></i>
               <div>
-                <p class="text-blue-200 text-sm">Tipo de Operação</p>
+                <p class="text-blue-200 text-sm">Tipo de Operacao</p>
                 <p class="text-white font-semibold">Entrada de Estoque</p>
               </div>
             </div>
@@ -218,7 +218,7 @@
               <i class="bi bi-exclamation-triangle-fill text-red-400"></i>
             </div>
             <div class="ml-3">
-              <h3 class="text-sm font-medium text-red-200">Erro no formulário</h3>
+              <h3 class="text-sm font-medium text-red-200">Erro no formulario</h3>
               <div class="mt-2 text-sm text-red-300">
                 <ul class="list-disc pl-5 space-y-1">
                   {% for error in form.non_field_errors %}

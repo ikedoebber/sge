@@ -13,7 +13,7 @@
   <!-- Page Header -->
   <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
     <div>
-      <h1 class="text-2xl font-bold text-white mb-2">Gestão de Produtos</h1>
+      <h1 class="text-2xl font-bold text-white mb-2">Gestao de Produtos</h1>
       <p class="text-gray-400">Controle e organize seu estoque</p>
     </div>
     <div class="flex flex-wrap gap-2 mt-4 sm:mt-0">
@@ -73,7 +73,7 @@
             <div class="relative">
               <input type="text" 
                      name="serie_number" 
-                     placeholder="Número de série" 
+                     placeholder="Numero de serie" 
                      value="{{ request.GET.serie_number }}"
                      class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200">
             </div>
@@ -90,7 +90,7 @@
       <div>
         <label class="block text-sm font-medium text-gray-300 mb-3">Filtrar por</label>
         <form method="get" action="{% url 'product_list' %}" class="space-y-4">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <select name="category" 
                     class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200">
               <option value="" {% if not request.GET.category %} selected {% endif %}>Todas as Categorias</option>
@@ -104,6 +104,12 @@
               {% for brand in brands %}
                 <option value="{{ brand.id }}" {% if request.GET.brand == brand.id|stringformat:"s" %} selected {% endif %}>{{ brand.name }}</option>
               {% endfor %}
+            </select>
+            <select name="stock_type" 
+                    class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200">
+              <option value="" {% if not request.GET.stock_type %} selected {% endif %}>Todos os Tipos</option>
+              <option value="proprio" {% if request.GET.stock_type == 'proprio' %} selected {% endif %}>Proprio</option>
+              <option value="consignado" {% if request.GET.stock_type == 'consignado' %} selected {% endif %}>Consignado</option>
             </select>
           </div>
           <button type="submit" 
@@ -126,11 +132,11 @@
             <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Produto</th>
             <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Categoria</th>
             <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Marca</th>
-            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Preço Custo</th>
-            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Preço Venda</th>
-            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Número Série</th>
+            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Tipo</th>
+            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Preco Custo</th>
+            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Preco Venda</th>
             <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Quantidade</th>
-            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Ações</th>
+            <th class="px-6 py-4 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">Acoes</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-white/10">
@@ -155,14 +161,22 @@
                   {{ product.brand }}
                 </span>
               </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                {% if product.stock_type == 'consignado' %}
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                    <i class="bi bi-arrow-left-right mr-1"></i> Consignado
+                  </span>
+                {% else %}
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    <i class="bi bi-check-circle mr-1"></i> Proprio
+                  </span>
+                {% endif %}
+              </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                 R$ {{ product.cost_price }}
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-400">
                 R$ {{ product.selling_price }}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                {{ product.serie_number|default:"-" }}
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 

@@ -25,7 +25,7 @@
       <div>
         <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
           <i class="bi bi-box-seam mr-2 text-violet-400"></i>
-          Informações Básicas
+          Informacoes Basicas
         </h3>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <!-- Title Field -->
@@ -37,7 +37,7 @@
                    name="{{ form.title.name }}" 
                    id="{{ form.title.id_for_label }}"
                    value="{{ form.title.value|default:'' }}"
-                   required="{{ form.title.field.required }}"
+                   required
                    class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200"
                    placeholder="Digite o nome do produto">
             {% if form.title.errors %}
@@ -55,7 +55,7 @@
                    id="{{ form.serie_number.id_for_label }}"
                    value="{{ form.serie_number.value|default:'' }}"
                    class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200"
-                   placeholder="Número de série (opcional)">
+                   placeholder="Numero de serie (opcional)">
             {% if form.serie_number.errors %}
               <div class="mt-1 text-sm text-red-400">{{ form.serie_number.errors.0 }}</div>
             {% endif %}
@@ -68,13 +68,13 @@
             </label>
             <select name="{{ form.category.name }}" 
                     id="{{ form.category.id_for_label }}"
-                    required="{{ form.category.field.required }}"
+                    required
                     class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200">
               <option value="">Selecione uma categoria</option>
-              {% for value, text in form.category.field.choices %}
-                {% if value %}
-                  <option value="{{ value }}" {% if form.category.value == value %}selected{% endif %}>{{ text }}</option>
-                {% endif %}
+              {% for choice in form.category.field.queryset %}
+                <option value="{{ choice.pk }}" {% if form.category.value|stringformat:"s" == choice.pk|stringformat:"s" %}selected{% endif %}>
+                  {{ choice.name }}
+                </option>
               {% endfor %}
             </select>
             {% if form.category.errors %}
@@ -89,13 +89,13 @@
             </label>
             <select name="{{ form.brand.name }}" 
                     id="{{ form.brand.id_for_label }}"
-                    required="{{ form.brand.field.required }}"
+                    required
                     class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200">
               <option value="">Selecione uma marca</option>
-              {% for value, text in form.brand.field.choices %}
-                {% if value %}
-                  <option value="{{ value }}" {% if form.brand.value == value %}selected{% endif %}>{{ text }}</option>
-                {% endif %}
+              {% for choice in form.brand.field.queryset %}
+                <option value="{{ choice.pk }}" {% if form.brand.value|stringformat:"s" == choice.pk|stringformat:"s" %}selected{% endif %}>
+                  {{ choice.name }}
+                </option>
               {% endfor %}
             </select>
             {% if form.brand.errors %}
@@ -109,7 +109,7 @@
       <div class="border-t border-white/10 pt-6">
         <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
           <i class="bi bi-currency-dollar mr-2 text-green-400"></i>
-          Informações de Preço
+          Informacoes de Preco
         </h3>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <!-- Cost Price -->
@@ -121,15 +121,14 @@
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <span class="text-gray-400">R$</span>
               </div>
-              <input type="number" 
+              <input type="text" 
                      name="{{ form.cost_price.name }}" 
                      id="{{ form.cost_price.id_for_label }}"
                      value="{{ form.cost_price.value|default:'' }}"
-                     step="0.01"
-                     min="0"
-                     required="{{ form.cost_price.field.required }}"
+                     inputmode="decimal"
+                     required
                      class="block w-full pl-10 pr-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200"
-                     placeholder="0,00">
+                     placeholder="0.00">
             </div>
             {% if form.cost_price.errors %}
               <div class="mt-1 text-sm text-red-400">{{ form.cost_price.errors.0 }}</div>
@@ -145,15 +144,14 @@
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <span class="text-gray-400">R$</span>
               </div>
-              <input type="number" 
+              <input type="text" 
                      name="{{ form.selling_price.name }}" 
                      id="{{ form.selling_price.id_for_label }}"
                      value="{{ form.selling_price.value|default:'' }}"
-                     step="0.01"
-                     min="0"
-                     required="{{ form.selling_price.field.required }}"
+                     inputmode="decimal"
+                     required
                      class="block w-full pl-10 pr-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200"
-                     placeholder="0,00">
+                     placeholder="0.00">
             </div>
             {% if form.selling_price.errors %}
               <div class="mt-1 text-sm text-red-400">{{ form.selling_price.errors.0 }}</div>
@@ -167,7 +165,7 @@
       <div class="border-t border-white/10 pt-6">
         <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
           <i class="bi bi-boxes mr-2 text-blue-400"></i>
-          Informações de Estoque
+          Informacoes de Estoque
         </h3>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <!-- Quantity -->
@@ -180,11 +178,73 @@
                    id="{{ form.quantity.id_for_label }}"
                    value="{{ form.quantity.value|default:0 }}"
                    min="0"
-                   required="{{ form.quantity.field.required }}"
+                   required
                    class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200"
                    placeholder="0">
             {% if form.quantity.errors %}
               <div class="mt-1 text-sm text-red-400">{{ form.quantity.errors.0 }}</div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Consignment Section -->
+      <div class="border-t border-white/10 pt-6">
+        <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+          <i class="bi bi-arrow-left-right mr-2 text-amber-400"></i>
+          Consignacao
+        </h3>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Stock Type -->
+          <div>
+            <label for="{{ form.stock_type.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">
+              {{ form.stock_type.label }}
+            </label>
+            <select name="{{ form.stock_type.name }}" 
+                    id="{{ form.stock_type.id_for_label }}"
+                    class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200"
+                    onchange="toggleConsignmentFields(this.value)">
+              {% for value, text in form.stock_type.field.choices %}
+                <option value="{{ value }}" {% if form.stock_type.value == value %}selected{% endif %}>{{ text }}</option>
+              {% endfor %}
+            </select>
+            {% if form.stock_type.errors %}
+              <div class="mt-1 text-sm text-red-400">{{ form.stock_type.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Consignment Supplier (only when consignado) -->
+          <div id="consignment-supplier-field" class="{% if form.stock_type.value != 'consignado' %}hidden{% endif %}">
+            <label for="{{ form.consignment_supplier.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">
+              {{ form.consignment_supplier.label }}
+            </label>
+            <select name="{{ form.consignment_supplier.name }}" 
+                    id="{{ form.consignment_supplier.id_for_label }}"
+                    class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200">
+              <option value="">Selecione o fornecedor</option>
+              {% for choice in form.consignment_supplier.field.queryset %}
+                <option value="{{ choice.pk }}" {% if form.consignment_supplier.value|stringformat:"s" == choice.pk|stringformat:"s" %}selected{% endif %}>
+                  {{ choice.name }}
+                </option>
+              {% endfor %}
+            </select>
+            {% if form.consignment_supplier.errors %}
+              <div class="mt-1 text-sm text-red-400">{{ form.consignment_supplier.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Consignment Return Date (only when consignado) -->
+          <div id="consignment-date-field" class="{% if form.stock_type.value != 'consignado' %}hidden{% endif %}">
+            <label for="{{ form.consignment_return_date.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">
+              {{ form.consignment_return_date.label }}
+            </label>
+            <input type="date" 
+                   name="{{ form.consignment_return_date.name }}" 
+                   id="{{ form.consignment_return_date.id_for_label }}"
+                   value="{{ form.consignment_return_date.value|default:'' }}"
+                   class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200">
+            {% if form.consignment_return_date.errors %}
+              <div class="mt-1 text-sm text-red-400">{{ form.consignment_return_date.errors.0 }}</div>
             {% endif %}
           </div>
         </div>
@@ -195,7 +255,7 @@
       <div class="border-t border-white/10 pt-6">
         <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
           <i class="bi bi-text-paragraph mr-2 text-blue-400"></i>
-          Descrição
+          Descricao
         </h3>
         <div>
           <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">
@@ -205,7 +265,7 @@
                     id="{{ form.description.id_for_label }}"
                     rows="4"
                     class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200 resize-none"
-                    placeholder="Descreva as características do produto...">{{ form.description.value|default:'' }}</textarea>
+                    placeholder="Descaracteristicas do produto...">{{ form.description.value|default:'' }}</textarea>
           {% if form.description.errors %}
             <div class="mt-1 text-sm text-red-400">{{ form.description.errors.0 }}</div>
           {% endif %}
@@ -236,7 +296,7 @@
               <i class="bi bi-exclamation-triangle-fill text-red-400"></i>
             </div>
             <div class="ml-3">
-              <h3 class="text-sm font-medium text-red-200">Erro no formulário</h3>
+              <h3 class="text-sm font-medium text-red-200">Erro no formulario</h3>
               <div class="mt-2 text-sm text-red-300">
                 <ul class="list-disc pl-5 space-y-1">
                   {% for error in form.non_field_errors %}
@@ -250,4 +310,18 @@
       {% endif %}
     </form>
   </div>
+
+  <script>
+    function toggleConsignmentFields(value) {
+      const supplierField = document.getElementById('consignment-supplier-field');
+      const dateField = document.getElementById('consignment-date-field');
+      if (value === 'consignado') {
+        supplierField.classList.remove('hidden');
+        dateField.classList.remove('hidden');
+      } else {
+        supplierField.classList.add('hidden');
+        dateField.classList.add('hidden');
+      }
+    }
+  </script>
 {% endblock %}

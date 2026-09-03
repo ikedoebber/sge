@@ -75,6 +75,11 @@
                 {% if supplier.cpf_cnpj %}
                   <div class="text-xs text-gray-400">{{ supplier.cpf_cnpj }}</div>
                 {% endif %}
+                {% if supplier.is_consignment_supplier %}
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800 mt-1">
+                    <i class="bi bi-arrow-left-right mr-1"></i> Consignacao
+                  </span>
+                {% endif %}
               </td>
               <td class="px-6 py-4 text-sm text-gray-300">
                 {% if supplier.phone %}

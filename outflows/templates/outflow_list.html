@@ -77,12 +77,23 @@
         </thead>
         <tbody class="divide-y divide-white/10">
           {% for outflow in outflows %}
-            <tr class="hover:bg-white/5 transition-colors duration-200">
+            <tr class="hover:bg-white/5 transition-colors duration-200 {% if outflow.status == 'cancelled' %}opacity-50{% endif %}">
               <td class="px-6 py-4 whitespace-nowrap">
                 <a href="{% url 'outflow_detail' outflow.id %}" 
                    class="text-violet-400 hover:text-violet-300 font-semibold transition-colors duration-200">
                   #{{ outflow.id }}
                 </a>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                {% if outflow.status == 'cancelled' %}
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-500/20 text-red-400 border border-red-500/30">
+                    <i class="bi bi-x-circle mr-1"></i> Cancelada
+                  </span>
+                {% else %}
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-500/20 text-green-400 border border-green-500/30">
+                    <i class="bi bi-check-circle mr-1"></i> Ativa
+                  </span>
+                {% endif %}
               </td>
               <td class="px-6 py-4">
                 <div class="flex items-center">
@@ -128,6 +139,10 @@
                 <a href="{% url 'outflow_detail' outflow.id %}" 
                    class="inline-flex items-center px-2.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors duration-200">
                   <i class="bi bi-eye"></i>
+                </a>
+                <a href="{% url 'outflow_update' outflow.id %}" 
+                   class="inline-flex items-center px-2.5 py-1.5 bg-violet-600 hover:bg-violet-700 text-white text-xs font-medium rounded-lg transition-colors duration-200 ml-1">
+                  <i class="bi bi-pencil"></i>
                 </a>
               </td>
             </tr>

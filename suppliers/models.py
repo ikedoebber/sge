@@ -15,6 +15,7 @@ class Supplier(models.Model):
     address = models.CharField('Endereco', max_length=500, blank=True, null=True)
     city = models.CharField('Cidade', max_length=200, blank=True, null=True)
     state = models.CharField('Estado', max_length=2, blank=True, null=True)
+    is_consignment_supplier = models.BooleanField('Fornecedor de Consignacao', default=False)
     notes = models.TextField('Observacoes', blank=True, null=True)
     created_at = models.DateTimeField('Criado em', auto_now_add=True)
     updated_at = models.DateTimeField('Atualizado em', auto_now=True)
