@@ -241,7 +241,7 @@
             <input type="date" 
                    name="{{ form.consignment_return_date.name }}" 
                    id="{{ form.consignment_return_date.id_for_label }}"
-                   value="{{ form.consignment_return_date.value|default:'' }}"
+                   value="{{ form.consignment_return_date.value|date:'Y-m-d'|default:'' }}"
                    class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200">
             {% if form.consignment_return_date.errors %}
               <div class="mt-1 text-sm text-red-400">{{ form.consignment_return_date.errors.0 }}</div>

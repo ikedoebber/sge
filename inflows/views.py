@@ -335,6 +335,7 @@ class InflowXMLUploadView(LoginRequiredMixin, PermissionRequiredMixin, FormView)
             'processing': True,
             'all_suppliers': Supplier.objects.all().order_by('name'),
             'all_brands': Brand.objects.all().order_by('name'),
+            'all_categories': Category.objects.all().order_by('name'),
         }
         
         return render(self.request, 'inflow_xml_upload.html', context)
@@ -391,6 +392,15 @@ class InflowXMLUploadView(LoginRequiredMixin, PermissionRequiredMixin, FormView)
             except (Brand.DoesNotExist, ValueError):
                 brand = None
         
+        # Categoria selecionada para novos produtos
+        selected_category_id = request.POST.get('category_id', '').strip()
+        category = None
+        if selected_category_id:
+            try:
+                category = Category.objects.get(id=selected_category_id)
+            except (Category.DoesNotExist, ValueError):
+                category = None
+        
         # Criar entradas para cada item
         created_count = 0
         errors = []
@@ -409,10 +419,11 @@ class InflowXMLUploadView(LoginRequiredMixin, PermissionRequiredMixin, FormView)
                     product = existing_product
                 else:
                     # Criar novo produto
-                    category, _ = Category.objects.get_or_create(
-                        name='Importado NFe',
-                        defaults={'description': 'Produtos importados automaticamente via XML de NFe'}
-                    )
+                    if not category:
+                        category, _ = Category.objects.get_or_create(
+                            name='Importado NFe',
+                            defaults={'description': 'Produtos importados automaticamente via XML de NFe'}
+                        )
                     
                     if not brand:
                         brand, _ = Brand.objects.get_or_create(

@@ -68,7 +68,7 @@
       {% csrf_token %}
       <input type="hidden" name="confirm_import" value="true">
       
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
       <!-- Fornecedor -->
       <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
         <h3 class="text-lg font-semibold text-white flex items-center mb-4">
@@ -112,6 +112,28 @@
           <option value="">Marca padrao (Sem Marca)</option>
           {% for b in all_brands %}
             <option value="{{ b.id }}">{{ b.name }}</option>
+          {% endfor %}
+        </select>
+        
+        <p class="text-gray-400 text-xs mt-2">
+          <i class="bi bi-info-circle mr-1"></i>
+          Aplica apenas a produtos novos criados nesta importacao
+        </p>
+      </div>
+
+      <!-- Categoria -->
+      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+        <h3 class="text-lg font-semibold text-white flex items-center mb-4">
+          <i class="bi bi-folder mr-2 text-violet-400"></i>
+          Categoria para Produtos Novos
+          <span class="ml-2 text-xs font-normal text-gray-400">(opcional)</span>
+        </h3>
+        
+        <select name="category_id" id="category_select"
+                class="w-full bg-gray-800/50 border border-gray-600 rounded-lg px-4 py-3 text-white focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-colors">
+          <option value="">Categoria padrao (Importado NFe)</option>
+          {% for c in all_categories %}
+            <option value="{{ c.id }}">{{ c.name }}</option>
           {% endfor %}
         </select>
         
