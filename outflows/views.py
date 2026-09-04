@@ -7,6 +7,7 @@ from django.db.models import Q
 from django.shortcuts import redirect
 from django.utils import timezone
 from app import metrics
+from products.models import Product
 from . import models, forms, serializers
 
 
@@ -53,8 +54,6 @@ class OutflowCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
             context['item_formset'] = forms.OutflowItemFormSet(prefix='items')
             context['initial_product_id'] = self.request.GET.get('product', '')
         
-        # Passar produtos como JSON para o JS
-        from products.models import Product
         products = Product.objects.select_related('category').filter(quantity__gt=0)
         context['products_json'] = [
             {'id': p.pk, 'title': p.title, 'price': float(p.selling_price)}
@@ -162,7 +161,6 @@ class OutflowUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
                 prefix='items', instance=self.object
             )
 
-        from products.models import Product
         existing_product_ids = set(
             self.object.items.values_list('product_id', flat=True)
         )
@@ -219,7 +217,6 @@ class OutflowUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
                 elif not item_pk:
                     stock_adjustments[pid] = stock_adjustments.get(pid, 0) - new_qty
 
-            from products.models import Product
             for pid, adjustment in stock_adjustments.items():
                 if adjustment < 0:
                     product = Product.objects.get(id=pid)
