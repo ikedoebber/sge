@@ -67,8 +67,7 @@ class OutflowCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
         item_formset = context['item_formset']
 
         if item_formset.is_valid():
-            stock_errors = []
-            items_data = []
+            product_quantities = {}
             for form_item in item_formset.forms:
                 delete_field = form_item.prefix + '-DELETE'
                 is_deleted = form_item.data.get(delete_field) == 'on'
@@ -80,11 +79,16 @@ class OutflowCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
                 qty = form_item.cleaned_data.get('quantity', 0) or 0
                 if qty <= 0:
                     continue
-                if product.quantity < qty:
+                pid = product.pk
+                product_quantities[pid] = product_quantities.get(pid, 0) + qty
+
+            stock_errors = []
+            for pid, total_qty in product_quantities.items():
+                product = Product.objects.get(id=pid)
+                if product.quantity < total_qty:
                     stock_errors.append(
-                        f'{product.title}: solicitado {qty}, disponivel {product.quantity}'
+                        f'{product.title}: solicitado {total_qty} un., disponivel {product.quantity} un.'
                     )
-                items_data.append({'product': product, 'qty': qty})
 
             if stock_errors:
                 messages.error(self.request, 'Estoque insuficiente: ' + '; '.join(stock_errors))
@@ -188,7 +192,7 @@ class OutflowUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
         if item_formset.is_valid():
             old_stock = {}
             for item in self.object.items.all():
-                old_stock[item.product_id] = item.quantity
+                old_stock[item.product_id] = old_stock.get(item.product_id, 0) + item.quantity
 
             stock_adjustments = {}
             stock_errors = []
@@ -207,19 +211,17 @@ class OutflowUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
                     if pid in old_stock:
                         stock_adjustments[pid] = stock_adjustments.get(pid, 0) + old_stock[pid]
                 else:
-                    if pid in old_stock:
-                        adjustment = old_stock[pid] - new_qty
-                        stock_adjustments[pid] = stock_adjustments.get(pid, 0) + adjustment
-                    else:
-                        stock_adjustments[pid] = stock_adjustments.get(pid, 0) - new_qty
+                    old_qty = old_stock.get(pid, 0)
+                    adjustment = old_qty - new_qty
+                    stock_adjustments[pid] = stock_adjustments.get(pid, 0) + adjustment
 
+            from products.models import Product
             for pid, adjustment in stock_adjustments.items():
                 if adjustment < 0:
                     product = Product.objects.get(id=pid)
-                    current = old_stock.get(pid, 0)
-                    needed = current - adjustment
+                    needed = abs(adjustment)
                     stock_errors.append(
-                        f'{product.title}: solicitado {needed}, disponivel {current}'
+                        f'{product.title}: solicitado {needed} un., disponivel {product.quantity} un.'
                     )
 
             if stock_errors:
@@ -245,6 +247,7 @@ class OutflowUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
                 item.delete()
 
             self.object.total_value = total
+            self.object.balance_due = total - self.object.down_payment
             self.object.save()
 
             return super().form_valid(form)

@@ -40,3 +40,17 @@ class ProductForm(forms.ModelForm):
             'consignment_supplier': 'Fornecedor Consignado',
             'consignment_return_date': 'Data de Retorno',
         }
+
+    def _clean_decimal(self, value):
+        if value in (None, ''):
+            return value
+        value = str(value).strip()
+        if ',' in value:
+            value = value.replace('.', '').replace(',', '.')
+        return value
+
+    def clean_cost_price(self):
+        return self._clean_decimal(self.cleaned_data.get('cost_price'))
+
+    def clean_selling_price(self):
+        return self._clean_decimal(self.cleaned_data.get('selling_price'))

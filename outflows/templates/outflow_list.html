@@ -83,16 +83,8 @@
                    class="text-violet-400 hover:text-violet-300 font-semibold transition-colors duration-200">
                   #{{ outflow.id }}
                 </a>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
                 {% if outflow.status == 'cancelled' %}
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-500/20 text-red-400 border border-red-500/30">
-                    <i class="bi bi-x-circle mr-1"></i> Cancelada
-                  </span>
-                {% else %}
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-500/20 text-green-400 border border-green-500/30">
-                    <i class="bi bi-check-circle mr-1"></i> Ativa
-                  </span>
+                  <div><span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-500/20 text-red-400 border border-red-500/30">Cancelada</span></div>
                 {% endif %}
               </td>
               <td class="px-6 py-4">
