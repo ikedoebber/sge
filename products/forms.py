@@ -1,8 +1,17 @@
 from django import forms
+from decimal import Decimal, InvalidOperation
 from . import models
 
 
 class ProductForm(forms.ModelForm):
+    cost_price = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'inputmode': 'decimal'}),
+    )
+    selling_price = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'inputmode': 'decimal'}),
+    )
 
     class Meta:
         model = models.Product
@@ -17,8 +26,6 @@ class ProductForm(forms.ModelForm):
             'brand': forms.Select(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'serie_number': forms.TextInput(attrs={'class': 'form-control'}),
-            'cost_price': forms.NumberInput(attrs={'class': 'form-control'}),
-            'selling_price': forms.NumberInput(attrs={'class': 'form-control'}),
             'quantity': forms.NumberInput(attrs={'class': 'form-control'}),
             'stock_type': forms.Select(attrs={'class': 'form-control'}),
             'consignment_supplier': forms.Select(attrs={'class': 'form-control'}),
@@ -41,16 +48,19 @@ class ProductForm(forms.ModelForm):
             'consignment_return_date': 'Data de Retorno',
         }
 
-    def _clean_decimal(self, value):
+    def _parse_decimal(self, value):
         if value in (None, ''):
-            return value
-        value = str(value).strip()
+            return None
+        value = str(value).strip().replace('R$', '').strip()
         if ',' in value:
             value = value.replace('.', '').replace(',', '.')
-        return value
+        try:
+            return Decimal(value)
+        except (InvalidOperation, ValueError):
+            return None
 
     def clean_cost_price(self):
-        return self._clean_decimal(self.cleaned_data.get('cost_price'))
+        return self._parse_decimal(self.data.get('cost_price'))
 
     def clean_selling_price(self):
-        return self._clean_decimal(self.cleaned_data.get('selling_price'))
+        return self._parse_decimal(self.data.get('selling_price'))

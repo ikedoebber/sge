@@ -178,7 +178,7 @@ class OutflowUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
                 'id': item.product_id,
                 'product_id': item.product_id,
                 'quantity': item.quantity,
-                'unit_price': float(item.unit_price),
+                'unit_price': float(item.unit_price) if item.unit_price else float(item.product.selling_price),
                 'item_id': item.pk,
             }
             for item in self.object.items.select_related('product').all()
@@ -190,9 +190,9 @@ class OutflowUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
         item_formset = context['item_formset']
 
         if item_formset.is_valid():
-            old_stock = {}
+            old_items = {}
             for item in self.object.items.all():
-                old_stock[item.product_id] = old_stock.get(item.product_id, 0) + item.quantity
+                old_items[item.pk] = {'product_id': item.product_id, 'quantity': item.quantity}
 
             stock_adjustments = {}
             stock_errors = []
@@ -207,13 +207,17 @@ class OutflowUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
                 pid = product.pk
                 new_qty = form_item.cleaned_data.get('quantity', 0) or 0
 
-                if is_deleted:
-                    if pid in old_stock:
-                        stock_adjustments[pid] = stock_adjustments.get(pid, 0) + old_stock[pid]
-                else:
-                    old_qty = old_stock.get(pid, 0)
+                item_pk = form_item.instance.pk
+
+                if is_deleted and item_pk and item_pk in old_items:
+                    old_qty = old_items[item_pk]['quantity']
+                    stock_adjustments[pid] = stock_adjustments.get(pid, 0) + old_qty
+                elif item_pk and item_pk in old_items:
+                    old_qty = old_items[item_pk]['quantity']
                     adjustment = old_qty - new_qty
                     stock_adjustments[pid] = stock_adjustments.get(pid, 0) + adjustment
+                elif not item_pk:
+                    stock_adjustments[pid] = stock_adjustments.get(pid, 0) - new_qty
 
             from products.models import Product
             for pid, adjustment in stock_adjustments.items():
