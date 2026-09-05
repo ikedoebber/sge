@@ -95,7 +95,7 @@ def get_payment_method_metrics():
     metrics = {}
     for key, label in choices.items():
         total = Outflow.objects.filter(payment_method=key, status='active').aggregate(
-            total=Sum('total_value')
+            total=Sum('amount_paid')
         )['total'] or 0
         count = Outflow.objects.filter(payment_method=key, status='active').count()
         metrics[key] = {
