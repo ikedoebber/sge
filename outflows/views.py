@@ -97,13 +97,11 @@ class OutflowCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
             self.object.sale_date = timezone.now().date()
 
             items = item_formset.save(commit=False)
-            total = 0
             for item in items:
                 if not item.unit_price:
                     item.unit_price = item.product.selling_price
                 item.outflow = self.object
                 item.save()
-                total += item.subtotal
 
                 product = item.product
                 product.quantity -= item.quantity
@@ -115,7 +113,9 @@ class OutflowCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
                 product.save()
                 item.delete()
 
-            self.object.total_value = total
+            self.object.total_value = sum(
+                item.subtotal for item in self.object.items.select_related('product').all()
+            )
             self.object.save()
 
             self._generate_installments(self.object)
@@ -235,20 +235,21 @@ class OutflowUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
                     product.save()
 
             self.object = form.save(commit=False)
+            self.object.save()
 
             items = item_formset.save(commit=False)
-            total = 0
             for item in items:
                 if not item.unit_price:
                     item.unit_price = item.product.selling_price
                 item.outflow = self.object
                 item.save()
-                total += item.subtotal
 
             for item in item_formset.deleted_objects:
                 item.delete()
 
-            self.object.total_value = total
+            self.object.total_value = sum(
+                item.subtotal for item in self.object.items.select_related('product').all()
+            )
             self.object.save()
 
             messages.success(self.request, 'Venda atualizada com sucesso!')
