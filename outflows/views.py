@@ -95,7 +95,6 @@ class OutflowCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
 
             self.object = form.save(commit=False)
             self.object.sale_date = timezone.now().date()
-            self.object.save()
 
             items = item_formset.save(commit=False)
             total = 0
@@ -117,12 +116,12 @@ class OutflowCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
                 item.delete()
 
             self.object.total_value = total
-            self.object.balance_due = total - self.object.down_payment
             self.object.save()
 
             self._generate_installments(self.object)
 
-            return super().form_valid(form)
+            messages.success(self.request, 'Venda criada com sucesso!')
+            return redirect('outflow_list')
         return self.render_to_response(context)
 
     def _generate_installments(self, outflow):
@@ -235,6 +234,8 @@ class OutflowUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
                     product.quantity += adjustment
                     product.save()
 
+            self.object = form.save(commit=False)
+
             items = item_formset.save(commit=False)
             total = 0
             for item in items:
@@ -248,10 +249,10 @@ class OutflowUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
                 item.delete()
 
             self.object.total_value = total
-            self.object.balance_due = total - self.object.down_payment
             self.object.save()
 
-            return super().form_valid(form)
+            messages.success(self.request, 'Venda atualizada com sucesso!')
+            return redirect('outflow_list')
         return self.render_to_response(context)
 
 

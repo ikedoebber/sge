@@ -56,8 +56,6 @@ class OutflowForm(forms.ModelForm):
         self.fields['client'].required = False
         self.fields['client'].empty_label = 'Selecione o cliente (opcional)'
         self.fields['total_value'].required = False
-        self.fields['total_value'].initial = 0
-        self.fields['down_payment'].initial = 0
         self.fields['description'].required = False
 
 

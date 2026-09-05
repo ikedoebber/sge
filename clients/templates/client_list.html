@@ -122,13 +122,6 @@
                       <i class="bi bi-pencil"></i>
                     </a>
                   {% endif %}
-                  {% if perms.clients.delete_client %}
-                    <a href="{% url 'client_delete' client.id %}" 
-                       class="inline-flex items-center px-2.5 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-medium rounded-lg transition-colors duration-200"
-                       title="Excluir">
-                      <i class="bi bi-trash"></i>
-                    </a>
-                  {% endif %}
                 </div>
               </td>
             </tr>

@@ -57,7 +57,7 @@
               <option value="" class="text-gray-500">Selecione o cliente (opcional)...</option>
               {% for choice in form.client.field.queryset %}
                 <option value="{{ choice.pk }}" 
-                        {% if form.client.value == choice.pk|stringformat:"s" %}selected{% endif %}
+                        {% if form.client.value|stringformat:"s" == choice.pk|stringformat:"s" %}selected{% endif %}
                         class="text-white">
                   {{ choice.name }} - {{ choice.phone }}
                 </option>
@@ -81,7 +81,7 @@
                   class="block w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-200">
             {% for choice in form.payment_method.field.choices %}
               <option value="{{ choice.0 }}" 
-                      {% if form.payment_method.value == choice.0 %}selected{% endif %}
+                      {% if form.payment_method.value|stringformat:"s" == choice.0|stringformat:"s" %}selected{% endif %}
                       class="text-white">
                 {{ choice.1 }}
               </option>
@@ -458,74 +458,10 @@
     const clientCreateBtn = document.getElementById('client-create-btn');
     if (clientCreateBtn) {
       clientCreateBtn.addEventListener('click', function() {
-        const formData = {
-          items: [],
-          client: document.getElementById('{{ form.client.id_for_label }}').value,
-          payment_method: document.getElementById('{{ form.payment_method.id_for_label }}').value,
-          down_payment: document.getElementById('{{ form.down_payment.id_for_label }}').value,
-          num_installments: document.getElementById('{{ form.num_installments.id_for_label }}').value,
-          description: document.getElementById('{{ form.description.id_for_label }}').value,
-        };
-        
-        document.querySelectorAll('.item-row').forEach(row => {
-          const productSelect = row.querySelector('.product-select');
-          const qtyInput = row.querySelector('.item-quantity');
-          if (productSelect && qtyInput) {
-            formData.items.push({
-              product: productSelect.value,
-              quantity: qtyInput.value,
-            });
-          }
-        });
-        
-        localStorage.setItem('outflowFormData', JSON.stringify(formData));
+        const params = new URLSearchParams();
+        params.set('next', window.location.href);
+        this.href = "{% url 'client_create' %}?" + params.toString();
       });
-    }
-
-    const savedData = localStorage.getItem('outflowFormData');
-    if (savedData) {
-      localStorage.removeItem('outflowFormData');
-      try {
-        const formData = JSON.parse(savedData);
-        
-        if (formData.client) {
-          const clientSelect = document.getElementById('{{ form.client.id_for_label }}');
-          if (clientSelect) clientSelect.value = formData.client;
-        }
-        if (formData.payment_method) {
-          const paymentSelect = document.getElementById('{{ form.payment_method.id_for_label }}');
-          if (paymentSelect) paymentSelect.value = formData.payment_method;
-        }
-        if (formData.down_payment) {
-          const downPaymentInput = document.getElementById('{{ form.down_payment.id_for_label }}');
-          if (downPaymentInput) downPaymentInput.value = formData.down_payment;
-        }
-        if (formData.num_installments) {
-          const installmentsInput = document.getElementById('{{ form.num_installments.id_for_label }}');
-          if (installmentsInput) installmentsInput.value = formData.num_installments;
-        }
-        if (formData.description) {
-          const descriptionInput = document.getElementById('{{ form.description.id_for_label }}');
-          if (descriptionInput) descriptionInput.value = formData.description;
-        }
-        
-        if (formData.items && formData.items.length > 0) {
-          container.innerHTML = '';
-          formIdx = 0;
-          formData.items.forEach(item => {
-            addEmptyRow(item.product);
-            const lastRow = container.lastElementChild;
-            if (lastRow) {
-              const qtyInput = lastRow.querySelector('.item-quantity');
-              if (qtyInput) qtyInput.value = item.quantity;
-            }
-          });
-          updateTotal();
-          updateResumo();
-        }
-      } catch (e) {
-        console.error('Erro ao restaurar dados do formulario:', e);
-      }
     }
   });
   </script>
