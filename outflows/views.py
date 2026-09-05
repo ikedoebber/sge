@@ -116,6 +116,7 @@ class OutflowCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
             self.object.total_value = sum(
                 item.subtotal for item in self.object.items.select_related('product').all()
             )
+            self.object.amount_paid = self.object.down_payment
             self.object.save()
 
             self._generate_installments(self.object)
@@ -250,6 +251,10 @@ class OutflowUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
             self.object.total_value = sum(
                 item.subtotal for item in self.object.items.select_related('product').all()
             )
+            parcelas_pagas = sum(
+                p.amount_paid for p in self.object.installments.all()
+            )
+            self.object.amount_paid = self.object.down_payment + parcelas_pagas
             self.object.save()
 
             messages.success(self.request, 'Venda atualizada com sucesso!')
