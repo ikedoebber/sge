@@ -48,20 +48,20 @@ class Outflow(models.Model):
         return f'Saida #{self.id} - {product_name}{suffix}{client_name}'
 
     def save(self, *args, **kwargs):
-        self.balance_due = self.total_value - self.down_payment - self.amount_paid
+        self.balance_due = max(0, self.total_value - self.down_payment - self.amount_paid)
         if not self.sale_date:
             self.sale_date = timezone.now().date()
         super().save(*args, **kwargs)
 
     def update_total(self):
         self.total_value = sum(item.subtotal for item in self.items.all())
-        self.balance_due = self.total_value - self.down_payment - self.amount_paid
+        self.balance_due = max(0, self.total_value - self.down_payment - self.amount_paid)
         self.save(update_fields=['total_value', 'balance_due'])
 
     def update_amount_paid(self):
         total_parcelas_pago = sum(p.amount_paid for p in self.installments.all())
         self.amount_paid = self.down_payment + total_parcelas_pago
-        self.balance_due = self.total_value - self.amount_paid
+        self.balance_due = max(0, self.total_value - self.amount_paid)
         self.save(update_fields=['amount_paid', 'balance_due'])
 
     def get_status_display_summary(self):

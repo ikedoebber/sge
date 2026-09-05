@@ -41,11 +41,10 @@ OutflowItemFormSet = forms.inlineformset_factory(
 class OutflowForm(forms.ModelForm):
     class Meta:
         model = models.Outflow
-        fields = ['client', 'description', 'total_value', 'down_payment', 'num_installments', 'payment_method']
+        fields = ['client', 'description', 'down_payment', 'num_installments', 'payment_method']
         widgets = {
             'client': forms.Select(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
-            'total_value': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'id': 'id_total_value'}),
             'down_payment': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'num_installments': forms.NumberInput(attrs={'class': 'form-control', 'min': '1'}),
             'payment_method': forms.Select(attrs={'class': 'form-control'}),
@@ -55,7 +54,6 @@ class OutflowForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['client'].required = False
         self.fields['client'].empty_label = 'Selecione o cliente (opcional)'
-        self.fields['total_value'].required = False
         self.fields['description'].required = False
 
 
