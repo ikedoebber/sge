@@ -111,7 +111,7 @@
               {% if object.status == 'cancelled' %}
                 <p class="text-xl font-bold text-red-400">Cancelada</p>
               {% else %}
-                <p class="text-xl font-bold text-blue-400">R$ {{ object.amount_paid|add:object.down_payment|floatformat:2 }}</p>
+                <p class="text-xl font-bold text-blue-400">R$ {{ object.amount_paid|floatformat:2 }}</p>
               {% endif %}
             </div>
             <div class="bg-gray-800/50 rounded-xl p-4">
