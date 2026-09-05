@@ -1,0 +1,25 @@
+- main [ref=e2]:
+  - generic [ref=e7]:
+    - generic [ref=e8]:
+      - generic [ref=e9]: 
+      - heading "SGE" [level=1] [ref=e11]
+      - paragraph [ref=e12]: Sistema de Gestão de Estoque
+      - paragraph [ref=e13]: Faça login em sua conta
+    - generic [ref=e15]:
+      - generic [ref=e16]:
+        - generic [ref=e17]:
+          - generic [ref=e18]: Usuário
+          - generic [ref=e19]:
+            - generic: 
+            - textbox "Usuário" [ref=e20]:
+              - /placeholder: Digite seu usuário
+        - generic [ref=e21]:
+          - generic [ref=e22]: Senha
+          - generic [ref=e23]:
+            - generic: 
+            - textbox "Senha" [ref=e24]:
+              - /placeholder: Digite sua senha
+      - button " Entrar" [ref=e26] [cursor=pointer]:
+        - generic [ref=e27]: 
+        - text: Entrar
+    - paragraph [ref=e30]: Versão 1.0 • Sistema Seguro

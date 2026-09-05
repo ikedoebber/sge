@@ -108,11 +108,19 @@
             </div>
             <div class="bg-gray-800/50 rounded-xl p-4">
               <p class="text-gray-300 text-xs uppercase">Pago</p>
-              <p class="text-xl font-bold text-blue-400">R$ {{ object.amount_paid|floatformat:2 }}</p>
+              {% if object.status == 'cancelled' %}
+                <p class="text-xl font-bold text-red-400">Cancelada</p>
+              {% else %}
+                <p class="text-xl font-bold text-blue-400">R$ {{ object.amount_paid|floatformat:2 }}</p>
+              {% endif %}
             </div>
             <div class="bg-gray-800/50 rounded-xl p-4">
               <p class="text-gray-300 text-xs uppercase">Saldo</p>
-              <p class="text-xl font-bold text-amber-400">R$ {{ object.balance_due|floatformat:2 }}</p>
+              {% if object.status == 'cancelled' %}
+                <p class="text-xl font-bold text-red-400">R$ 0,00</p>
+              {% else %}
+                <p class="text-xl font-bold text-amber-400">R$ {{ object.balance_due|floatformat:2 }}</p>
+              {% endif %}
             </div>
           </div>
 
@@ -139,7 +147,9 @@
                     </div>
                     <div class="flex items-center gap-3">
                       <span class="text-white font-medium">R$ {{ parcela.value|floatformat:2 }}</span>
-                      {% if parcela.status == 'paid' %}
+                      {% if object.status == 'cancelled' %}
+                        <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Cancelada</span>
+                      {% elif parcela.status == 'paid' %}
                         <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Pago</span>
                       {% else %}
                         <a href="{% url 'installment_pay' parcela.id %}" 
@@ -168,13 +178,17 @@
       <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
         <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
           <i class="bi bi-graph-down mr-2 text-violet-400"></i>
-          Impacto no Estoque
+          {% if object.status == 'cancelled' %}Estoque Devolvido{% else %}Impacto no Estoque{% endif %}
         </h3>
         <div class="space-y-2">
           {% for item in object.items.all %}
             <div class="flex items-center justify-between p-3 bg-gray-800/50 rounded-lg">
               <span class="text-white text-sm">{{ item.product.title }}</span>
-              <span class="text-red-400 font-medium">-{{ item.quantity }} un</span>
+              {% if object.status == 'cancelled' %}
+                <span class="text-green-400 font-medium">+{{ item.quantity }} un</span>
+              {% else %}
+                <span class="text-red-400 font-medium">-{{ item.quantity }} un</span>
+              {% endif %}
             </div>
           {% endfor %}
         </div>

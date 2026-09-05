@@ -1,0 +1,70 @@
+- generic [active] [ref=f3e1]:
+  - generic [ref=f3e2]:
+    - heading "Page not found (404)" [level=1] [ref=f3e3]
+    - table [ref=f3e4]:
+      - rowgroup [ref=f3e5]:
+        - row [ref=f3e6]:
+          - rowheader "Request Method:" [ref=f3e7]
+          - cell "GET" [ref=f3e8]
+        - row [ref=f3e9]:
+          - rowheader "Request URL:" [ref=f3e10]
+          - cell "http://localhost:8000/clients/" [ref=f3e11]
+  - generic [ref=f3e12]:
+    - paragraph [ref=f3e13]:
+      - text: Using the URLconf defined in
+      - code [ref=f3e14]: app.urls
+      - text: ", Django tried these URL patterns, in this order:"
+    - list [ref=f3e15]:
+      - listitem [ref=f3e16]: admin/
+      - listitem [ref=f3e17]: login/ [name='login']
+      - listitem [ref=f3e18]: logout/ [name='logout']
+      - listitem [ref=f3e19]: api/v1/
+      - listitem [ref=f3e20]: "[name='home']"
+      - listitem [ref=f3e21]: suppliers/list/ [name='supplier_list']
+      - listitem [ref=f3e22]: suppliers/create/ [name='supplier_create']
+      - listitem [ref=f3e23]: suppliers/<int:pk>/detail/ [name='supplier_detail']
+      - listitem [ref=f3e24]: suppliers/<int:pk>/update/ [name='supplier_update']
+      - listitem [ref=f3e25]: suppliers/<int:pk>/delete/ [name='supplier_delete']
+      - listitem [ref=f3e26]: api/v1/suppliers/ [name='supplier-create-list-api-view']
+      - listitem [ref=f3e27]: api/v1/suppliers/<int:pk>/ [name='supplier-detail-api-view']
+      - listitem [ref=f3e28]: brands/list/ [name='brand_list']
+      - listitem [ref=f3e29]: brands/create/ [name='brand_create']
+      - listitem [ref=f3e30]: brands/<int:pk>/detail/ [name='brand_detail']
+      - listitem [ref=f3e31]: brands/<int:pk>/update/ [name='brand_update']
+      - listitem [ref=f3e32]: brands/<int:pk>/delete/ [name='brand_delete']
+      - listitem [ref=f3e33]: api/v1/brands/ [name='brand-create-list-api-view']
+      - listitem [ref=f3e34]: api/v1/brands/<int:pk>/ [name='brand-detail-api-view']
+      - listitem [ref=f3e35]: categories/list/ [name='category_list']
+      - listitem [ref=f3e36]: categories/create/ [name='category_create']
+      - listitem [ref=f3e37]: categories/<int:pk>/detail/ [name='category_detail']
+      - listitem [ref=f3e38]: categories/<int:pk>/update/ [name='category_update']
+      - listitem [ref=f3e39]: categories/<int:pk>/delete/ [name='category_delete']
+      - listitem [ref=f3e40]: api/v1/categories/ [name='category-create-list-api-view']
+      - listitem [ref=f3e41]: api/v1/categories/<int:pk>/ [name='category-detail-api-view']
+      - listitem [ref=f3e42]: products/list/ [name='product_list']
+      - listitem [ref=f3e43]: products/create/ [name='product_create']
+      - listitem [ref=f3e44]: products/<int:pk>/detail/ [name='product_detail']
+      - listitem [ref=f3e45]: products/<int:pk>/update/ [name='product_update']
+      - listitem [ref=f3e46]: products/<int:pk>/delete/ [name='product_delete']
+      - listitem [ref=f3e47]: api/v1/products/ [name='product-create-list-api-view']
+      - listitem [ref=f3e48]: api/v1/products/<int:pk>/ [name='product-detail-api-view']
+      - listitem [ref=f3e49]: inflows/list/ [name='inflow_list']
+      - listitem [ref=f3e50]: inflows/create/ [name='inflow_create']
+      - listitem [ref=f3e51]: inflows/<int:pk>/detail/ [name='inflow_detail']
+      - listitem [ref=f3e52]: api/v1/inflows/ [name='inflow-create-list-api-view']
+      - listitem [ref=f3e53]: api/v1/inflows/<int:pk>/ [name='inflow-detail-api-view']
+      - listitem [ref=f3e54]: outflows/list/ [name='outflow_list']
+      - listitem [ref=f3e55]: outflows/create/ [name='outflow_create']
+      - listitem [ref=f3e56]: outflows/<int:pk>/detail/ [name='outflow_detail']
+      - listitem [ref=f3e57]: api/v1/outflows/ [name='outflow-create-list-api-view']
+      - listitem [ref=f3e58]: api/v1/outflows/<int:pk>/ [name='outflow-detail-api-view']
+    - paragraph [ref=f3e59]:
+      - text: The current path,
+      - code [ref=f3e60]: clients/
+      - text: ", didn’t match any of these."
+  - paragraph [ref=f3e62]:
+    - text: You’re seeing this error because you have
+    - code [ref=f3e63]: DEBUG = True
+    - text: in your Django settings file. Change that to
+    - code [ref=f3e64]: "False"
+    - text: ", and Django will display a standard 404 page."

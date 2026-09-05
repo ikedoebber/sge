@@ -17,13 +17,6 @@
           Editar
         </a>
       {% endif %}
-      {% if perms.clients.delete_client %}
-        <a href="{% url 'client_delete' object.id %}" 
-           class="inline-flex items-center justify-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors duration-200">
-          <i class="bi bi-trash mr-2"></i>
-          Excluir
-        </a>
-      {% endif %}
       <a href="{% url 'client_list' %}" 
          class="inline-flex items-center justify-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-colors duration-200">
         <i class="bi bi-arrow-left mr-2"></i>
@@ -173,14 +166,6 @@
               Editar Cliente
             </a>
           {% endif %}
-          
-          {% if perms.clients.delete_client %}
-            <a href="{% url 'client_delete' object.id %}" 
-               class="w-full inline-flex items-center justify-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors duration-200">
-              <i class="bi bi-trash mr-2"></i>
-              Excluir Cliente
-            </a>
-          {% endif %}
         </div>
       </div>
     </div>
@@ -244,6 +229,96 @@
     </div>
   </div>
 
+  <!-- Metricas de Consumo -->
+  <div class="mt-8">
+    <h2 class="text-xl font-bold text-white mb-4 flex items-center">
+      <i class="bi bi-bar-chart-line mr-2 text-violet-400"></i>
+      Metricas de Consumo
+    </h2>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-5">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-300 text-sm font-medium">Total de Compras</p>
+            <p class="text-2xl font-bold text-white">{{ total_compras }}</p>
+          </div>
+          <div class="p-3 bg-violet-600/30 rounded-xl">
+            <i class="bi bi-bag-check text-2xl text-violet-300"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-5">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-300 text-sm font-medium">Ticket Medio</p>
+            <p class="text-2xl font-bold text-white">R$ {{ ticket_medio|floatformat:2 }}</p>
+          </div>
+          <div class="p-3 bg-cyan-600/30 rounded-xl">
+            <i class="bi bi-cash-stack text-2xl text-cyan-300"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-5">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-300 text-sm font-medium">Total Itens Comprados</p>
+            <p class="text-2xl font-bold text-white">{{ total_itens }}</p>
+          </div>
+          <div class="p-3 bg-emerald-600/30 rounded-xl">
+            <i class="bi bi-box-seam text-2xl text-emerald-300"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-5">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-300 text-sm font-medium">Produto Mais Comprado</p>
+            <p class="text-lg font-bold text-white truncate">{{ produto_mais_comprado }}</p>
+            {% if produto_mais_comprado_qtd > 0 %}
+              <p class="text-xs text-gray-400">{{ produto_mais_comprado_qtd }} unidade(s)</p>
+            {% endif %}
+          </div>
+          <div class="p-3 bg-amber-600/30 rounded-xl">
+            <i class="bi bi-star text-2xl text-amber-300"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-5">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-300 text-sm font-medium">Ultima Compra</p>
+            {% if ultima_compra_data %}
+              <p class="text-lg font-bold text-white">{{ ultima_compra_data|date:"d/m/Y" }}</p>
+              <a href="{% url 'outflow_detail' ultima_compra_id %}" class="text-xs text-violet-400 hover:text-violet-300">Venda #{{ ultima_compra_id }}</a>
+            {% else %}
+              <p class="text-lg font-bold text-white">-</p>
+            {% endif %}
+          </div>
+          <div class="p-3 bg-rose-600/30 rounded-xl">
+            <i class="bi bi-calendar-check text-2xl text-rose-300"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-5">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-300 text-sm font-medium">Pagamento Preferido</p>
+            <p class="text-lg font-bold text-white">{{ forma_pagamento_preferida }}</p>
+          </div>
+          <div class="p-3 bg-indigo-600/30 rounded-xl">
+            <i class="bi bi-credit-card text-2xl text-indigo-300"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Saidas / Vendas do Cliente -->
   {% if sales %}
     <div class="mt-8">
@@ -284,7 +359,9 @@
                   <td class="px-4 py-3 text-sm text-white font-medium">R$ {{ sale.total_value|floatformat:2 }}</td>
                   <td class="px-4 py-3 text-sm text-amber-400">R$ {{ sale.balance_due|floatformat:2 }}</td>
                   <td class="px-4 py-3 text-sm">
-                    {% if sale.balance_due <= 0 %}
+                    {% if sale.status == 'cancelled' %}
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Cancelada</span>
+                    {% elif sale.balance_due <= 0 %}
                       <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Pago</span>
                     {% else %}
                       <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">Pendente</span>

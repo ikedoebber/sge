@@ -1,0 +1,87 @@
+- generic [ref=f33e2]:
+  - text: 
+  - complementary [ref=f33e3]:
+    - generic [ref=f33e4]:
+      - generic [ref=f33e7]:
+        - generic [ref=f33e8]: 
+        - generic [ref=f33e10]:
+          - heading "SGE" [level=1] [ref=f33e11]
+          - paragraph [ref=f33e12]: Sistema de Gestão
+      - navigation [ref=f33e13]:
+        - list [ref=f33e14]:
+          - listitem [ref=f33e15]:
+            - link " Dashboard" [ref=f33e16] [cursor=pointer]:
+              - /url: /
+              - generic [ref=f33e17]: 
+              - generic [ref=f33e18]: Dashboard
+          - listitem [ref=f33e19]:
+            - link " Vendas" [ref=f33e20] [cursor=pointer]:
+              - /url: /outflows/list/
+              - generic [ref=f33e21]: 
+              - generic [ref=f33e22]: Vendas
+          - listitem [ref=f33e23]:
+            - link " Clientes" [ref=f33e24] [cursor=pointer]:
+              - /url: /clients/list/
+              - generic [ref=f33e25]: 
+              - generic [ref=f33e26]: Clientes
+          - listitem [ref=f33e27]:
+            - link " Produtos" [ref=f33e28] [cursor=pointer]:
+              - /url: /products/list/
+              - generic [ref=f33e29]: 
+              - generic [ref=f33e30]: Produtos
+        - text: 
+      - button " Sair do Sistema" [ref=f33e33] [cursor=pointer]:
+        - generic [ref=f33e34]: 
+        - generic [ref=f33e35]: Sair do Sistema
+  - generic [ref=f33e36]:
+    - banner [ref=f33e37]:
+      - generic [ref=f33e39]:
+        - generic [ref=f33e40]:
+          - heading "Sistema de Gestão de Estoque" [level=2] [ref=f33e41]
+          - generic [ref=f33e43]: Sistema Online
+        - generic [ref=f33e47]:
+          - generic [ref=f33e48]:
+            - paragraph [ref=f33e49]: admin
+            - paragraph [ref=f33e50]: Usuário
+          - generic [ref=f33e51]: 
+        - text: 
+    - main [ref=f33e55]:
+      - generic [ref=f33e56]:
+        - generic [ref=f33e57]:
+          - heading "Gestao de Clientes" [level=1] [ref=f33e58]
+          - paragraph [ref=f33e59]: Gerencie os clientes do seu sistema
+        - link " Novo Cliente" [ref=f33e60] [cursor=pointer]:
+          - /url: /clients/create/
+          - generic [ref=f33e61]: 
+          - text: Novo Cliente
+      - generic [ref=f33e64]:
+        - generic [ref=f33e65]: Buscar Clientes
+        - generic [ref=f33e67]:
+          - textbox "Nome do cliente" [ref=f33e69]
+          - button " Buscar" [ref=f33e70] [cursor=pointer]:
+            - generic [ref=f33e71]: 
+            - text: Buscar
+      - table [ref=f33e74]:
+        - rowgroup [ref=f33e75]:
+          - row [ref=f33e76]:
+            - columnheader "ID" [ref=f33e77]
+            - columnheader "Nome" [ref=f33e78]
+            - columnheader "Tipo" [ref=f33e79]
+            - columnheader "CPF/CNPJ" [ref=f33e80]
+            - columnheader "E-mail" [ref=f33e81]
+            - columnheader "Telefone" [ref=f33e82]
+            - columnheader "Criado em" [ref=f33e83]
+            - columnheader "Acoes" [ref=f33e84]
+        - rowgroup [ref=f33e85]:
+          - row [ref=f33e86]:
+            - cell " Nenhum cliente encontrado Tente ajustar os filtros ou adicionar um novo cliente." [ref=f33e87]:
+              - generic [ref=f33e88]:
+                - generic [ref=f33e89]: 
+                - paragraph [ref=f33e90]: Nenhum cliente encontrado
+                - paragraph [ref=f33e91]: Tente ajustar os filtros ou adicionar um novo cliente.
+    - contentinfo [ref=f33e92]:
+      - generic [ref=f33e94]:
+        - paragraph [ref=f33e96]: © 2024 SGE - Sistema de Gestão
+        - generic [ref=f33e98]:
+          - generic [ref=f33e99]: v1.0
+          - generic [ref=f33e101]: Seguro

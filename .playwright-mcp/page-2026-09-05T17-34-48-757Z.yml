@@ -1,0 +1,142 @@
+- generic [ref=f42e2]:
+  - text: 
+  - complementary [ref=f42e3]:
+    - generic [ref=f42e4]:
+      - generic [ref=f42e7]:
+        - generic [ref=f42e8]: 
+        - generic [ref=f42e10]:
+          - heading "SGE" [level=1] [ref=f42e11]
+          - paragraph [ref=f42e12]: Sistema de Gestão
+      - navigation [ref=f42e13]:
+        - list [ref=f42e14]:
+          - listitem [ref=f42e15]:
+            - link " Dashboard" [ref=f42e16] [cursor=pointer]:
+              - /url: /
+              - generic [ref=f42e17]: 
+              - generic [ref=f42e18]: Dashboard
+          - listitem [ref=f42e19]:
+            - link " Vendas" [ref=f42e20] [cursor=pointer]:
+              - /url: /outflows/list/
+              - generic [ref=f42e21]: 
+              - generic [ref=f42e22]: Vendas
+          - listitem [ref=f42e23]:
+            - link " Clientes" [ref=f42e24] [cursor=pointer]:
+              - /url: /clients/list/
+              - generic [ref=f42e25]: 
+              - generic [ref=f42e26]: Clientes
+          - listitem [ref=f42e27]:
+            - link " Produtos" [ref=f42e28] [cursor=pointer]:
+              - /url: /products/list/
+              - generic [ref=f42e29]: 
+              - generic [ref=f42e30]: Produtos
+        - text: 
+      - button " Sair do Sistema" [ref=f42e33] [cursor=pointer]:
+        - generic [ref=f42e34]: 
+        - generic [ref=f42e35]: Sair do Sistema
+  - generic [ref=f42e36]:
+    - banner [ref=f42e37]:
+      - generic [ref=f42e39]:
+        - generic [ref=f42e40]:
+          - heading "Sistema de Gestão de Estoque" [level=2] [ref=f42e41]
+          - generic [ref=f42e43]: Sistema Online
+        - generic [ref=f42e47]:
+          - generic [ref=f42e48]:
+            - paragraph [ref=f42e49]: admin
+            - paragraph [ref=f42e50]: Usuário
+          - generic [ref=f42e51]: 
+        - text: 
+    - main [ref=f42e55]:
+      - generic [ref=f42e56]:
+        - generic [ref=f42e57]:
+          - 'heading "Venda #4  Cancelada" [level=1] [ref=f42e58]':
+            - text: "Venda #4"
+            - generic [ref=f42e59]:
+              - generic [ref=f42e60]: 
+              - text: Cancelada
+          - paragraph [ref=f42e61]: 05/09/2026 14:34
+        - link " Voltar" [ref=f42e63] [cursor=pointer]:
+          - /url: /outflows/list/
+          - generic [ref=f42e64]: 
+          - text: Voltar
+      - generic [ref=f42e65]:
+        - generic [ref=f42e66]:
+          - generic [ref=f42e67]:
+            - generic [ref=f42e68]:
+              - generic [ref=f42e69]: 
+              - generic [ref=f42e71]:
+                - 'heading "Venda #4" [level=2] [ref=f42e72]'
+                - paragraph [ref=f42e73]: 1 item(ns)
+            - generic [ref=f42e75]:
+              - generic [ref=f42e76]:
+                - generic [ref=f42e77]: 
+                - generic [ref=f42e79]:
+                  - paragraph [ref=f42e80]: Teclado
+                  - paragraph [ref=f42e81]: Eletronicos
+              - generic [ref=f42e82]:
+                - generic [ref=f42e83]: 11x R$ 200,00
+                - generic [ref=f42e84]: R$ 2200,00
+            - generic [ref=f42e86]:
+              - paragraph [ref=f42e87]: Total
+              - paragraph [ref=f42e88]: R$ 2200,00
+          - generic [ref=f42e89]:
+            - heading " Detalhes da Venda" [level=3] [ref=f42e90]:
+              - generic [ref=f42e91]: 
+              - text: Detalhes da Venda
+            - generic [ref=f42e92]:
+              - generic [ref=f42e93]:
+                - paragraph [ref=f42e94]: Valor Total
+                - paragraph [ref=f42e95]: R$ 2200,00
+              - generic [ref=f42e96]:
+                - paragraph [ref=f42e97]: Entrada
+                - paragraph [ref=f42e98]: R$ 0,00
+              - generic [ref=f42e99]:
+                - paragraph [ref=f42e100]: Pago
+                - paragraph [ref=f42e101]: Cancelada
+              - generic [ref=f42e102]:
+                - paragraph [ref=f42e103]: Saldo
+                - paragraph [ref=f42e104]: R$ 0,00
+            - generic [ref=f42e105]:
+              - generic [ref=f42e106]:
+                - paragraph [ref=f42e107]: Pagamento
+                - paragraph [ref=f42e108]: Cartao de Credito
+              - generic [ref=f42e109]:
+                - paragraph [ref=f42e110]: Parcelas
+                - paragraph [ref=f42e111]: 1x
+            - link " Gerar Parcelas para Pagamento" [ref=f42e113] [cursor=pointer]:
+              - /url: /outflows/4/installments/create/
+              - generic [ref=f42e114]: 
+              - text: Gerar Parcelas para Pagamento
+          - generic [ref=f42e115]:
+            - heading " Estoque Devolvido" [level=3] [ref=f42e116]:
+              - generic [ref=f42e117]: 
+              - text: Estoque Devolvido
+            - generic [ref=f42e119]:
+              - generic [ref=f42e120]: Teclado
+              - generic [ref=f42e121]: +11 un
+        - generic [ref=f42e123]:
+          - heading " Detalhes" [level=3] [ref=f42e124]:
+            - generic [ref=f42e125]: 
+            - text: Detalhes
+          - generic [ref=f42e126]:
+            - generic [ref=f42e127]:
+              - generic [ref=f42e128]: ID
+              - generic [ref=f42e129]: "#4"
+            - generic [ref=f42e130]:
+              - generic [ref=f42e131]: Data/Hora
+              - generic [ref=f42e132]:
+                - generic [ref=f42e133]: 05/09/2026
+                - generic [ref=f42e134]: 14:34:30
+            - generic [ref=f42e135]:
+              - generic [ref=f42e136]: Cliente
+              - link "Joao Silva" [ref=f42e137] [cursor=pointer]:
+                - /url: /clients/1/detail/
+            - generic [ref=f42e138]:
+              - generic [ref=f42e139]: Tipo
+              - generic [ref=f42e140]: Venda
+      - text:   
+    - contentinfo [ref=f42e141]:
+      - generic [ref=f42e143]:
+        - paragraph [ref=f42e145]: © 2024 SGE - Sistema de Gestão
+        - generic [ref=f42e147]:
+          - generic [ref=f42e148]: v1.0
+          - generic [ref=f42e150]: Seguro

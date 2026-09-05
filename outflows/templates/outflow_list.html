@@ -114,7 +114,9 @@
               </td>
               <td class="px-6 py-4">
                 {% if outflow.client %}
-                  {% if outflow.balance_due <= 0 %}
+                  {% if outflow.status == 'cancelled' %}
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Cancelada</span>
+                  {% elif outflow.balance_due <= 0 %}
                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Quitado</span>
                   {% else %}
                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">A receber</span>
@@ -132,10 +134,12 @@
                    class="inline-flex items-center px-2.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors duration-200">
                   <i class="bi bi-eye"></i>
                 </a>
-                <a href="{% url 'outflow_update' outflow.id %}" 
-                   class="inline-flex items-center px-2.5 py-1.5 bg-violet-600 hover:bg-violet-700 text-white text-xs font-medium rounded-lg transition-colors duration-200 ml-1">
-                  <i class="bi bi-pencil"></i>
-                </a>
+                {% if outflow.status == 'active' %}
+                  <a href="{% url 'outflow_update' outflow.id %}" 
+                     class="inline-flex items-center px-2.5 py-1.5 bg-violet-600 hover:bg-violet-700 text-white text-xs font-medium rounded-lg transition-colors duration-200 ml-1">
+                    <i class="bi bi-pencil"></i>
+                  </a>
+                {% endif %}
               </td>
             </tr>
           {% empty %}

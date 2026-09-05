@@ -1,0 +1,238 @@
+- generic [ref=f41e2]:
+  - text: 
+  - complementary [ref=f41e3]:
+    - generic [ref=f41e4]:
+      - generic [ref=f41e7]:
+        - generic [ref=f41e8]: 
+        - generic [ref=f41e10]:
+          - heading "SGE" [level=1] [ref=f41e11]
+          - paragraph [ref=f41e12]: Sistema de Gestão
+      - navigation [ref=f41e13]:
+        - list [ref=f41e14]:
+          - listitem [ref=f41e15]:
+            - link " Dashboard" [ref=f41e16] [cursor=pointer]:
+              - /url: /
+              - generic [ref=f41e17]: 
+              - generic [ref=f41e18]: Dashboard
+          - listitem [ref=f41e19]:
+            - link " Vendas" [ref=f41e20] [cursor=pointer]:
+              - /url: /outflows/list/
+              - generic [ref=f41e21]: 
+              - generic [ref=f41e22]: Vendas
+          - listitem [ref=f41e23]:
+            - link " Clientes" [ref=f41e24] [cursor=pointer]:
+              - /url: /clients/list/
+              - generic [ref=f41e25]: 
+              - generic [ref=f41e26]: Clientes
+          - listitem [ref=f41e27]:
+            - link " Produtos" [ref=f41e28] [cursor=pointer]:
+              - /url: /products/list/
+              - generic [ref=f41e29]: 
+              - generic [ref=f41e30]: Produtos
+        - text: 
+      - button " Sair do Sistema" [ref=f41e33] [cursor=pointer]:
+        - generic [ref=f41e34]: 
+        - generic [ref=f41e35]: Sair do Sistema
+  - generic [ref=f41e36]:
+    - banner [ref=f41e37]:
+      - generic [ref=f41e39]:
+        - generic [ref=f41e40]:
+          - heading "Sistema de Gestão de Estoque" [level=2] [ref=f41e41]
+          - generic [ref=f41e43]: Sistema Online
+        - generic [ref=f41e47]:
+          - generic [ref=f41e48]:
+            - paragraph [ref=f41e49]: admin
+            - paragraph [ref=f41e50]: Usuário
+          - generic [ref=f41e51]: 
+        - text: 
+    - main [ref=f41e55]:
+      - generic [ref=f41e56]:
+        - generic [ref=f41e57]:
+          - heading "Detalhes do Cliente" [level=1] [ref=f41e58]
+          - paragraph [ref=f41e59]: Informacoes completas sobre o cliente
+        - generic [ref=f41e60]:
+          - link " Editar" [ref=f41e61] [cursor=pointer]:
+            - /url: /clients/1/update/
+            - generic [ref=f41e62]: 
+            - text: Editar
+          - link " Excluir" [ref=f41e63] [cursor=pointer]:
+            - /url: /clients/1/delete/
+            - generic [ref=f41e64]: 
+            - text: Excluir
+          - link " Voltar" [ref=f41e65] [cursor=pointer]:
+            - /url: /clients/list/
+            - generic [ref=f41e66]: 
+            - text: Voltar
+      - generic [ref=f41e67]:
+        - generic [ref=f41e69]:
+          - generic [ref=f41e70]:
+            - generic [ref=f41e71]: 
+            - generic [ref=f41e73]:
+              - heading "Joao Silva" [level=2] [ref=f41e74]
+              - paragraph [ref=f41e75]:
+                - text: "Cliente #1"
+                - generic [ref=f41e76]: Pessoa Fisica
+          - generic [ref=f41e77]:
+            - generic [ref=f41e78]:
+              - heading "Contato" [level=3] [ref=f41e79]
+              - generic [ref=f41e80]:
+                - generic [ref=f41e81]:
+                  - heading "E-mail" [level=4] [ref=f41e82]
+                  - paragraph [ref=f41e83]: joao@test.com
+                - generic [ref=f41e84]:
+                  - heading "Telefone" [level=4] [ref=f41e85]
+                  - paragraph [ref=f41e86]: (11) 99999-9999
+            - generic [ref=f41e87]:
+              - heading "Endereco" [level=3] [ref=f41e88]
+              - paragraph [ref=f41e90]: Endereco nao informado
+        - generic [ref=f41e91]:
+          - generic [ref=f41e92]:
+            - heading " Informacoes Gerais" [level=3] [ref=f41e93]:
+              - generic [ref=f41e94]: 
+              - text: Informacoes Gerais
+            - generic [ref=f41e95]:
+              - generic [ref=f41e96]:
+                - generic [ref=f41e97]: ID
+                - generic [ref=f41e98]: "#1"
+              - generic [ref=f41e99]:
+                - generic [ref=f41e100]: CPF/CNPJ
+                - generic [ref=f41e101]: 123.456.789-00
+              - generic [ref=f41e102]:
+                - generic [ref=f41e103]: Criado em
+                - generic [ref=f41e104]: 05/09/2026
+              - generic [ref=f41e105]:
+                - generic [ref=f41e106]: Atualizado em
+                - generic [ref=f41e107]: 05/09/2026
+              - generic [ref=f41e108]:
+                - generic [ref=f41e109]: Status
+                - generic [ref=f41e110]: Ativo
+          - generic [ref=f41e111]:
+            - heading " Acoes Rapidas" [level=3] [ref=f41e112]:
+              - generic [ref=f41e113]: 
+              - text: Acoes Rapidas
+            - generic [ref=f41e114]:
+              - link " Nova Venda" [ref=f41e115] [cursor=pointer]:
+                - /url: /outflows/create/?client=1
+                - generic [ref=f41e116]: 
+                - text: Nova Venda
+              - link " Editar Cliente" [ref=f41e117] [cursor=pointer]:
+                - /url: /clients/1/update/
+                - generic [ref=f41e118]: 
+                - text: Editar Cliente
+              - link " Excluir Cliente" [ref=f41e119] [cursor=pointer]:
+                - /url: /clients/1/delete/
+                - generic [ref=f41e120]: 
+                - text: Excluir Cliente
+      - generic [ref=f41e121]:
+        - heading " Resumo Financeiro" [level=2] [ref=f41e122]:
+          - generic [ref=f41e123]: 
+          - text: Resumo Financeiro
+        - generic [ref=f41e124]:
+          - generic [ref=f41e126]:
+            - generic [ref=f41e127]:
+              - paragraph [ref=f41e128]: Total Vendido
+              - paragraph [ref=f41e129]: R$ 9600,00
+            - generic [ref=f41e130]: 
+          - generic [ref=f41e133]:
+            - generic [ref=f41e134]:
+              - paragraph [ref=f41e135]: Total Recebido
+              - paragraph [ref=f41e136]: R$ 0,00
+            - generic [ref=f41e137]: 
+          - generic [ref=f41e140]:
+            - generic [ref=f41e141]:
+              - paragraph [ref=f41e142]: A Receber
+              - paragraph [ref=f41e143]: R$ 9600,00
+            - generic [ref=f41e144]: 
+          - generic [ref=f41e147]:
+            - generic [ref=f41e148]:
+              - paragraph [ref=f41e149]: Vencido
+              - paragraph [ref=f41e150]: R$ 0,00
+            - generic [ref=f41e151]: 
+      - generic [ref=f41e153]:
+        - heading " Metricas de Consumo" [level=2] [ref=f41e154]:
+          - generic [ref=f41e155]: 
+          - text: Metricas de Consumo
+        - generic [ref=f41e156]:
+          - generic [ref=f41e158]:
+            - generic [ref=f41e159]:
+              - paragraph [ref=f41e160]: Total de Compras
+              - paragraph [ref=f41e161]: "3"
+            - generic [ref=f41e162]: 
+          - generic [ref=f41e165]:
+            - generic [ref=f41e166]:
+              - paragraph [ref=f41e167]: Ticket Medio
+              - paragraph [ref=f41e168]: R$ 3200,00
+            - generic [ref=f41e169]: 
+          - generic [ref=f41e172]:
+            - generic [ref=f41e173]:
+              - paragraph [ref=f41e174]: Total Itens Comprados
+              - paragraph [ref=f41e175]: "9"
+            - generic [ref=f41e176]: 
+          - generic [ref=f41e179]:
+            - generic [ref=f41e180]:
+              - paragraph [ref=f41e181]: Produto Mais Comprado
+              - paragraph [ref=f41e182]: Mouse
+              - paragraph [ref=f41e183]: 6 unidade(s)
+            - generic [ref=f41e184]: 
+          - generic [ref=f41e187]:
+            - generic [ref=f41e188]:
+              - paragraph [ref=f41e189]: Ultima Compra
+              - paragraph [ref=f41e190]: 05/09/2026
+              - 'link "Venda #1" [ref=f41e191] [cursor=pointer]':
+                - /url: /outflows/1/detail/
+            - generic [ref=f41e192]: 
+          - generic [ref=f41e195]:
+            - generic [ref=f41e196]:
+              - paragraph [ref=f41e197]: Pagamento Preferido
+              - paragraph [ref=f41e198]: PIX
+            - generic [ref=f41e199]: 
+      - generic [ref=f41e202]:
+        - generic [ref=f41e203]:
+          - heading " Vendas Recentes" [level=3] [ref=f41e204]:
+            - generic [ref=f41e205]: 
+            - text: Vendas Recentes
+          - link "Ver todas" [ref=f41e206] [cursor=pointer]:
+            - /url: /outflows/list/?client=Joao Silva
+        - table [ref=f41e208]:
+          - rowgroup [ref=f41e209]:
+            - row [ref=f41e210]:
+              - columnheader "ID" [ref=f41e211]
+              - columnheader "Itens" [ref=f41e212]
+              - columnheader "Valor Total" [ref=f41e213]
+              - columnheader "Saldo" [ref=f41e214]
+              - columnheader "Status" [ref=f41e215]
+              - columnheader "Acoes" [ref=f41e216]
+          - rowgroup [ref=f41e217]:
+            - row [ref=f41e218]:
+              - cell "#3" [ref=f41e219]
+              - cell "Notebook, Mouse" [ref=f41e220]
+              - cell "R$ 3200,00" [ref=f41e221]
+              - cell "R$ 3200,00" [ref=f41e222]
+              - cell "Pendente" [ref=f41e223]
+              - cell [ref=f41e225]:
+                - link "" [ref=f41e226] [cursor=pointer]:
+                  - /url: /outflows/3/detail/
+            - row [ref=f41e228]:
+              - cell "#2" [ref=f41e229]
+              - cell "Notebook, Mouse" [ref=f41e230]
+              - cell "R$ 3200,00" [ref=f41e231]
+              - cell "R$ 3200,00" [ref=f41e232]
+              - cell "Pendente" [ref=f41e233]
+              - cell [ref=f41e235]:
+                - link "" [ref=f41e236] [cursor=pointer]:
+                  - /url: /outflows/2/detail/
+            - row [ref=f41e238]:
+              - cell "#1" [ref=f41e239]
+              - cell "Notebook, Mouse" [ref=f41e240]
+              - cell "R$ 3200,00" [ref=f41e241]
+              - cell "R$ 3200,00" [ref=f41e242]
+              - cell "Pendente" [ref=f41e243]
+              - cell [ref=f41e245]:
+                - link "" [ref=f41e246] [cursor=pointer]:
+                  - /url: /outflows/1/detail/
+    - contentinfo [ref=f41e248]:
+      - generic [ref=f41e250]:
+        - paragraph [ref=f41e252]: © 2024 SGE - Sistema de Gestão
+        - generic [ref=f41e254]:
+          - generic [ref=f41e255]: v1.0
+          - generic [ref=f41e257]: Seguro

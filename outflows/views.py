@@ -276,9 +276,11 @@ class OutflowCancelView(LoginRequiredMixin, PermissionRequiredMixin, DetailView)
             product.quantity += item.quantity
             product.save()
 
+        outflow.installments.all().delete()
+
         outflow.status = 'cancelled'
         outflow.balance_due = 0
-        outflow.amount_paid = outflow.total_value
+        outflow.amount_paid = 0
         outflow.save()
 
         messages.success(request, f'Venda #{outflow.id} cancelada com sucesso. Estoque devolvido.')

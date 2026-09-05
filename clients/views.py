@@ -1,7 +1,7 @@
 from rest_framework import generics
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.db.models import Sum, Q
+from django.db.models import Sum, Q, Count, Avg, F
 from django.db.models import ProtectedError
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -49,21 +49,72 @@ class ClientDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         client = self.object
         
-        from outflows.models import Outflow, Installment
+        from outflows.models import Outflow, Installment, OutflowItem
         
         outflows = Outflow.objects.filter(client=client)
+        active_outflows = outflows.filter(status='active')
         
-        context['sales'] = outflows
-        context['total_vendido'] = outflows.aggregate(total=Sum('total_value'))['total'] or 0
-        context['total_recebido'] = outflows.aggregate(total=Sum('amount_paid'))['total'] or 0
-        context['total_receber'] = outflows.aggregate(total=Sum('balance_due'))['total'] or 0
+        context['sales'] = active_outflows
+        context['total_vendido'] = active_outflows.aggregate(total=Sum('total_value'))['total'] or 0
+        context['total_recebido'] = active_outflows.aggregate(total=Sum('amount_paid'))['total'] or 0
+        context['total_receber'] = active_outflows.aggregate(total=Sum('balance_due'))['total'] or 0
         
         total_vencido = Installment.objects.filter(
             outflow__client=client,
+            outflow__status='active',
             status='overdue'
         ).aggregate(total=Sum('value'))['total'] or 0
         context['total_vencido'] = total_vencido
-        
+
+        # Metricas de consumo
+        total_compras = active_outflows.count()
+        context['total_compras'] = total_compras
+
+        if total_compras > 0:
+            context['ticket_medio'] = context['total_vendido'] / total_compras
+        else:
+            context['ticket_medio'] = 0
+
+        total_itens = OutflowItem.objects.filter(
+            outflow__client=client,
+            outflow__status='active'
+        ).aggregate(total=Sum('quantity'))['total'] or 0
+        context['total_itens'] = total_itens
+
+        produto_mais_comprado = OutflowItem.objects.filter(
+            outflow__client=client,
+            outflow__status='active'
+        ).values('product__title').annotate(
+            total_qtd=Sum('quantity')
+        ).order_by('-total_qtd').first()
+
+        if produto_mais_comprado:
+            context['produto_mais_comprado'] = produto_mais_comprado['product__title']
+            context['produto_mais_comprado_qtd'] = produto_mais_comprado['total_qtd']
+        else:
+            context['produto_mais_comprado'] = '-'
+            context['produto_mais_comprado_qtd'] = 0
+
+        ultima_compra = active_outflows.order_by('-sale_date').first()
+        if ultima_compra:
+            context['ultima_compra_data'] = ultima_compra.sale_date
+            context['ultima_compra_id'] = ultima_compra.id
+        else:
+            context['ultima_compra_data'] = None
+            context['ultima_compra_id'] = None
+
+        forma_pagamento = active_outflows.values('payment_method').annotate(
+            total=Count('id')
+        ).order_by('-total').first()
+
+        if forma_pagamento:
+            pagamento_display = dict(Outflow.PAYMENT_METHOD_CHOICES).get(
+                forma_pagamento['payment_method'], forma_pagamento['payment_method']
+            )
+            context['forma_pagamento_preferida'] = pagamento_display
+        else:
+            context['forma_pagamento_preferida'] = '-'
+
         return context
 
 

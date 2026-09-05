@@ -1,0 +1,126 @@
+- generic [ref=f2e2]:
+  - text: 
+  - complementary [ref=f2e3]:
+    - generic [ref=f2e4]:
+      - generic [ref=f2e7]:
+        - generic [ref=f2e8]: 
+        - generic [ref=f2e10]:
+          - heading "SGE" [level=1] [ref=f2e11]
+          - paragraph [ref=f2e12]: Sistema de Gestão
+      - navigation [ref=f2e13]:
+        - list [ref=f2e14]:
+          - listitem [ref=f2e15]:
+            - link " Dashboard" [ref=f2e16] [cursor=pointer]:
+              - /url: /
+              - generic [ref=f2e17]: 
+              - generic [ref=f2e18]: Dashboard
+          - listitem [ref=f2e19]:
+            - link " Fornecedores" [ref=f2e20] [cursor=pointer]:
+              - /url: /suppliers/list/
+              - generic [ref=f2e21]: 
+              - generic [ref=f2e22]: Fornecedores
+          - listitem [ref=f2e23]:
+            - link " Marcas" [ref=f2e24] [cursor=pointer]:
+              - /url: /brands/list/
+              - generic [ref=f2e25]: 
+              - generic [ref=f2e26]: Marcas
+          - listitem [ref=f2e27]:
+            - link " Categorias" [ref=f2e28] [cursor=pointer]:
+              - /url: /categories/list/
+              - generic [ref=f2e29]: 
+              - generic [ref=f2e30]: Categorias
+          - listitem [ref=f2e31]:
+            - link " Produtos" [ref=f2e32] [cursor=pointer]:
+              - /url: /products/list/
+              - generic [ref=f2e33]: 
+              - generic [ref=f2e34]: Produtos
+          - listitem [ref=f2e35]:
+            - link " Entradas" [ref=f2e36] [cursor=pointer]:
+              - /url: /inflows/list/
+              - generic [ref=f2e37]: 
+              - generic [ref=f2e38]: Entradas
+          - listitem [ref=f2e39]:
+            - link " Saídas" [ref=f2e40] [cursor=pointer]:
+              - /url: /outflows/list/
+              - generic [ref=f2e41]: 
+              - generic [ref=f2e42]: Saídas
+        - text: 
+      - button " Sair do Sistema" [ref=f2e45] [cursor=pointer]:
+        - generic [ref=f2e46]: 
+        - generic [ref=f2e47]: Sair do Sistema
+  - generic [ref=f2e48]:
+    - banner [ref=f2e49]:
+      - generic [ref=f2e51]:
+        - generic [ref=f2e52]:
+          - heading "Sistema de Gestão de Estoque" [level=2] [ref=f2e53]
+          - generic [ref=f2e55]: Sistema Online
+        - generic [ref=f2e59]:
+          - generic [ref=f2e60]:
+            - paragraph [ref=f2e61]: admin
+            - paragraph [ref=f2e62]: Usuário
+          - generic [ref=f2e63]: 
+        - text: 
+    - main [ref=f2e67]:
+      - generic [ref=f2e68]:
+        - generic [ref=f2e70]:
+          - generic [ref=f2e71]:
+            - heading "Quantidade de produtos" [level=3] [ref=f2e72]
+            - paragraph [ref=f2e73]: "0"
+            - generic [ref=f2e74]: Total em estoque
+          - generic [ref=f2e77]: 
+        - generic [ref=f2e80]:
+          - generic [ref=f2e81]:
+            - heading "Custo do estoque" [level=3] [ref=f2e82]
+            - paragraph [ref=f2e83]: R$ 0,00
+            - generic [ref=f2e84]: Valor investido
+          - generic [ref=f2e87]: 
+        - generic [ref=f2e90]:
+          - generic [ref=f2e91]:
+            - heading "Valor do estoque" [level=3] [ref=f2e92]
+            - paragraph [ref=f2e93]: R$ 0,00
+            - generic [ref=f2e94]: Valor de venda
+          - generic [ref=f2e97]: 
+        - generic [ref=f2e100]:
+          - generic [ref=f2e101]:
+            - heading "Lucro do estoque" [level=3] [ref=f2e102]
+            - paragraph [ref=f2e103]: R$ 0,00
+            - generic [ref=f2e104]: Margem potencial
+          - generic [ref=f2e107]: 
+      - generic [ref=f2e109]:
+        - generic [ref=f2e111]:
+          - generic [ref=f2e112]:
+            - heading "Quantidade de vendas" [level=3] [ref=f2e113]
+            - paragraph [ref=f2e114]: "0"
+            - generic [ref=f2e115]: Transações realizadas
+          - generic [ref=f2e118]: 
+        - generic [ref=f2e121]:
+          - generic [ref=f2e122]:
+            - heading "Produtos vendidos" [level=3] [ref=f2e123]
+            - paragraph [ref=f2e124]: "0"
+            - generic [ref=f2e125]: Unidades vendidas
+          - generic [ref=f2e128]: 
+        - generic [ref=f2e131]:
+          - generic [ref=f2e132]:
+            - heading "Valor das vendas" [level=3] [ref=f2e133]
+            - paragraph [ref=f2e134]: R$ 0,00
+            - generic [ref=f2e135]: Receita total
+          - generic [ref=f2e138]: 
+        - generic [ref=f2e141]:
+          - generic [ref=f2e142]:
+            - heading "Lucro das vendas" [level=3] [ref=f2e143]
+            - paragraph [ref=f2e144]: R$ 0,00
+            - generic [ref=f2e145]: Lucro líquido
+          - generic [ref=f2e148]: 
+      - generic [ref=f2e150]:
+        - generic [ref=f2e152]:
+          - heading "Valor de vendas" [level=3] [ref=f2e153]
+          - paragraph [ref=f2e154]: Últimos 7 dias
+        - generic [ref=f2e158]:
+          - heading "Quantidade de Vendas Diárias" [level=3] [ref=f2e159]
+          - paragraph [ref=f2e160]: Últimos 7 dias
+    - contentinfo [ref=f2e163]:
+      - generic [ref=f2e165]:
+        - paragraph [ref=f2e167]: © 2024 SGE - Sistema de Gestão de Estoque
+        - generic [ref=f2e169]:
+          - generic [ref=f2e170]: Versão 1.0
+          - generic [ref=f2e172]: Sistema Seguro
