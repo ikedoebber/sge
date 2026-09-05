@@ -4,22 +4,23 @@
 
 {% block content %}
   <!-- Page Header -->
-  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 lg:mb-8">
     <div>
-      <h1 class="text-2xl font-bold text-white mb-2">Detalhes do Cliente</h1>
-      <p class="text-gray-400">Informacoes completas sobre o cliente</p>
+      <h1 class="text-xl sm:text-2xl font-bold text-white mb-1 sm:mb-2">Detalhes do Cliente</h1>
+      <p class="text-gray-400 text-sm sm:text-base">Informacoes completas sobre o cliente</p>
     </div>
-    <div class="flex flex-col sm:flex-row gap-3 mt-4 sm:mt-0">
+    <div class="flex gap-2 sm:gap-3 mt-3 sm:mt-0">
       {% if perms.clients.change_client %}
         <a href="{% url 'client_update' object.id %}" 
-           class="inline-flex items-center justify-center px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg transition-colors duration-200">
-          <i class="bi bi-pencil mr-2"></i>
-          Editar
+           class="inline-flex items-center justify-center px-3 sm:px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium rounded-lg transition-colors duration-200">
+          <i class="bi bi-pencil mr-1 sm:mr-2"></i>
+          <span class="hidden sm:inline">Editar</span>
+          <span class="sm:hidden"><i class="bi bi-pencil"></i></span>
         </a>
       {% endif %}
       <a href="{% url 'client_list' %}" 
-         class="inline-flex items-center justify-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-colors duration-200">
-        <i class="bi bi-arrow-left mr-2"></i>
+         class="inline-flex items-center justify-center px-3 sm:px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium rounded-lg transition-colors duration-200">
+        <i class="bi bi-arrow-left mr-1 sm:mr-2"></i>
         Voltar
       </a>
     </div>
@@ -27,49 +28,49 @@
 
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
     <!-- Main Information -->
-    <div class="lg:col-span-2 space-y-6">
+    <div class="lg:col-span-2 space-y-4 sm:space-y-6">
       <!-- Basic Information Card -->
-      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
-        <div class="flex items-center mb-6">
-          <div class="p-3 bg-violet-600/20 rounded-xl mr-4">
-            <i class="bi bi-person text-2xl text-violet-400"></i>
+      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-4 sm:p-6">
+        <div class="flex items-center mb-4 sm:mb-6">
+          <div class="p-2 sm:p-3 bg-violet-600/20 rounded-xl mr-3 sm:mr-4">
+            <i class="bi bi-person text-xl sm:text-2xl text-violet-400"></i>
           </div>
           <div>
-            <h2 class="text-xl font-bold text-white">{{ object.name }}</h2>
-            <p class="text-gray-400">
+            <h2 class="text-lg sm:text-xl font-bold text-white">{{ object.name }}</h2>
+            <p class="text-gray-400 text-sm">
               Cliente #{{ object.id }}
               {% if object.person_type == 'pf' %}
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 ml-2">
-                  Pessoa Fisica
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 ml-2">
+                  PF
                 </span>
               {% else %}
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 ml-2">
-                  Juridica
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 ml-2">
+                  PJ
                 </span>
               {% endif %}
             </p>
           </div>
         </div>
 
-        <div class="space-y-4">
+        <div class="space-y-3 sm:space-y-4">
           <!-- Contact Information -->
           <div>
-            <h3 class="text-sm font-medium text-gray-300 uppercase tracking-wider mb-2">Contato</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div class="bg-gray-800/50 rounded-lg p-4">
-                <h4 class="text-sm font-medium text-gray-300 mb-1">E-mail</h4>
+            <h3 class="text-xs sm:text-sm font-medium text-gray-300 uppercase tracking-wider mb-2">Contato</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
+              <div class="bg-gray-800/50 rounded-lg p-3">
+                <h4 class="text-xs font-medium text-gray-300 mb-1">E-mail</h4>
                 {% if object.email %}
-                  <p class="text-white">{{ object.email }}</p>
+                  <p class="text-white text-sm break-all">{{ object.email }}</p>
                 {% else %}
-                  <p class="text-gray-500 italic">Nao informado</p>
+                  <p class="text-gray-500 italic text-sm">Nao informado</p>
                 {% endif %}
               </div>
-              <div class="bg-gray-800/50 rounded-lg p-4">
-                <h4 class="text-sm font-medium text-gray-300 mb-1">Telefone</h4>
+              <div class="bg-gray-800/50 rounded-lg p-3">
+                <h4 class="text-xs font-medium text-gray-300 mb-1">Telefone</h4>
                 {% if object.phone %}
-                  <p class="text-white">{{ object.phone }}</p>
+                  <p class="text-white text-sm">{{ object.phone }}</p>
                 {% else %}
-                  <p class="text-gray-500 italic">Nao informado</p>
+                  <p class="text-gray-500 italic text-sm">Nao informado</p>
                 {% endif %}
               </div>
             </div>
@@ -77,16 +78,16 @@
 
           <!-- Address Information -->
           <div>
-            <h3 class="text-sm font-medium text-gray-300 uppercase tracking-wider mb-2">Endereco</h3>
-            <div class="bg-gray-800/50 rounded-lg p-4">
+            <h3 class="text-xs sm:text-sm font-medium text-gray-300 uppercase tracking-wider mb-2">Endereco</h3>
+            <div class="bg-gray-800/50 rounded-lg p-3">
               {% if object.address %}
-                <p class="text-white mb-2">{{ object.address }}</p>
-                <p class="text-gray-300 text-sm">
+                <p class="text-white text-sm mb-1">{{ object.address }}</p>
+                <p class="text-gray-300 text-xs sm:text-sm">
                   {% if object.city %}{{ object.city }}{% endif %}
                   {% if object.state %} - {{ object.state }}{% endif %}
                 </p>
               {% else %}
-                <p class="text-gray-500 italic">Endereco nao informado</p>
+                <p class="text-gray-500 italic text-sm">Endereco nao informado</p>
               {% endif %}
             </div>
           </div>
@@ -94,9 +95,9 @@
           <!-- Notes -->
           {% if object.notes %}
             <div>
-              <h3 class="text-sm font-medium text-gray-300 uppercase tracking-wider mb-2">Observacoes</h3>
-              <div class="bg-gray-800/50 rounded-lg p-4">
-                <p class="text-white leading-relaxed">{{ object.notes }}</p>
+              <h3 class="text-xs sm:text-sm font-medium text-gray-300 uppercase tracking-wider mb-2">Observacoes</h3>
+              <div class="bg-gray-800/50 rounded-lg p-3">
+                <p class="text-white leading-relaxed text-sm">{{ object.notes }}</p>
               </div>
             </div>
           {% endif %}
@@ -105,38 +106,38 @@
     </div>
 
     <!-- Sidebar Information -->
-    <div class="space-y-6">
+    <div class="space-y-4 sm:space-y-6">
       <!-- Quick Stats -->
-      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
-        <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-4 sm:p-6">
+        <h3 class="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center">
           <i class="bi bi-info-circle mr-2 text-violet-400"></i>
           Informacoes Gerais
         </h3>
         
-        <div class="space-y-4">
+        <div class="space-y-2 sm:space-y-4">
           <div class="flex justify-between items-center py-2 border-b border-white/10">
-            <span class="text-gray-300 text-sm">ID</span>
-            <span class="text-white font-medium">#{{ object.id }}</span>
+            <span class="text-gray-300 text-xs sm:text-sm">ID</span>
+            <span class="text-white font-medium text-sm">#{{ object.id }}</span>
           </div>
           
           <div class="flex justify-between items-center py-2 border-b border-white/10">
-            <span class="text-gray-300 text-sm">CPF/CNPJ</span>
-            <span class="text-white font-medium">{{ object.cpf_cnpj }}</span>
+            <span class="text-gray-300 text-xs sm:text-sm">CPF/CNPJ</span>
+            <span class="text-white font-medium text-sm break-all ml-2 text-right">{{ object.cpf_cnpj }}</span>
           </div>
           
           <div class="flex justify-between items-center py-2 border-b border-white/10">
-            <span class="text-gray-300 text-sm">Criado em</span>
-            <span class="text-white font-medium">{{ object.created_at|date:"d/m/Y" }}</span>
+            <span class="text-gray-300 text-xs sm:text-sm">Criado em</span>
+            <span class="text-white font-medium text-sm">{{ object.created_at|date:"d/m/Y" }}</span>
           </div>
           
           <div class="flex justify-between items-center py-2 border-b border-white/10">
-            <span class="text-gray-300 text-sm">Atualizado em</span>
-            <span class="text-white font-medium">{{ object.updated_at|date:"d/m/Y" }}</span>
+            <span class="text-gray-300 text-xs sm:text-sm">Atualizado em</span>
+            <span class="text-white font-medium text-sm">{{ object.updated_at|date:"d/m/Y" }}</span>
           </div>
 
           <div class="flex justify-between items-center py-2">
-            <span class="text-gray-300 text-sm">Status</span>
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+            <span class="text-gray-300 text-xs sm:text-sm">Status</span>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
               Ativo
             </span>
           </div>
@@ -144,16 +145,16 @@
       </div>
 
       <!-- Quick Actions -->
-      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
-        <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-4 sm:p-6">
+        <h3 class="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4 flex items-center">
           <i class="bi bi-lightning mr-2 text-violet-400"></i>
           Acoes Rapidas
         </h3>
         
-        <div class="space-y-3">
+        <div class="space-y-2 sm:space-y-3">
           {% if perms.outflows.add_outflow %}
             <a href="{% url 'outflow_create' %}?client={{ object.id }}" 
-               class="w-full inline-flex items-center justify-center px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium rounded-lg transition-colors duration-200">
+               class="w-full inline-flex items-center justify-center px-4 py-2.5 sm:py-2 bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium rounded-lg transition-colors duration-200">
               <i class="bi bi-cart-plus mr-2"></i>
               Nova Venda
             </a>
@@ -161,7 +162,7 @@
           
           {% if perms.clients.change_client %}
             <a href="{% url 'client_update' object.id %}" 
-               class="w-full inline-flex items-center justify-center px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium rounded-lg transition-colors duration-200">
+               class="w-full inline-flex items-center justify-center px-4 py-2.5 sm:py-2 bg-violet-600 hover:bg-violet-700 text-white text-sm font-medium rounded-lg transition-colors duration-200">
               <i class="bi bi-pencil mr-2"></i>
               Editar Cliente
             </a>
@@ -172,57 +173,57 @@
   </div>
 
   <!-- Resumo Financeiro -->
-  <div class="mt-8">
-    <h2 class="text-xl font-bold text-white mb-4 flex items-center">
+  <div class="mt-6 sm:mt-8">
+    <h2 class="text-lg sm:text-xl font-bold text-white mb-3 sm:mb-4 flex items-center">
       <i class="bi bi-graph-up mr-2 text-violet-400"></i>
       Resumo Financeiro
     </h2>
     
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-      <div class="bg-green-600/20 backdrop-blur-sm border border-green-500/30 rounded-xl p-5">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 mb-6 sm:mb-8">
+      <div class="bg-green-600/20 backdrop-blur-sm border border-green-500/30 rounded-xl p-3 sm:p-5">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-green-200 text-sm font-medium">Total Vendido</p>
-            <p class="text-2xl font-bold text-white">R$ {{ total_vendido|floatformat:2 }}</p>
+            <p class="text-green-200 text-xs sm:text-sm font-medium">Vendido</p>
+            <p class="text-lg sm:text-2xl font-bold text-white">R$ {{ total_vendido|floatformat:2 }}</p>
           </div>
-          <div class="p-3 bg-green-600/30 rounded-xl">
-            <i class="bi bi-cart-check text-2xl text-green-300"></i>
+          <div class="p-2 sm:p-3 bg-green-600/30 rounded-xl">
+            <i class="bi bi-cart-check text-lg sm:text-2xl text-green-300"></i>
           </div>
         </div>
       </div>
       
-      <div class="bg-blue-600/20 backdrop-blur-sm border border-blue-500/30 rounded-xl p-5">
+      <div class="bg-blue-600/20 backdrop-blur-sm border border-blue-500/30 rounded-xl p-3 sm:p-5">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-blue-200 text-sm font-medium">Total Recebido</p>
-            <p class="text-2xl font-bold text-white">R$ {{ total_recebido|floatformat:2 }}</p>
+            <p class="text-blue-200 text-xs sm:text-sm font-medium">Recebido</p>
+            <p class="text-lg sm:text-2xl font-bold text-white">R$ {{ total_recebido|floatformat:2 }}</p>
           </div>
-          <div class="p-3 bg-blue-600/30 rounded-xl">
-            <i class="bi bi-check-circle text-2xl text-blue-300"></i>
+          <div class="p-2 sm:p-3 bg-blue-600/30 rounded-xl">
+            <i class="bi bi-check-circle text-lg sm:text-2xl text-blue-300"></i>
           </div>
         </div>
       </div>
       
-      <div class="bg-amber-600/20 backdrop-blur-sm border border-amber-500/30 rounded-xl p-5">
+      <div class="bg-amber-600/20 backdrop-blur-sm border border-amber-500/30 rounded-xl p-3 sm:p-5">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-amber-200 text-sm font-medium">A Receber</p>
-            <p class="text-2xl font-bold text-white">R$ {{ total_receber|floatformat:2 }}</p>
+            <p class="text-amber-200 text-xs sm:text-sm font-medium">A Receber</p>
+            <p class="text-lg sm:text-2xl font-bold text-white">R$ {{ total_receber|floatformat:2 }}</p>
           </div>
-          <div class="p-3 bg-amber-600/30 rounded-xl">
-            <i class="bi bi-clock-history text-2xl text-amber-300"></i>
+          <div class="p-2 sm:p-3 bg-amber-600/30 rounded-xl">
+            <i class="bi bi-clock-history text-lg sm:text-2xl text-amber-300"></i>
           </div>
         </div>
       </div>
       
-      <div class="bg-red-600/20 backdrop-blur-sm border border-red-500/30 rounded-xl p-5">
+      <div class="bg-red-600/20 backdrop-blur-sm border border-red-500/30 rounded-xl p-3 sm:p-5">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-red-200 text-sm font-medium">Vencido</p>
-            <p class="text-2xl font-bold text-white">R$ {{ total_vencido|floatformat:2 }}</p>
+            <p class="text-red-200 text-xs sm:text-sm font-medium">Vencido</p>
+            <p class="text-lg sm:text-2xl font-bold text-white">R$ {{ total_vencido|floatformat:2 }}</p>
           </div>
-          <div class="p-3 bg-red-600/30 rounded-xl">
-            <i class="bi bi-exclamation-triangle text-2xl text-red-300"></i>
+          <div class="p-2 sm:p-3 bg-red-600/30 rounded-xl">
+            <i class="bi bi-exclamation-triangle text-lg sm:text-2xl text-red-300"></i>
           </div>
         </div>
       </div>
@@ -230,89 +231,89 @@
   </div>
 
   <!-- Metricas de Consumo -->
-  <div class="mt-8">
-    <h2 class="text-xl font-bold text-white mb-4 flex items-center">
+  <div class="mt-6 sm:mt-8">
+    <h2 class="text-lg sm:text-xl font-bold text-white mb-3 sm:mb-4 flex items-center">
       <i class="bi bi-bar-chart-line mr-2 text-violet-400"></i>
       Metricas de Consumo
     </h2>
     
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-5">
+    <div class="grid grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 mb-6 sm:mb-8">
+      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-3 sm:p-5">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-gray-300 text-sm font-medium">Total de Compras</p>
-            <p class="text-2xl font-bold text-white">{{ total_compras }}</p>
+            <p class="text-gray-300 text-xs sm:text-sm font-medium">Compras</p>
+            <p class="text-xl sm:text-2xl font-bold text-white">{{ total_compras }}</p>
           </div>
-          <div class="p-3 bg-violet-600/30 rounded-xl">
-            <i class="bi bi-bag-check text-2xl text-violet-300"></i>
+          <div class="p-2 sm:p-3 bg-violet-600/30 rounded-xl">
+            <i class="bi bi-bag-check text-lg sm:text-2xl text-violet-300"></i>
           </div>
         </div>
       </div>
 
-      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-5">
+      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-3 sm:p-5">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-gray-300 text-sm font-medium">Ticket Medio</p>
-            <p class="text-2xl font-bold text-white">R$ {{ ticket_medio|floatformat:2 }}</p>
+            <p class="text-gray-300 text-xs sm:text-sm font-medium">Ticket Medio</p>
+            <p class="text-xl sm:text-2xl font-bold text-white">R$ {{ ticket_medio|floatformat:2 }}</p>
           </div>
-          <div class="p-3 bg-cyan-600/30 rounded-xl">
-            <i class="bi bi-cash-stack text-2xl text-cyan-300"></i>
+          <div class="p-2 sm:p-3 bg-cyan-600/30 rounded-xl">
+            <i class="bi bi-cash-stack text-lg sm:text-2xl text-cyan-300"></i>
           </div>
         </div>
       </div>
 
-      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-5">
+      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-3 sm:p-5">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-gray-300 text-sm font-medium">Total Itens Comprados</p>
-            <p class="text-2xl font-bold text-white">{{ total_itens }}</p>
+            <p class="text-gray-300 text-xs sm:text-sm font-medium">Itens</p>
+            <p class="text-xl sm:text-2xl font-bold text-white">{{ total_itens }}</p>
           </div>
-          <div class="p-3 bg-emerald-600/30 rounded-xl">
-            <i class="bi bi-box-seam text-2xl text-emerald-300"></i>
+          <div class="p-2 sm:p-3 bg-emerald-600/30 rounded-xl">
+            <i class="bi bi-box-seam text-lg sm:text-2xl text-emerald-300"></i>
           </div>
         </div>
       </div>
 
-      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-5">
+      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-3 sm:p-5">
         <div class="flex items-center justify-between">
-          <div>
-            <p class="text-gray-300 text-sm font-medium">Produto Mais Comprado</p>
-            <p class="text-lg font-bold text-white truncate">{{ produto_mais_comprado }}</p>
+          <div class="min-w-0">
+            <p class="text-gray-300 text-xs sm:text-sm font-medium">Mais Comprado</p>
+            <p class="text-base sm:text-lg font-bold text-white truncate">{{ produto_mais_comprado }}</p>
             {% if produto_mais_comprado_qtd > 0 %}
-              <p class="text-xs text-gray-400">{{ produto_mais_comprado_qtd }} unidade(s)</p>
+              <p class="text-xs text-gray-400">{{ produto_mais_comprado_qtd }} un.</p>
             {% endif %}
           </div>
-          <div class="p-3 bg-amber-600/30 rounded-xl">
-            <i class="bi bi-star text-2xl text-amber-300"></i>
+          <div class="p-2 sm:p-3 bg-amber-600/30 rounded-xl flex-shrink-0 ml-2">
+            <i class="bi bi-star text-lg sm:text-2xl text-amber-300"></i>
           </div>
         </div>
       </div>
 
-      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-5">
+      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-3 sm:p-5">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-gray-300 text-sm font-medium">Ultima Compra</p>
+            <p class="text-gray-300 text-xs sm:text-sm font-medium">Ultima Compra</p>
             {% if ultima_compra_data %}
-              <p class="text-lg font-bold text-white">{{ ultima_compra_data|date:"d/m/Y" }}</p>
-              <a href="{% url 'outflow_detail' ultima_compra_id %}" class="text-xs text-violet-400 hover:text-violet-300">Venda #{{ ultima_compra_id }}</a>
+              <p class="text-base sm:text-lg font-bold text-white">{{ ultima_compra_data|date:"d/m/Y" }}</p>
+              <a href="{% url 'outflow_detail' ultima_compra_id %}" class="text-xs text-violet-400 hover:text-violet-300">#{{ ultima_compra_id }}</a>
             {% else %}
-              <p class="text-lg font-bold text-white">-</p>
+              <p class="text-base sm:text-lg font-bold text-white">-</p>
             {% endif %}
           </div>
-          <div class="p-3 bg-rose-600/30 rounded-xl">
-            <i class="bi bi-calendar-check text-2xl text-rose-300"></i>
+          <div class="p-2 sm:p-3 bg-rose-600/30 rounded-xl">
+            <i class="bi bi-calendar-check text-lg sm:text-2xl text-rose-300"></i>
           </div>
         </div>
       </div>
 
-      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-5">
+      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-3 sm:p-5">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-gray-300 text-sm font-medium">Pagamento Preferido</p>
-            <p class="text-lg font-bold text-white">{{ forma_pagamento_preferida }}</p>
+            <p class="text-gray-300 text-xs sm:text-sm font-medium">Pagamento</p>
+            <p class="text-base sm:text-lg font-bold text-white">{{ forma_pagamento_preferida }}</p>
           </div>
-          <div class="p-3 bg-indigo-600/30 rounded-xl">
-            <i class="bi bi-credit-card text-2xl text-indigo-300"></i>
+          <div class="p-2 sm:p-3 bg-indigo-600/30 rounded-xl">
+            <i class="bi bi-credit-card text-lg sm:text-2xl text-indigo-300"></i>
           </div>
         </div>
       </div>
@@ -321,20 +322,51 @@
 
   <!-- Saidas / Vendas do Cliente -->
   {% if sales %}
-    <div class="mt-8">
-      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
-        <div class="flex items-center justify-between mb-6">
-          <h3 class="text-lg font-semibold text-white flex items-center">
+    <div class="mt-6 sm:mt-8">
+      <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-4 sm:p-6">
+        <div class="flex items-center justify-between mb-4 sm:mb-6">
+          <h3 class="text-base sm:text-lg font-semibold text-white flex items-center">
             <i class="bi bi-cart mr-2 text-violet-400"></i>
             Vendas Recentes
           </h3>
           <a href="{% url 'outflow_list' %}?client={{ object.name }}" 
-             class="text-violet-400 hover:text-violet-300 text-sm font-medium transition-colors duration-200">
+             class="text-violet-400 hover:text-violet-300 text-xs sm:text-sm font-medium transition-colors duration-200">
             Ver todas
           </a>
         </div>
         
-        <div class="overflow-x-auto">
+        <!-- Mobile: Card Layout -->
+        <div class="sm:hidden space-y-3">
+          {% for sale in sales|slice:":5" %}
+            <a href="{% url 'outflow_detail' sale.id %}" class="block bg-gray-800/50 rounded-xl p-3 hover:bg-gray-800/70 transition-colors duration-200">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-violet-400 font-semibold text-sm">#{{ sale.id }}</span>
+                {% if sale.status == 'cancelled' %}
+                  <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Cancelada</span>
+                {% elif sale.balance_due <= 0 %}
+                  <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Pago</span>
+                {% else %}
+                  <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">Pendente</span>
+                {% endif %}
+              </div>
+              <p class="text-white text-sm truncate mb-2">
+                {% for item in sale.items.all|slice:":2" %}
+                  {{ item.product.title }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+                {% if sale.items.count > 2 %}...{% endif %}
+              </p>
+              <div class="flex items-center justify-between">
+                <span class="text-green-400 font-medium text-sm">R$ {{ sale.total_value|floatformat:2 }}</span>
+                {% if sale.balance_due > 0 %}
+                  <span class="text-amber-400 text-xs">Saldo: R$ {{ sale.balance_due|floatformat:2 }}</span>
+                {% endif %}
+              </div>
+            </a>
+          {% endfor %}
+        </div>
+
+        <!-- Desktop: Table Layout -->
+        <div class="hidden sm:block overflow-x-auto">
           <table class="w-full">
             <thead>
               <tr class="bg-white/5 border-b border-white/10">

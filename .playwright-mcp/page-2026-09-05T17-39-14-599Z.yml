@@ -1,0 +1,238 @@
+- generic [ref=e2]:
+  - button "" [ref=e3] [cursor=pointer]
+  - complementary [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - generic [ref=e10]: 
+          - generic [ref=e12]:
+            - heading "SGE" [level=1] [ref=e13]
+            - paragraph [ref=e14]: Sistema de Gestão
+        - button [ref=e15] [cursor=pointer]
+      - navigation [ref=e16]:
+        - list [ref=e17]:
+          - listitem [ref=e18]:
+            - link " Dashboard" [ref=e19] [cursor=pointer]:
+              - /url: /
+              - generic [ref=e20]: 
+              - generic [ref=e21]: Dashboard
+          - listitem [ref=e22]:
+            - link " Vendas" [ref=e23] [cursor=pointer]:
+              - /url: /outflows/list/
+              - generic [ref=e24]: 
+              - generic [ref=e25]: Vendas
+          - listitem [ref=e26]:
+            - link " Clientes" [ref=e27] [cursor=pointer]:
+              - /url: /clients/list/
+              - generic [ref=e28]: 
+              - generic [ref=e29]: Clientes
+          - listitem [ref=e30]:
+            - link " Produtos" [ref=e31] [cursor=pointer]:
+              - /url: /products/list/
+              - generic [ref=e32]: 
+              - generic [ref=e33]: Produtos
+        - generic [ref=e35]:
+          - generic [ref=e36]: 
+          - generic [ref=e38]:
+            - paragraph [ref=e39]: admin
+            - paragraph [ref=e40]: Usuário logado
+      - button " Sair do Sistema" [ref=e43] [cursor=pointer]:
+        - generic [ref=e44]: 
+        - generic [ref=e45]: Sair do Sistema
+  - generic [ref=e46]:
+    - banner [ref=e47]:
+      - generic [ref=e49]:
+        - heading "Sistema de Gestão de Estoque" [level=2] [ref=e51]
+        - text: 
+        - generic [ref=e52]: 
+    - main [ref=e57]:
+      - generic [ref=e58]:
+        - generic [ref=e59]:
+          - heading "Detalhes do Cliente" [level=1] [ref=e60]
+          - paragraph [ref=e61]: Informacoes completas sobre o cliente
+        - generic [ref=e62]:
+          - link " Editar" [ref=e63] [cursor=pointer]:
+            - /url: /clients/1/update/
+            - generic [ref=e64]: 
+            - text: Editar
+          - link " Excluir" [ref=e65] [cursor=pointer]:
+            - /url: /clients/1/delete/
+            - generic [ref=e66]: 
+            - text: Excluir
+          - link " Voltar" [ref=e67] [cursor=pointer]:
+            - /url: /clients/list/
+            - generic [ref=e68]: 
+            - text: Voltar
+      - generic [ref=e69]:
+        - generic [ref=e71]:
+          - generic [ref=e72]:
+            - generic [ref=e73]: 
+            - generic [ref=e75]:
+              - heading "Joao Silva" [level=2] [ref=e76]
+              - paragraph [ref=e77]:
+                - text: "Cliente #1"
+                - generic [ref=e78]: Pessoa Fisica
+          - generic [ref=e79]:
+            - generic [ref=e80]:
+              - heading "Contato" [level=3] [ref=e81]
+              - generic [ref=e82]:
+                - generic [ref=e83]:
+                  - heading "E-mail" [level=4] [ref=e84]
+                  - paragraph [ref=e85]: joao@test.com
+                - generic [ref=e86]:
+                  - heading "Telefone" [level=4] [ref=e87]
+                  - paragraph [ref=e88]: (11) 99999-9999
+            - generic [ref=e89]:
+              - heading "Endereco" [level=3] [ref=e90]
+              - paragraph [ref=e92]: Endereco nao informado
+        - generic [ref=e93]:
+          - generic [ref=e94]:
+            - heading " Informacoes Gerais" [level=3] [ref=e95]:
+              - generic [ref=e96]: 
+              - text: Informacoes Gerais
+            - generic [ref=e97]:
+              - generic [ref=e98]:
+                - generic [ref=e99]: ID
+                - generic [ref=e100]: "#1"
+              - generic [ref=e101]:
+                - generic [ref=e102]: CPF/CNPJ
+                - generic [ref=e103]: 123.456.789-00
+              - generic [ref=e104]:
+                - generic [ref=e105]: Criado em
+                - generic [ref=e106]: 05/09/2026
+              - generic [ref=e107]:
+                - generic [ref=e108]: Atualizado em
+                - generic [ref=e109]: 05/09/2026
+              - generic [ref=e110]:
+                - generic [ref=e111]: Status
+                - generic [ref=e112]: Ativo
+          - generic [ref=e113]:
+            - heading " Acoes Rapidas" [level=3] [ref=e114]:
+              - generic [ref=e115]: 
+              - text: Acoes Rapidas
+            - generic [ref=e116]:
+              - link " Nova Venda" [ref=e117] [cursor=pointer]:
+                - /url: /outflows/create/?client=1
+                - generic [ref=e118]: 
+                - text: Nova Venda
+              - link " Editar Cliente" [ref=e119] [cursor=pointer]:
+                - /url: /clients/1/update/
+                - generic [ref=e120]: 
+                - text: Editar Cliente
+              - link " Excluir Cliente" [ref=e121] [cursor=pointer]:
+                - /url: /clients/1/delete/
+                - generic [ref=e122]: 
+                - text: Excluir Cliente
+      - generic [ref=e123]:
+        - heading " Resumo Financeiro" [level=2] [ref=e124]:
+          - generic [ref=e125]: 
+          - text: Resumo Financeiro
+        - generic [ref=e126]:
+          - generic [ref=e128]:
+            - generic [ref=e129]:
+              - paragraph [ref=e130]: Total Vendido
+              - paragraph [ref=e131]: R$ 9600,00
+            - generic [ref=e132]: 
+          - generic [ref=e135]:
+            - generic [ref=e136]:
+              - paragraph [ref=e137]: Total Recebido
+              - paragraph [ref=e138]: R$ 0,00
+            - generic [ref=e139]: 
+          - generic [ref=e142]:
+            - generic [ref=e143]:
+              - paragraph [ref=e144]: A Receber
+              - paragraph [ref=e145]: R$ 9600,00
+            - generic [ref=e146]: 
+          - generic [ref=e149]:
+            - generic [ref=e150]:
+              - paragraph [ref=e151]: Vencido
+              - paragraph [ref=e152]: R$ 0,00
+            - generic [ref=e153]: 
+      - generic [ref=e155]:
+        - heading " Metricas de Consumo" [level=2] [ref=e156]:
+          - generic [ref=e157]: 
+          - text: Metricas de Consumo
+        - generic [ref=e158]:
+          - generic [ref=e160]:
+            - generic [ref=e161]:
+              - paragraph [ref=e162]: Total de Compras
+              - paragraph [ref=e163]: "3"
+            - generic [ref=e164]: 
+          - generic [ref=e167]:
+            - generic [ref=e168]:
+              - paragraph [ref=e169]: Ticket Medio
+              - paragraph [ref=e170]: R$ 3200,00
+            - generic [ref=e171]: 
+          - generic [ref=e174]:
+            - generic [ref=e175]:
+              - paragraph [ref=e176]: Total Itens Comprados
+              - paragraph [ref=e177]: "9"
+            - generic [ref=e178]: 
+          - generic [ref=e181]:
+            - generic [ref=e182]:
+              - paragraph [ref=e183]: Produto Mais Comprado
+              - paragraph [ref=e184]: Mouse
+              - paragraph [ref=e185]: 6 unidade(s)
+            - generic [ref=e186]: 
+          - generic [ref=e189]:
+            - generic [ref=e190]:
+              - paragraph [ref=e191]: Ultima Compra
+              - paragraph [ref=e192]: 05/09/2026
+              - 'link "Venda #1" [ref=e193] [cursor=pointer]':
+                - /url: /outflows/1/detail/
+            - generic [ref=e194]: 
+          - generic [ref=e197]:
+            - generic [ref=e198]:
+              - paragraph [ref=e199]: Pagamento Preferido
+              - paragraph [ref=e200]: PIX
+            - generic [ref=e201]: 
+      - generic [ref=e204]:
+        - generic [ref=e205]:
+          - heading " Vendas Recentes" [level=3] [ref=e206]:
+            - generic [ref=e207]: 
+            - text: Vendas Recentes
+          - link "Ver todas" [ref=e208] [cursor=pointer]:
+            - /url: /outflows/list/?client=Joao Silva
+        - table [ref=e210]:
+          - rowgroup [ref=e211]:
+            - row [ref=e212]:
+              - columnheader "ID" [ref=e213]
+              - columnheader "Itens" [ref=e214]
+              - columnheader "Valor Total" [ref=e215]
+              - columnheader "Saldo" [ref=e216]
+              - columnheader "Status" [ref=e217]
+              - columnheader "Acoes" [ref=e218]
+          - rowgroup [ref=e219]:
+            - row [ref=e220]:
+              - cell "#3" [ref=e221]
+              - cell "Notebook, Mouse" [ref=e222]
+              - cell "R$ 3200,00" [ref=e223]
+              - cell "R$ 3200,00" [ref=e224]
+              - cell "Pendente" [ref=e225]
+              - cell [ref=e227]:
+                - link "" [ref=e228] [cursor=pointer]:
+                  - /url: /outflows/3/detail/
+            - row [ref=e230]:
+              - cell "#2" [ref=e231]
+              - cell "Notebook, Mouse" [ref=e232]
+              - cell "R$ 3200,00" [ref=e233]
+              - cell "R$ 3200,00" [ref=e234]
+              - cell "Pendente" [ref=e235]
+              - cell [ref=e237]:
+                - link "" [ref=e238] [cursor=pointer]:
+                  - /url: /outflows/2/detail/
+            - row [ref=e240]:
+              - cell "#1" [ref=e241]
+              - cell "Notebook, Mouse" [ref=e242]
+              - cell "R$ 3200,00" [ref=e243]
+              - cell "R$ 3200,00" [ref=e244]
+              - cell "Pendente" [ref=e245]
+              - cell [ref=e247]:
+                - link "" [ref=e248] [cursor=pointer]:
+                  - /url: /outflows/1/detail/
+    - contentinfo [ref=e250]:
+      - generic [ref=e252]:
+        - paragraph [ref=e254]: © 2024 SGE - Sistema de Gestão
+        - generic [ref=e256]:
+          - generic [ref=e257]: v1.0
+          - generic [ref=e259]: Seguro
