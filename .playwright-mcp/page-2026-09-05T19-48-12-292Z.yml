@@ -1,0 +1,225 @@
+- generic [ref=f1e2]:
+  - text: 
+  - complementary [ref=f1e3]:
+    - generic [ref=f1e4]:
+      - generic [ref=f1e7]:
+        - generic [ref=f1e8]: 
+        - generic [ref=f1e10]:
+          - heading "SGE" [level=1] [ref=f1e11]
+          - paragraph [ref=f1e12]: Sistema de Gestão
+      - navigation [ref=f1e13]:
+        - list [ref=f1e14]:
+          - listitem [ref=f1e15]:
+            - link " Dashboard" [ref=f1e16] [cursor=pointer]:
+              - /url: /
+              - generic [ref=f1e17]: 
+              - generic [ref=f1e18]: Dashboard
+          - listitem [ref=f1e19]:
+            - link " Vendas" [ref=f1e20] [cursor=pointer]:
+              - /url: /outflows/list/
+              - generic [ref=f1e21]: 
+              - generic [ref=f1e22]: Vendas
+          - listitem [ref=f1e23]:
+            - link " Clientes" [ref=f1e24] [cursor=pointer]:
+              - /url: /clients/list/
+              - generic [ref=f1e25]: 
+              - generic [ref=f1e26]: Clientes
+          - listitem [ref=f1e27]:
+            - link " Produtos" [ref=f1e28] [cursor=pointer]:
+              - /url: /products/list/
+              - generic [ref=f1e29]: 
+              - generic [ref=f1e30]: Produtos
+        - text: 
+      - button " Sair do Sistema" [ref=f1e33] [cursor=pointer]:
+        - generic [ref=f1e34]: 
+        - generic [ref=f1e35]: Sair do Sistema
+  - generic [ref=f1e36]:
+    - banner [ref=f1e37]:
+      - generic [ref=f1e39]:
+        - generic [ref=f1e40]:
+          - heading "Sistema de Gestão de Estoque" [level=2] [ref=f1e41]
+          - generic [ref=f1e43]: Sistema Online
+        - generic [ref=f1e47]:
+          - generic [ref=f1e48]:
+            - paragraph [ref=f1e49]: admin
+            - paragraph [ref=f1e50]: Usuário
+          - generic [ref=f1e51]: 
+        - text: 
+    - main [ref=f1e55]:
+      - generic [ref=f1e56]:
+        - generic [ref=f1e58]:
+          - generic [ref=f1e59]:
+            - heading "Vendas" [level=3] [ref=f1e60]
+            - paragraph [ref=f1e61]: "3"
+            - generic [ref=f1e62]: Realizadas
+          - generic [ref=f1e65]: 
+        - generic [ref=f1e68]:
+          - generic [ref=f1e69]:
+            - heading "Produtos" [level=3] [ref=f1e70]
+            - paragraph [ref=f1e71]: "9"
+            - generic [ref=f1e72]: Vendidos
+          - generic [ref=f1e75]: 
+        - generic [ref=f1e78]:
+          - generic [ref=f1e79]:
+            - heading "Receita" [level=3] [ref=f1e80]
+            - paragraph [ref=f1e81]: R$ 9.600,00
+            - generic [ref=f1e82]: Total
+          - generic [ref=f1e85]: 
+        - generic [ref=f1e88]:
+          - generic [ref=f1e89]:
+            - heading "Lucro" [level=3] [ref=f1e90]
+            - paragraph [ref=f1e91]: R$ 3.300,00
+            - generic [ref=f1e92]: Liquido
+          - generic [ref=f1e95]: 
+      - generic [ref=f1e97]:
+        - generic [ref=f1e99]:
+          - generic [ref=f1e100]:
+            - heading "Dinheiro" [level=3] [ref=f1e101]
+            - paragraph [ref=f1e102]: R$ 0,00
+            - generic [ref=f1e103]: 0 venda(s)
+          - generic [ref=f1e106]: 
+        - generic [ref=f1e109]:
+          - generic [ref=f1e110]:
+            - heading "Cartao de Credito" [level=3] [ref=f1e111]
+            - paragraph [ref=f1e112]: R$ 0,00
+            - generic [ref=f1e113]: 0 venda(s)
+          - generic [ref=f1e116]: 
+        - generic [ref=f1e119]:
+          - generic [ref=f1e120]:
+            - heading "Cartao de Debito" [level=3] [ref=f1e121]
+            - paragraph [ref=f1e122]: R$ 0,00
+            - generic [ref=f1e123]: 0 venda(s)
+          - generic [ref=f1e126]: 
+        - generic [ref=f1e130]:
+          - heading "PIX" [level=3] [ref=f1e131]
+          - paragraph [ref=f1e132]: R$ 9.600,00
+          - generic [ref=f1e133]: 3 venda(s)
+        - generic [ref=f1e138]:
+          - generic [ref=f1e139]:
+            - heading "Boleto" [level=3] [ref=f1e140]
+            - paragraph [ref=f1e141]: R$ 0,00
+            - generic [ref=f1e142]: 0 venda(s)
+          - generic [ref=f1e145]: 
+        - generic [ref=f1e148]:
+          - generic [ref=f1e149]:
+            - heading "Em Aberto" [level=3] [ref=f1e150]
+            - paragraph [ref=f1e151]: R$ 0,00
+            - generic [ref=f1e152]: 0 venda(s)
+          - generic [ref=f1e155]: 
+      - generic [ref=f1e157]:
+        - generic [ref=f1e158]:
+          - heading "Gestao de Saidas" [level=1] [ref=f1e159]
+          - paragraph [ref=f1e160]: Controle as saidas de produtos e vendas
+        - link " Nova Saida / Venda" [ref=f1e161] [cursor=pointer]:
+          - /url: /outflows/create/
+          - generic [ref=f1e162]: 
+          - text: Nova Saida / Venda
+      - generic [ref=f1e165]:
+        - generic [ref=f1e166]: Buscar Saidas
+        - generic [ref=f1e168]:
+          - textbox "Nome do produto" [ref=f1e170]
+          - textbox "Nome do cliente" [ref=f1e172]
+          - generic [ref=f1e173]:
+            - button " Buscar" [ref=f1e174] [cursor=pointer]:
+              - generic [ref=f1e175]: 
+              - text: Buscar
+            - link [ref=f1e176] [cursor=pointer]:
+              - /url: /outflows/list/
+      - table [ref=f1e179]:
+        - rowgroup [ref=f1e180]:
+          - row [ref=f1e181]:
+            - columnheader "ID" [ref=f1e182]
+            - columnheader "Produtos" [ref=f1e183]
+            - columnheader "Cliente" [ref=f1e184]
+            - columnheader "Valor" [ref=f1e185]
+            - columnheader "Status" [ref=f1e186]
+            - columnheader "Data" [ref=f1e187]
+            - columnheader "Acoes" [ref=f1e188]
+        - rowgroup [ref=f1e189]:
+          - row [ref=f1e190]:
+            - cell "#4 Cancelada" [ref=f1e191]:
+              - link "#4" [ref=f1e192] [cursor=pointer]:
+                - /url: /outflows/4/detail/
+              - generic [ref=f1e193]: Cancelada
+            - cell " Teclado x11" [ref=f1e195]:
+              - generic [ref=f1e196]:
+                - generic [ref=f1e197]: 
+                - generic [ref=f1e199]: Teclado x11
+            - cell "Joao Silva" [ref=f1e201]
+            - cell "R$ 2200,00" [ref=f1e202]
+            - cell "Cancelada" [ref=f1e203]
+            - cell "05/09/2026 14:34" [ref=f1e205]:
+              - generic [ref=f1e206]: 05/09/2026
+              - generic [ref=f1e207]: 14:34
+            - cell [ref=f1e208]:
+              - link "" [ref=f1e209] [cursor=pointer]:
+                - /url: /outflows/4/detail/
+          - row [ref=f1e211]:
+            - cell [ref=f1e212]:
+              - link "#3" [ref=f1e213] [cursor=pointer]:
+                - /url: /outflows/3/detail/
+            - cell " Notebook x1 Mouse x2" [ref=f1e214]:
+              - generic [ref=f1e215]:
+                - generic [ref=f1e216]: 
+                - generic [ref=f1e218]:
+                  - generic [ref=f1e219]: Notebook x1
+                  - generic [ref=f1e220]: Mouse x2
+            - cell "Joao Silva" [ref=f1e221]
+            - cell "R$ 3200,00" [ref=f1e222]
+            - cell "A receber" [ref=f1e223]
+            - cell "05/09/2026 14:34" [ref=f1e225]:
+              - generic [ref=f1e226]: 05/09/2026
+              - generic [ref=f1e227]: 14:34
+            - cell [ref=f1e228]:
+              - link "" [ref=f1e229] [cursor=pointer]:
+                - /url: /outflows/3/detail/
+              - link "" [ref=f1e231] [cursor=pointer]:
+                - /url: /outflows/3/update/
+          - row [ref=f1e233]:
+            - cell [ref=f1e234]:
+              - link "#2" [ref=f1e235] [cursor=pointer]:
+                - /url: /outflows/2/detail/
+            - cell " Notebook x1 Mouse x2" [ref=f1e236]:
+              - generic [ref=f1e237]:
+                - generic [ref=f1e238]: 
+                - generic [ref=f1e240]:
+                  - generic [ref=f1e241]: Notebook x1
+                  - generic [ref=f1e242]: Mouse x2
+            - cell "Joao Silva" [ref=f1e243]
+            - cell "R$ 3200,00" [ref=f1e244]
+            - cell "A receber" [ref=f1e245]
+            - cell "05/09/2026 14:34" [ref=f1e247]:
+              - generic [ref=f1e248]: 05/09/2026
+              - generic [ref=f1e249]: 14:34
+            - cell [ref=f1e250]:
+              - link "" [ref=f1e251] [cursor=pointer]:
+                - /url: /outflows/2/detail/
+              - link "" [ref=f1e253] [cursor=pointer]:
+                - /url: /outflows/2/update/
+          - row [ref=f1e255]:
+            - cell [ref=f1e256]:
+              - link "#1" [ref=f1e257] [cursor=pointer]:
+                - /url: /outflows/1/detail/
+            - cell " Notebook x1 Mouse x2" [ref=f1e258]:
+              - generic [ref=f1e259]:
+                - generic [ref=f1e260]: 
+                - generic [ref=f1e262]:
+                  - generic [ref=f1e263]: Notebook x1
+                  - generic [ref=f1e264]: Mouse x2
+            - cell "Joao Silva" [ref=f1e265]
+            - cell "R$ 3200,00" [ref=f1e266]
+            - cell "A receber" [ref=f1e267]
+            - cell "05/09/2026 14:34" [ref=f1e269]:
+              - generic [ref=f1e270]: 05/09/2026
+              - generic [ref=f1e271]: 14:34
+            - cell [ref=f1e272]:
+              - link "" [ref=f1e273] [cursor=pointer]:
+                - /url: /outflows/1/detail/
+              - link "" [ref=f1e275] [cursor=pointer]:
+                - /url: /outflows/1/update/
+    - contentinfo [ref=f1e277]:
+      - generic [ref=f1e279]:
+        - paragraph [ref=f1e281]: © 2024 SGE - Sistema de Gestão
+        - generic [ref=f1e283]:
+          - generic [ref=f1e284]: v1.0
+          - generic [ref=f1e286]: Seguro

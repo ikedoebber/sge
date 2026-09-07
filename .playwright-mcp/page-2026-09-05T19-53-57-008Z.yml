@@ -1,0 +1,128 @@
+- generic [ref=f12e2]:
+  - text: 
+  - complementary [ref=f12e3]:
+    - generic [ref=f12e4]:
+      - generic [ref=f12e7]:
+        - generic [ref=f12e8]: 
+        - generic [ref=f12e10]:
+          - heading "SGE" [level=1] [ref=f12e11]
+          - paragraph [ref=f12e12]: Sistema de Gestão
+      - navigation [ref=f12e13]:
+        - list [ref=f12e14]:
+          - listitem [ref=f12e15]:
+            - link " Dashboard" [ref=f12e16] [cursor=pointer]:
+              - /url: /
+              - generic [ref=f12e17]: 
+              - generic [ref=f12e18]: Dashboard
+          - listitem [ref=f12e19]:
+            - link " Vendas" [ref=f12e20] [cursor=pointer]:
+              - /url: /outflows/list/
+              - generic [ref=f12e21]: 
+              - generic [ref=f12e22]: Vendas
+          - listitem [ref=f12e23]:
+            - link " Clientes" [ref=f12e24] [cursor=pointer]:
+              - /url: /clients/list/
+              - generic [ref=f12e25]: 
+              - generic [ref=f12e26]: Clientes
+          - listitem [ref=f12e27]:
+            - link " Produtos" [ref=f12e28] [cursor=pointer]:
+              - /url: /products/list/
+              - generic [ref=f12e29]: 
+              - generic [ref=f12e30]: Produtos
+        - text: 
+      - button " Sair do Sistema" [ref=f12e33] [cursor=pointer]:
+        - generic [ref=f12e34]: 
+        - generic [ref=f12e35]: Sair do Sistema
+  - generic [ref=f12e36]:
+    - banner [ref=f12e37]:
+      - generic [ref=f12e39]:
+        - generic [ref=f12e40]:
+          - heading "Sistema de Gestão de Estoque" [level=2] [ref=f12e41]
+          - generic [ref=f12e43]: Sistema Online
+        - generic [ref=f12e47]:
+          - generic [ref=f12e48]:
+            - paragraph [ref=f12e49]: admin
+            - paragraph [ref=f12e50]: Usuário
+          - generic [ref=f12e51]: 
+        - text: 
+    - main [ref=f12e55]:
+      - generic [ref=f12e56]:
+        - generic [ref=f12e57]:
+          - 'heading "Saida #3" [level=1] [ref=f12e58]'
+          - paragraph [ref=f12e59]: 05/09/2026 14:34
+        - generic [ref=f12e60]:
+          - link " Editar" [ref=f12e61] [cursor=pointer]:
+            - /url: /outflows/3/update/
+            - generic [ref=f12e62]: 
+            - text: Editar
+          - button " Cancelar Venda" [ref=f12e63] [cursor=pointer]:
+            - generic [ref=f12e64]: 
+            - text: Cancelar Venda
+          - link " Voltar" [ref=f12e65] [cursor=pointer]:
+            - /url: /outflows/list/
+            - generic [ref=f12e66]: 
+            - text: Voltar
+      - generic [ref=f12e67]:
+        - generic [ref=f12e68]:
+          - generic [ref=f12e69]:
+            - generic [ref=f12e70]:
+              - generic [ref=f12e71]: 
+              - generic [ref=f12e73]:
+                - 'heading "Saida #3" [level=2] [ref=f12e74]'
+                - paragraph [ref=f12e75]: 2 item(ns)
+            - generic [ref=f12e76]:
+              - generic [ref=f12e77]:
+                - generic [ref=f12e78]:
+                  - generic [ref=f12e79]: 
+                  - generic [ref=f12e81]:
+                    - paragraph [ref=f12e82]: Notebook
+                    - paragraph [ref=f12e83]: Eletronicos
+                - generic [ref=f12e84]:
+                  - generic [ref=f12e85]: 1x R$ 3000,00
+                  - generic [ref=f12e86]: R$ 3000,00
+              - generic [ref=f12e87]:
+                - generic [ref=f12e88]:
+                  - generic [ref=f12e89]: 
+                  - generic [ref=f12e91]:
+                    - paragraph [ref=f12e92]: Mouse
+                    - paragraph [ref=f12e93]: Eletronicos
+                - generic [ref=f12e94]:
+                  - generic [ref=f12e95]: 2x R$ 100,00
+                  - generic [ref=f12e96]: R$ 200,00
+            - generic [ref=f12e98]:
+              - paragraph [ref=f12e99]: Total
+              - paragraph [ref=f12e100]: R$ 3200,00
+          - generic [ref=f12e101]:
+            - heading " Impacto no Estoque" [level=3] [ref=f12e102]:
+              - generic [ref=f12e103]: 
+              - text: Impacto no Estoque
+            - generic [ref=f12e104]:
+              - generic [ref=f12e105]:
+                - generic [ref=f12e106]: Notebook
+                - generic [ref=f12e107]: "-1 un"
+              - generic [ref=f12e108]:
+                - generic [ref=f12e109]: Mouse
+                - generic [ref=f12e110]: "-2 un"
+        - generic [ref=f12e112]:
+          - heading " Detalhes" [level=3] [ref=f12e113]:
+            - generic [ref=f12e114]: 
+            - text: Detalhes
+          - generic [ref=f12e115]:
+            - generic [ref=f12e116]:
+              - generic [ref=f12e117]: ID
+              - generic [ref=f12e118]: "#3"
+            - generic [ref=f12e119]:
+              - generic [ref=f12e120]: Data/Hora
+              - generic [ref=f12e121]:
+                - generic [ref=f12e122]: 05/09/2026
+                - generic [ref=f12e123]: 14:34:30
+            - generic [ref=f12e124]:
+              - generic [ref=f12e125]: Tipo
+              - generic [ref=f12e126]: Saida
+      - text:   
+    - contentinfo [ref=f12e127]:
+      - generic [ref=f12e129]:
+        - paragraph [ref=f12e131]: © 2024 SGE - Sistema de Gestão
+        - generic [ref=f12e133]:
+          - generic [ref=f12e134]: v1.0
+          - generic [ref=f12e136]: Seguro

@@ -1,0 +1,153 @@
+- generic [ref=f8e2]:
+  - text: 
+  - complementary [ref=f8e3]:
+    - generic [ref=f8e4]:
+      - generic [ref=f8e7]:
+        - generic [ref=f8e8]: 
+        - generic [ref=f8e10]:
+          - heading "SGE" [level=1] [ref=f8e11]
+          - paragraph [ref=f8e12]: Sistema de Gestão
+      - navigation [ref=f8e13]:
+        - list [ref=f8e14]:
+          - listitem [ref=f8e15]:
+            - link " Dashboard" [ref=f8e16] [cursor=pointer]:
+              - /url: /
+              - generic [ref=f8e17]: 
+              - generic [ref=f8e18]: Dashboard
+          - listitem [ref=f8e19]:
+            - link " Vendas" [ref=f8e20] [cursor=pointer]:
+              - /url: /outflows/list/
+              - generic [ref=f8e21]: 
+              - generic [ref=f8e22]: Vendas
+          - listitem [ref=f8e23]:
+            - link " Clientes" [ref=f8e24] [cursor=pointer]:
+              - /url: /clients/list/
+              - generic [ref=f8e25]: 
+              - generic [ref=f8e26]: Clientes
+          - listitem [ref=f8e27]:
+            - link " Produtos" [ref=f8e28] [cursor=pointer]:
+              - /url: /products/list/
+              - generic [ref=f8e29]: 
+              - generic [ref=f8e30]: Produtos
+        - text: 
+      - button " Sair do Sistema" [ref=f8e33] [cursor=pointer]:
+        - generic [ref=f8e34]: 
+        - generic [ref=f8e35]: Sair do Sistema
+  - generic [ref=f8e36]:
+    - banner [ref=f8e37]:
+      - generic [ref=f8e39]:
+        - generic [ref=f8e40]:
+          - heading "Sistema de Gestão de Estoque" [level=2] [ref=f8e41]
+          - generic [ref=f8e43]: Sistema Online
+        - generic [ref=f8e47]:
+          - generic [ref=f8e48]:
+            - paragraph [ref=f8e49]: admin
+            - paragraph [ref=f8e50]: Usuário
+          - generic [ref=f8e51]: 
+        - text: 
+    - main [ref=f8e55]:
+      - generic [ref=f8e56]:
+        - generic [ref=f8e58]:
+          - generic [ref=f8e59]:
+            - heading "Quantidade" [level=3] [ref=f8e60]
+            - paragraph [ref=f8e61]: "180"
+            - generic [ref=f8e62]: Em estoque
+          - generic [ref=f8e65]: 
+        - generic [ref=f8e68]:
+          - generic [ref=f8e69]:
+            - heading "Custo" [level=3] [ref=f8e70]
+            - paragraph [ref=f8e71]: R$ 51.000,00
+            - generic [ref=f8e72]: Investido
+          - generic [ref=f8e75]: 
+        - generic [ref=f8e78]:
+          - generic [ref=f8e79]:
+            - heading "Venda" [level=3] [ref=f8e80]
+            - paragraph [ref=f8e81]: R$ 82.000,00
+            - generic [ref=f8e82]: Valor venda
+          - generic [ref=f8e85]: 
+        - generic [ref=f8e88]:
+          - generic [ref=f8e89]:
+            - heading "Lucro" [level=3] [ref=f8e90]
+            - paragraph [ref=f8e91]: R$ 31.000,00
+            - generic [ref=f8e92]: Margem
+          - generic [ref=f8e95]: 
+      - generic [ref=f8e97]:
+        - generic [ref=f8e99]:
+          - generic [ref=f8e100]:
+            - heading "Vendas" [level=3] [ref=f8e101]
+            - paragraph [ref=f8e102]: "3"
+            - generic [ref=f8e103]: Realizadas
+          - generic [ref=f8e106]: 
+        - generic [ref=f8e109]:
+          - generic [ref=f8e110]:
+            - heading "Produtos" [level=3] [ref=f8e111]
+            - paragraph [ref=f8e112]: "9"
+            - generic [ref=f8e113]: Vendidos
+          - generic [ref=f8e116]: 
+        - generic [ref=f8e119]:
+          - generic [ref=f8e120]:
+            - heading "Receita" [level=3] [ref=f8e121]
+            - paragraph [ref=f8e122]: R$ 9.600,00
+            - generic [ref=f8e123]: Total
+          - generic [ref=f8e126]: 
+        - generic [ref=f8e129]:
+          - generic [ref=f8e130]:
+            - heading "Lucro" [level=3] [ref=f8e131]
+            - paragraph [ref=f8e132]: R$ 3.300,00
+            - generic [ref=f8e133]: Liquido
+          - generic [ref=f8e136]: 
+      - generic [ref=f8e138]:
+        - generic [ref=f8e140]:
+          - generic [ref=f8e141]:
+            - heading "Dinheiro" [level=3] [ref=f8e142]
+            - paragraph [ref=f8e143]: R$ 0,00
+            - generic [ref=f8e144]: 0 venda(s)
+          - generic [ref=f8e147]: 
+        - generic [ref=f8e150]:
+          - generic [ref=f8e151]:
+            - heading "Cartao de Credito" [level=3] [ref=f8e152]
+            - paragraph [ref=f8e153]: R$ 0,00
+            - generic [ref=f8e154]: 0 venda(s)
+          - generic [ref=f8e157]: 
+        - generic [ref=f8e160]:
+          - generic [ref=f8e161]:
+            - heading "Cartao de Debito" [level=3] [ref=f8e162]
+            - paragraph [ref=f8e163]: R$ 0,00
+            - generic [ref=f8e164]: 0 venda(s)
+          - generic [ref=f8e167]: 
+        - generic [ref=f8e171]:
+          - heading "PIX" [level=3] [ref=f8e172]
+          - paragraph [ref=f8e173]: R$ 6.400,00
+          - generic [ref=f8e174]: 3 venda(s)
+        - generic [ref=f8e179]:
+          - generic [ref=f8e180]:
+            - heading "Boleto" [level=3] [ref=f8e181]
+            - paragraph [ref=f8e182]: R$ 0,00
+            - generic [ref=f8e183]: 0 venda(s)
+          - generic [ref=f8e186]: 
+        - generic [ref=f8e189]:
+          - generic [ref=f8e190]:
+            - heading "Em Aberto" [level=3] [ref=f8e191]
+            - paragraph [ref=f8e192]: R$ 0,00
+            - generic [ref=f8e193]: 0 venda(s)
+          - generic [ref=f8e196]: 
+      - generic [ref=f8e198]:
+        - generic [ref=f8e200]:
+          - heading "Valor de vendas" [level=3] [ref=f8e201]
+          - paragraph [ref=f8e202]: Últimos 7 dias
+        - generic [ref=f8e206]:
+          - heading "Quantidade de Vendas Diárias" [level=3] [ref=f8e207]
+          - paragraph [ref=f8e208]: Últimos 7 dias
+      - generic [ref=f8e211]:
+        - generic [ref=f8e213]:
+          - heading "Produtos por Categoria" [level=3] [ref=f8e214]
+          - paragraph [ref=f8e215]: Distribuição do estoque
+        - generic [ref=f8e219]:
+          - heading "Produtos por Marca" [level=3] [ref=f8e220]
+          - paragraph [ref=f8e221]: Distribuição por fabricante
+    - contentinfo [ref=f8e224]:
+      - generic [ref=f8e226]:
+        - paragraph [ref=f8e228]: © 2024 SGE - Sistema de Gestão
+        - generic [ref=f8e230]:
+          - generic [ref=f8e231]: v1.0
+          - generic [ref=f8e233]: Seguro

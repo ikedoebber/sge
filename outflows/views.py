@@ -95,6 +95,7 @@ class OutflowCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
 
             self.object = form.save(commit=False)
             self.object.sale_date = timezone.now().date()
+            self.object.save()
 
             items = item_formset.save(commit=False)
             for item in items:
